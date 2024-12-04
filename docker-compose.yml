@@ -2,8 +2,8 @@ services:
     heritage_api:
         container_name: heritage_api
         build:
-            context: ./heritage_api
-            dockerfile: ./Dockerfile
+            context: ./api
+            dockerfile: ./docker/Dockerfile
         ports:
           - 8080:8080
         networks:
@@ -12,13 +12,13 @@ services:
     heritage_web:
         container_name: heritage_web
         build:
-            context: ./heritage_react
-            dockerfile: ./docker/react.Dockerfile
+            context: ./react
+            dockerfile: ./docker/Dockerfile
         volumes:
             - heritage_web:/app/dist
 
     web_server:
-        container_name: caddy
+        container_name: heritage_server
         image: caddy:2.8.4-alpine
         restart: unless-stopped
         depends_on:
@@ -29,7 +29,7 @@ services:
             - 443:443
             - 443:443/udp
         volumes:
-            - ./conf:/etc/caddy
+            - ./server:/etc/caddy
             - heritage_web:/srv
             - caddy_data:/data
             - caddy_config:/config
