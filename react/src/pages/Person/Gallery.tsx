@@ -9,7 +9,7 @@ type UserData = {
 // ToDo:
 const assetsRoute = (personId: string) => `http://localhost:8080/api/people/${personId}`;
 
-export function PersonGallery() {
+export function Gallery() {
     const { id } = useParams<Params>();
     const heritage = useHeritage();
 

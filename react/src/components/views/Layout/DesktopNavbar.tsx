@@ -11,8 +11,9 @@ const navlinkStyle = ({ isActive }: NavLinkRenderProps) =>
 export function DesktopNavbar() {
     return (
         <nav className="bg-background grid grid-cols-[auto_1fr] px-8 py-3 items-center border-b border-border gap-2">
-            <NavLink to={RoutePaths.ROOT}>
-                <img src={nrUrl} width={25} height={25} className="cursor-pointer" alt="logo" />
+            <NavLink to={RoutePaths.ROOT} className="flex items-center gap-2 text-xl font-semibold">
+                <img src={nrUrl} width={30} height={30} className="cursor-pointer" alt="logo" />
+                <span className="text-foreground">Nasz Ród</span>
             </NavLink>
             <div className="justify-self-end flex gap-1 text-sm font-medium">
                 <NavLink to={RoutePaths.OSOBY} className={navlinkStyle}>

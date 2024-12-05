@@ -4,12 +4,12 @@ import { RoutePaths } from "@/constants/RoutePaths";
 
 const navlinkStyle = ({ isActive }: NavLinkRenderProps) =>
     isActive
-        ? "text-highlight bg-highlight-background border border-highlight-background rounded-3xl py-1 px-2"
-        : "text-foreground bg-background border border-background rounded-3xl py-1 px-2 hover:bg-accent";
+        ? "text-highlight bg-highlight-background border border-highlight-background rounded-3xl py-2 px-3"
+        : "text-foreground bg-background border border-background rounded-3xl py-2 px-3 hover:bg-accent";
 
 export function Footer() {
     return (
-        <div className="bg-background border-t border-border flex justify-center gap-3 py-2 text-xs">
+        <div className="bg-background border-t border-border flex justify-center gap-3 py-2 text-sm">
             <NavLink to={RoutePaths.KONTAKT} className={navlinkStyle}>
                 Kontakt
             </NavLink>

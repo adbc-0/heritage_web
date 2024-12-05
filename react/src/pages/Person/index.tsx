@@ -1,7 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Basic } from "./Basic";
-import { PersonTree } from "./PersonTree";
-import { PersonGallery } from "./PersonGallery";
+import { Tree } from "./Tree";
+import { Gallery } from "./Gallery";
 import { Documents } from "./Documents";
 import { Notes } from "./Notes";
 
@@ -20,11 +20,11 @@ export default function Person() {
             <TabsContent value="basic">
                 <Basic />
             </TabsContent>
-            <TabsContent value="tree">
-                <PersonTree />
+            <TabsContent className="h-[90%]" value="tree">
+                <Tree />
             </TabsContent>
             <TabsContent value="photos">
-                <PersonGallery />
+                <Gallery />
             </TabsContent>
             <TabsContent value="documents">
                 <Documents />

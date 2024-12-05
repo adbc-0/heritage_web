@@ -7,7 +7,7 @@ import { useHeritage } from "@/contexts/heritageContext";
 import { transformDatasetForPerson } from "@/utils/heritage";
 
 // what will happen with ozimki root. Will dummy node be rendered?
-export function PersonTree() {
+export function Tree() {
     const { id } = useParams<Params>();
     const heritage = useHeritage();
     const navigate = useNavigate();
@@ -39,9 +39,8 @@ export function PersonTree() {
         };
     }, [heritage, id, navigate]);
     return (
-        <div className="m-3">
-            <h2 className="text-center font-semibold">Drzewo</h2>
-            <div className="mt-3 mx-auto bg-background border border-border w-[80%] md:w-[50%] h-[60vh]">
+        <div className="m-3 h-full">
+            <div className="mt-3 mx-auto bg-background border border-border w-[90%] md:w-[75%] h-full">
                 <svg ref={svgElement} id="relative" className="rounded-md" />
             </div>
         </div>
