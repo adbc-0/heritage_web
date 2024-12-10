@@ -4,11 +4,10 @@
 
 ### VPS
 
-- Install Ubuntu on VPS. Use Ubuntu or Debian as base.
+- Pick OS on VPS. Use Debian or Ubuntu as a base.
 - Buy Domain. Point domain at VPS.
 - Download git and docker on VPS.
 - Setup SSH. Download repositories.
-- Install docker.
 - Run docker compose.
 
 ### Docker
