@@ -7,7 +7,6 @@ COPY package.json .
 COPY pnpm-lock.yaml .
 RUN npm install
 
-COPY nginx ./nginx/
 COPY public ./public/
 COPY src ./src/
 COPY eslint.config.js .
