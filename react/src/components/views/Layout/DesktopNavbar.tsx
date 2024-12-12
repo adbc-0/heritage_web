@@ -1,6 +1,6 @@
 import { NavLink, NavLinkRenderProps } from "react-router";
 
-import nrUrl from "@/assets/NR.png";
+import LogoSVG from "@/assets/logo.svg";
 import { RoutePaths } from "@/constants/RoutePaths";
 
 const navlinkStyle = ({ isActive }: NavLinkRenderProps) =>
@@ -12,8 +12,7 @@ export function DesktopNavbar() {
     return (
         <nav className="bg-background grid grid-cols-[auto_1fr] px-8 py-3 items-center border-b border-border gap-2">
             <NavLink to={RoutePaths.ROOT} className="flex items-center gap-2 text-xl font-semibold">
-                <img src={nrUrl} width={30} height={30} className="cursor-pointer" alt="logo" />
-                <span className="text-foreground">Nasz Ród</span>
+                <img src={LogoSVG} width={110} className="cursor-pointer" alt="logo" />
             </NavLink>
             <div className="justify-self-end flex gap-1 text-sm font-medium">
                 <NavLink to={RoutePaths.OSOBY} className={navlinkStyle}>
