@@ -110,12 +110,19 @@ export function removeChild(tree: TreeObject, personId: string): TreeObject | nu
         return null;
     }
     for (let i = 0; i < tree.children.length; i++) {
-        if (tree.children[i].indiId === personId) {
-            const [d] = tree.children.splice(i, 1);
-            --i;
-            return d;
+        const child = tree.children[i];
+        if (!child) {
+            throw new Error('child node is falsy');
         }
-        deletedSubtree = removeChild(tree.children[i], personId);
+        if (child.indiId === personId) {
+            const [removedChild] = tree.children.splice(i, 1);
+            if (!removedChild) {
+                throw new Error('removed child node is falsy');
+            }
+            --i;
+            return removedChild;
+        }
+        deletedSubtree = removeChild(child, personId);
     }
     return deletedSubtree;
 }
