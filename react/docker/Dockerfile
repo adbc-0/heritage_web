@@ -1,22 +1,15 @@
-FROM node:22.9.0 AS build
+FROM node:22.9.0 AS base
+
+COPY . /app
 WORKDIR /app
 
-# Install dependencies
-COPY lib ./lib/
-COPY package.json .
-COPY pnpm-lock.yaml .
-RUN npm install
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
 
-COPY public ./public/
-COPY src ./src/
-COPY eslint.config.js .
-COPY index.html .
-COPY postcss.config.js .
-COPY tailwind.config.js .
-COPY tsconfig.json .
-COPY tsconfig.app.json .
-COPY tsconfig.node.json .
-COPY vite.config.ts .
-COPY .env.production .
+FROM base AS build
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
+RUN pnpm run build
 
-RUN npm run build
+FROM caddy:2.8.4-alpine AS server
+COPY --from=build /app/dist /srv
