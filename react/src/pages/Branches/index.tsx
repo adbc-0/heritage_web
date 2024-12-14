@@ -1,6 +1,6 @@
 import { ElementRef, useEffect, useId, useRef, useState } from "react";
 import { useNavigate } from "react-router";
-import { ArrowDown, CircleX } from "lucide-react";
+import { ChevronDown, CircleX } from "lucide-react";
 import * as topola from "topola";
 
 import { useHeritage } from "@/contexts/heritageContext";
@@ -9,7 +9,7 @@ import { RoutePaths } from "@/constants/RoutePaths";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Separator } from "@/components/ui/separator";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const SELECT_LIMIT = 2;
 const defaultBranches = [
@@ -111,7 +111,7 @@ export default function Branches() {
     return (
         <div className="grid grid-rows-[auto_1fr]">
             <div className="flex flex-col items-center gap-2 justify-center mt-4">
-                <label className="text-sm" htmlFor={branchMultiselectId}>
+                <label htmlFor={branchMultiselectId}>
                     Wyświetlane gałęzie
                 </label>
                 <Popover
@@ -122,7 +122,7 @@ export default function Branches() {
                 >
                     <PopoverTrigger>
                         <div
-                            className="flex justify-center items-center bg-background border rounded-md py-1 px-3 mx-3"
+                            className="flex justify-center items-center bg-background border rounded-md p-1 pr-2 mx-3"
                             role="combobox"
                             aria-controls={ariaDropdownControls}
                             aria-labelledby={branchMultiselectId}
@@ -143,27 +143,34 @@ export default function Branches() {
                                     </Badge>
                                 ))}
                                 {renderedBranches.length > 2 && (
-                                    <Badge className="h-8 text-nowrap">+{renderedBranches.length - 2} dodatkowych</Badge>
+                                    <span className="h-8 text-nowrap text-xs font-medium content-center text-primary mx-1">+{renderedBranches.length - 2} więcej</span>
                                 )}
                             </div>
-                            <Separator orientation="vertical" className="mx-3 h-6" />
-                            <ArrowDown color="grey" size={20} />
+                            <ChevronDown className="ml-2" color="grey" size={20} />
                         </div>
                     </PopoverTrigger>
-                    <PopoverContent id={ariaDropdownControls} className="flex flex-row">
+                    <PopoverContent id={ariaDropdownControls} className="flex flex-row p-0">
                         <div className="w-full">
                             {branches.map(({ name: branchName, active }) => (
-                                <div key={branchName} className="flex items-center">
-                                    <Button
-                                        className="w-full border rounded-none"
-                                        variant={active ? "default" : "secondary"}
-                                        type="button"
-                                        onClick={() => {
-                                            toggleBranch(branchName);
-                                        }}
-                                    >
-                                        {branchName}
-                                    </Button>
+                                <div key={branchName} className="hover:bg-accent">
+                                    <div className="flex items-center gap-2 mx-2">
+                                        <Checkbox
+                                            checked={active}
+                                            onClick={() => {
+                                                toggleBranch(branchName);
+                                            }}
+                                        />
+                                        <Button
+                                            className="w-full rounded-none p-0 text-left justify-start"
+                                            variant="ghost"
+                                            type="button"
+                                            onClick={() => {
+                                                toggleBranch(branchName);
+                                            }}
+                                        >
+                                            {branchName}
+                                        </Button>
+                                    </div>
                                 </div>
                             ))}
                         </div>
