@@ -6,8 +6,27 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"strings"
 )
+
+type env struct {
+	mode     string
+	password string
+	cors     string
+}
+
+func setEnv(key string, defaultValue string) string {
+	value, ok := os.LookupEnv(key)
+	if !ok {
+		return defaultValue
+	}
+	return value
+}
+
+var newEnv = env{
+	mode:     setEnv("MODE", "DEV"),
+	password: setEnv("PASSWORD", "DEV"),
+	cors:     setEnv("CORS", "http://localhost:5173"),
+}
 
 func healthCheck(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNoContent)
@@ -30,13 +49,13 @@ func getHeritage(w http.ResponseWriter, r *http.Request) {
 
 func authUser(w http.ResponseWriter, r *http.Request) {
 	_, password, _ := r.BasicAuth()
-	if password != os.Getenv("PASSWORD") {
+	if password != newEnv.password {
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
 		return
 	}
 	cookie := http.Cookie{
 		Name:     "auth",
-		Value:    os.Getenv("PASSWORD"),
+		Value:    password,
 		Path:     "/",
 		MaxAge:   3600,
 		HttpOnly: true,
@@ -53,7 +72,7 @@ func acceptPreflight(w http.ResponseWriter, r *http.Request) {
 
 func setCORSHeaders(w http.ResponseWriter) {
 	w.Header().Set("Access-Control-Allow-Credentials", "true")
-	w.Header().Set("Access-Control-Allow-Origin", os.Getenv("CORS"))
+	w.Header().Set("Access-Control-Allow-Origin", newEnv.cors)
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
 }
@@ -79,27 +98,11 @@ func ensureBasicAuth(next http.HandlerFunc) http.HandlerFunc {
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)
 			return
 		}
-		if authCookie.Value != os.Getenv("PASSWORD") {
+		if authCookie.Value != newEnv.password {
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)
 			return
 		}
 		next(w, r)
-	}
-}
-
-func loadEnvVariables() {
-	data, err := os.ReadFile(".env")
-	if err != nil {
-		return
-	}
-	lines := strings.Split(string(data), "\n")
-	for _, line := range lines {
-		parts := strings.Split(line, "=")
-		if len(parts) == 2 {
-			key := strings.TrimSpace(parts[0])
-			value := strings.TrimSpace(parts[1])
-			os.Setenv(key, value)
-		}
 	}
 }
 
@@ -137,8 +140,6 @@ func getPerson(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	loadEnvVariables()
-
 	fs := http.FileServer(http.Dir("assets/people"))
 	http.Handle("/assets/people/", ensureBasicAuth(cors(handlerToHandlerFunc(http.StripPrefix("/assets/people/", fs)))))
 
@@ -148,6 +149,10 @@ func main() {
 
 	http.HandleFunc("OPTIONS /api/auth", cors(acceptPreflight))
 	http.HandleFunc("POST /api/auth", cors(authUser))
+
+	if newEnv.mode == "DEV" {
+		fmt.Println("App running in dev mode on port :8080")
+	}
 
 	err := http.ListenAndServe(":8080", nil)
 

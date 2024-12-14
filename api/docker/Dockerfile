@@ -8,7 +8,6 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o go-api /app/cmd
 FROM scratch
 WORKDIR /app
 COPY --from=builder app/go-api .
-COPY .env .
 COPY assets/ assets/
-EXPOSE 8080
+
 CMD ["./go-api"]

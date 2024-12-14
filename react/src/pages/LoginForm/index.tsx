@@ -1,6 +1,7 @@
 import { LockKeyhole } from "lucide-react";
 import { FormEvent, useId } from "react";
 
+import { ENV } from "@/constants/Env";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,7 +14,7 @@ type LoginFormProps = {
     authorize: () => void;
 };
 
-const AuthorizationRoute = `${import.meta.env.VITE_API_URL}/auth`;
+const AuthorizationRoute = `${ENV.API_URL}/auth`;
 
 export function LoginForm({ authorize }: LoginFormProps) {
     const passwordId = useId();

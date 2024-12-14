@@ -1,13 +1,14 @@
-import { useHeritage } from "@/contexts/heritageContext";
 import { useEffect, useState } from "react";
 import { Params, useParams } from "react-router";
+
+import { ENV } from "@/constants/Env";
+import { useHeritage } from "@/contexts/heritageContext";
 
 type UserData = {
     files: string[];
 };
 
-// ToDo:
-const assetsRoute = (personId: string) => `http://localhost:8080/api/people/${personId}`;
+const assetsRoute = (personId: string) => `${ENV.API_URL}/people/${personId}`;
 
 export function Gallery() {
     const { id } = useParams<Params>();

@@ -1,5 +1,6 @@
 import { ReactElement, useEffect, useState } from "react";
 
+import { ENV } from "@/constants/Env";
 import { useAuth } from "@/contexts/authContext";
 import { HeritageContext } from "@/contexts/heritageContext";
 import { GlobalError } from "@/pages/GlobalError/GlobalError";
@@ -17,7 +18,7 @@ const LoadingState = {
 } as const;
 type LoadingStateValues = (typeof LoadingState)[keyof typeof LoadingState];
 
-const HeritageDataRoute = `${import.meta.env.VITE_API_URL}/heritage`;
+const HeritageDataRoute = `${ENV.API_URL}/heritage`;
 const ForbiddenStatusCode = 401;
 
 export function HeritageProvider({ children }: ReactChildren) {
