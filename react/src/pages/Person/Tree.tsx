@@ -1,4 +1,4 @@
-import { ElementRef, useEffect, useRef } from "react";
+import { ComponentRef, useEffect, useRef } from "react";
 import { Params, useNavigate, useParams } from "react-router";
 import * as topola from "topola";
 
@@ -11,7 +11,7 @@ export function Tree() {
     const { id } = useParams<Params>();
     const heritage = useHeritage();
     const navigate = useNavigate();
-    const svgElement = useRef<ElementRef<"svg">>(null);
+    const svgElement = useRef<ComponentRef<"svg">>(null);
     useEffect(() => {
         if (!id) {
             return;

@@ -27,5 +27,5 @@ export function AuthProvider({ children }: ReactChildren) {
     if (authStatus === AuthStatus.UNAUTHORIZED) {
         return <LoginForm authorize={authorize} />;
     }
-    return <AuthContext.Provider value={authValue}>{children}</AuthContext.Provider>;
+    return <AuthContext value={authValue}>{children}</AuthContext>;
 }

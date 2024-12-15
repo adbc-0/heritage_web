@@ -1,4 +1,4 @@
-import { ElementRef, useEffect, useId, useRef, useState } from "react";
+import { ComponentRef, useEffect, useId, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import { ChevronDown, CircleX } from "lucide-react";
 import * as topola from "topola";
@@ -19,27 +19,27 @@ const defaultBranches = [
         rootIndiId: "I38",
     },
     {
-        active: false,
+        active: true,
         name: "Pizłowie",
         rootIndiId: "I5",
     },
     {
-        active: false,
+        active: true,
         name: "Bieleccy",
         rootIndiId: "I154",
     },
     {
-        active: false,
+        active: true,
         name: "Niziołowie",
         rootIndiId: "I156",
     },
     {
-        active: false,
+        active: true,
         name: "Nowakowie",
         rootIndiId: "I303",
     },
     {
-        active: false,
+        active: true,
         name: "Pinkoszowie",
         rootIndiId: "I296",
     },
@@ -55,7 +55,7 @@ export default function Branches() {
     const heritageDataset = useHeritage();
     const branchMultiselectId = useId();
     const ariaDropdownControls = useId();
-    const svgElement = useRef<ElementRef<"svg">>(null);
+    const svgElement = useRef<ComponentRef<"svg">>(null);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [branches, setBranches] = useState(defaultBranches);
     const renderedBranches = branches.filter((branch) => branch.active).map((branch) => branch.name);

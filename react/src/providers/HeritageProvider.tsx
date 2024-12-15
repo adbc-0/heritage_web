@@ -50,7 +50,7 @@ export function HeritageProvider({ children }: ReactChildren) {
         void getHeritageInfo();
     }, [authorize, unauthorize]);
     if (unexpectedFetchingError) {
-        return <GlobalError />
+        return <GlobalError />;
     }
     if (loadingState === LoadingState.IDLE) {
         return <LoadingPage />;
@@ -58,5 +58,5 @@ export function HeritageProvider({ children }: ReactChildren) {
     if (loadingState === LoadingState.LOADING) {
         return <LoadingPage />;
     }
-    return <HeritageContext.Provider value={heritage}>{children}</HeritageContext.Provider>;
+    return <HeritageContext value={heritage}>{children}</HeritageContext>;
 }
