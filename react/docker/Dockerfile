@@ -1,7 +1,7 @@
 FROM node:22.9.0 AS base
-
-COPY . /app
 WORKDIR /app
+
+COPY . .
 
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"

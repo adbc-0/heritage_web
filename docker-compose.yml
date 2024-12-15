@@ -5,7 +5,7 @@ services:
             context: ./api
             dockerfile: ./docker/Dockerfile
         environment:
-            MODE: "DEV"
+            MODE: "PROD"
             PASSWORD: "DEV"
             CORS: "https://localhost"
         ports:
@@ -18,8 +18,6 @@ services:
         build:
             context: ./react
             dockerfile: ./docker/Dockerfile
-        environment:
-            VITE_API_URL: "https://localhost"
         restart: unless-stopped
         depends_on:
             - heritage_api
