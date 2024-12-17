@@ -58,14 +58,18 @@ export default function Branches() {
     const svgElement = useRef<ComponentRef<"svg">>(null);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [branches, setBranches] = useState(defaultBranches);
-    const renderedBranches = branches.filter((branch) => branch.active).map((branch) => branch.name);
+    const renderedBranches = branches
+        .filter((branch) => branch.active)
+        .map((branch) => branch.name);
 
     useEffect(() => {
         if (!heritageDataset) {
             return;
         }
         const svgRef = svgElement.current;
-        const inactiveBranches = branches.filter((branch) => !branch.active).map((branch) => branch.rootIndiId);
+        const inactiveBranches = branches
+            .filter((branch) => !branch.active)
+            .map((branch) => branch.rootIndiId);
         const heritageDatasetWithFilteredBranches = transformHeritageDatasetForActiveBranches(
             heritageDataset,
             inactiveBranches,
@@ -87,7 +91,7 @@ export default function Branches() {
             }
             svgRef.replaceChildren();
         };
-    }, [branches, heritageDataset]);
+    }, [branches, heritageDataset, navigate]);
 
     function toggleBranch(branchName: string) {
         const copy = structuredClone(branches);
@@ -95,7 +99,8 @@ export default function Branches() {
         if (!branch) {
             throw new Error("Branch was not found");
         }
-        const userIsAttemptingToRemoveLastActiveBranch = branch.active && renderedBranches.length === 1;
+        const userIsAttemptingToRemoveLastActiveBranch =
+            branch.active && renderedBranches.length === 1;
         if (userIsAttemptingToRemoveLastActiveBranch) {
             return;
         }
@@ -103,7 +108,10 @@ export default function Branches() {
         setBranches(copy);
     }
 
-    function removeActiveBranchWithIcon(event: React.MouseEvent<SVGSVGElement>, branchName: string) {
+    function removeActiveBranchWithIcon(
+        event: React.MouseEvent<SVGSVGElement>,
+        branchName: string,
+    ) {
         event.preventDefault();
         toggleBranch(branchName);
     }
@@ -111,9 +119,7 @@ export default function Branches() {
     return (
         <div className="grid grid-rows-[auto_1fr]">
             <div className="flex flex-col items-center gap-2 justify-center mt-4">
-                <label htmlFor={branchMultiselectId}>
-                    Wyświetlane gałęzie
-                </label>
+                <label htmlFor={branchMultiselectId}>Wyświetlane gałęzie</label>
                 <Popover
                     open={dropdownOpen}
                     onOpenChange={(newStatus) => {
@@ -143,7 +149,9 @@ export default function Branches() {
                                     </Badge>
                                 ))}
                                 {renderedBranches.length > 2 && (
-                                    <span className="h-8 text-nowrap text-xs font-medium content-center text-primary mx-1">+{renderedBranches.length - 2} więcej</span>
+                                    <span className="h-8 text-nowrap text-xs font-medium content-center text-primary mx-1">
+                                        +{renderedBranches.length - 2} więcej
+                                    </span>
                                 )}
                             </div>
                             <ChevronDown className="ml-2" color="grey" size={20} />

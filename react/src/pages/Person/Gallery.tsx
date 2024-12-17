@@ -45,7 +45,7 @@ export function Gallery() {
             <div>
                 <h2 className="text-center font-semibold my-3">Brak zdjęć</h2>
             </div>
-        )
+        );
     }
 
     return (
@@ -58,7 +58,10 @@ export function Gallery() {
                         rel="noreferrer"
                         href={`http://localhost:8080/assets/people/I84/${link}`}
                     >
-                        <img src={`http://localhost:8080/assets/people/I84/${link}`} alt="unknown" />
+                        <img
+                            src={`http://localhost:8080/assets/people/I84/${link}`}
+                            alt="unknown"
+                        />
                     </a>
                 ))}
             </div>

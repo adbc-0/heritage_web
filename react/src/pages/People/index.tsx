@@ -5,7 +5,14 @@ import { ArrowDown01, ArrowDown10, ArrowDownAZ, ArrowDownZa } from "lucide-react
 import { isPersonInvisible, searchPerson, serachFamily } from "@/utils/heritage";
 import { RoutePaths } from "@/constants/RoutePaths";
 import { useHeritage } from "@/contexts/heritageContext";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Heritage, Indi } from "@/typescript/heritage";
 
@@ -49,9 +56,9 @@ function mapParents(heritage: Heritage) {
         return {
             ...person,
             dad: getParentName(heritage, parentsFamily.husb),
-            mom: getParentName(heritage, parentsFamily.wife)
+            mom: getParentName(heritage, parentsFamily.wife),
         };
-    }
+    };
 }
 
 function basicPeopleTransformations(heritage: Heritage | null): Person[] {
@@ -90,7 +97,7 @@ type SortByType = (typeof SortBy)[keyof typeof SortBy];
 type DirectionType = (typeof Direction)[keyof typeof Direction];
 
 function isNil(v: unknown): v is null | undefined {
-    return typeof v === 'undefined' || v === null;
+    return typeof v === "undefined" || v === null;
 }
 
 function sortByTextAsc(accessor: "firstName" | "lastName" | "dad" | "mom") {
@@ -104,7 +111,7 @@ function sortByTextAsc(accessor: "firstName" | "lastName" | "dad" | "mom") {
             return -1;
         }
         return aValue.localeCompare(bValue);
-    }
+    };
 }
 function sortByTextDesc(accessor: "firstName" | "lastName" | "dad" | "mom") {
     return function (a: Person, b: Person) {
@@ -117,7 +124,7 @@ function sortByTextDesc(accessor: "firstName" | "lastName" | "dad" | "mom") {
             return -1;
         }
         return bValue.localeCompare(aValue);
-    }
+    };
 }
 function sortByNumberAsc(accessor: "birth" | "death") {
     return function (a: Person, b: Person) {
@@ -130,7 +137,7 @@ function sortByNumberAsc(accessor: "birth" | "death") {
             return -1;
         }
         return aValue - bValue;
-    }
+    };
 }
 function sortByNumberDesc(accessor: "birth" | "death") {
     return function (a: Person, b: Person) {
@@ -143,7 +150,7 @@ function sortByNumberDesc(accessor: "birth" | "death") {
             return -1;
         }
         return bValue - aValue;
-    }
+    };
 }
 
 const sortingAlgorithmByType = {
@@ -230,7 +237,9 @@ export default function People() {
     function changeSortingCriterion(criterion: SortByType) {
         if (criterion === sortByCriterion) {
             console.log(sortByCriterion, sortDirection);
-            setSortDirection((current) => (current === Direction.ASC ? Direction.DESC : Direction.ASC));
+            setSortDirection((current) =>
+                current === Direction.ASC ? Direction.DESC : Direction.ASC,
+            );
             return;
         }
         setSortByCriterion(criterion);
@@ -272,7 +281,10 @@ export default function People() {
                                     }}
                                 >
                                     Nazwisko
-                                    {renderSortingIcon(SortBy.LAST_NAME)(sortByCriterion, sortDirection)}
+                                    {renderSortingIcon(SortBy.LAST_NAME)(
+                                        sortByCriterion,
+                                        sortDirection,
+                                    )}
                                 </button>
                             </TableHead>
                             <TableHead>
@@ -284,7 +296,10 @@ export default function People() {
                                     }}
                                 >
                                     Ojciec
-                                    {renderSortingIcon(SortBy.FATHER)(sortByCriterion, sortDirection)}
+                                    {renderSortingIcon(SortBy.FATHER)(
+                                        sortByCriterion,
+                                        sortDirection,
+                                    )}
                                 </button>
                             </TableHead>
                             <TableHead>
@@ -296,7 +311,10 @@ export default function People() {
                                     }}
                                 >
                                     Matka
-                                    {renderSortingIcon(SortBy.MOTHER)(sortByCriterion, sortDirection)}
+                                    {renderSortingIcon(SortBy.MOTHER)(
+                                        sortByCriterion,
+                                        sortDirection,
+                                    )}
                                 </button>
                             </TableHead>
                             <TableHead>
@@ -308,7 +326,10 @@ export default function People() {
                                     }}
                                 >
                                     Rok urodzenia
-                                    {renderSortingIcon(SortBy.BIRTH)(sortByCriterion, sortDirection)}
+                                    {renderSortingIcon(SortBy.BIRTH)(
+                                        sortByCriterion,
+                                        sortDirection,
+                                    )}
                                 </button>
                             </TableHead>
                             <TableHead>
@@ -320,7 +341,10 @@ export default function People() {
                                     }}
                                 >
                                     Rok śmierci
-                                    {renderSortingIcon(SortBy.DEATH)(sortByCriterion, sortDirection)}
+                                    {renderSortingIcon(SortBy.DEATH)(
+                                        sortByCriterion,
+                                        sortDirection,
+                                    )}
                                 </button>
                             </TableHead>
                         </TableRow>
@@ -338,8 +362,12 @@ export default function People() {
                                 <TableCell className="text-center">{person.lastName}</TableCell>
                                 <TableCell className="text-center">{person.dad}</TableCell>
                                 <TableCell className="text-center">{person.mom}</TableCell>
-                                <TableCell className="text-center">{person.birth?.date.year}</TableCell>
-                                <TableCell className="text-center">{person.death?.date.year}</TableCell>
+                                <TableCell className="text-center">
+                                    {person.birth?.date.year}
+                                </TableCell>
+                                <TableCell className="text-center">
+                                    {person.death?.date.year}
+                                </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>

@@ -19,7 +19,7 @@ export default function Home() {
                 chartType: topola.HourglassChart,
                 renderer: topola.SimpleRenderer,
                 indiCallback(data) {
-                    void navigate(`${RoutePaths.OSOBY}/${data.id}`)
+                    void navigate(`${RoutePaths.OSOBY}/${data.id}`);
                 },
             })
             .render();

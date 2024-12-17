@@ -10,11 +10,21 @@ export default function Person() {
         <Tabs defaultValue="basic" className="mt-1">
             <div className="overflow-x-auto m-1">
                 <TabsList className="flex justify-start p-0">
-                    <TabsTrigger className="grow" value="basic">Informacje</TabsTrigger>
-                    <TabsTrigger className="grow" value="tree">Drzewo</TabsTrigger>
-                    <TabsTrigger className="grow" value="photos">Zdjęcia</TabsTrigger>
-                    <TabsTrigger className="grow" value="documents">Dokumenty</TabsTrigger>
-                    <TabsTrigger className="grow" value="notes">Notatki</TabsTrigger>
+                    <TabsTrigger className="grow" value="basic">
+                        Informacje
+                    </TabsTrigger>
+                    <TabsTrigger className="grow" value="tree">
+                        Drzewo
+                    </TabsTrigger>
+                    <TabsTrigger className="grow" value="photos">
+                        Zdjęcia
+                    </TabsTrigger>
+                    <TabsTrigger className="grow" value="documents">
+                        Dokumenty
+                    </TabsTrigger>
+                    <TabsTrigger className="grow" value="notes">
+                        Notatki
+                    </TabsTrigger>
                 </TabsList>
             </div>
             <TabsContent value="basic">

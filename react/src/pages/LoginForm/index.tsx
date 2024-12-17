@@ -45,7 +45,9 @@ export function LoginForm({ authorize }: LoginFormProps) {
                 <div className="flex flex-col gap-2 items-center p-5 border border-border rounded-t-md">
                     <LockKeyhole size={60} />
                     <h1 className="text-xl font-bold tracking-tight mt-2">Wymagane hasło</h1>
-                    <p className="text-sm text-muted-foreground">Dostęp do zasobów jest chroniony hasłem</p>
+                    <p className="text-sm text-muted-foreground">
+                        Dostęp do zasobów jest chroniony hasłem
+                    </p>
                 </div>
                 <div className="bg-background-darker p-5 border border-border rounded-b-md border-t-0">
                     <Label className="text-xs text-muted-foreground" htmlFor={passwordId}>

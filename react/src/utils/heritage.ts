@@ -13,7 +13,9 @@ export function composeTree(heritage: Heritage, rootPersonId: string) {
 
     function findSpouses(personId: string) {
         const spouses: string[] = [];
-        const families = heritage.fams.filter((fam) => fam.husb === personId || fam.wife === personId);
+        const families = heritage.fams.filter(
+            (fam) => fam.husb === personId || fam.wife === personId,
+        );
         families.forEach((family) => {
             if (family.husb === personId) {
                 if (family.wife) {
@@ -71,15 +73,13 @@ export function decomposeTree(tree: TreeObject, heritage: Heritage) {
 
     nest(tree);
 
-    const splicedIndis = Array
-        .from(indis)
-        .map((indi) => {
-            const person = searchPerson(heritage, indi);
-            if (!person) {
-                throw new Error('expected to find person');
-            }
-            return person;
-        });
+    const splicedIndis = Array.from(indis).map((indi) => {
+        const person = searchPerson(heritage, indi);
+        if (!person) {
+            throw new Error("expected to find person");
+        }
+        return person;
+    });
     splicedIndis.forEach((indi) => {
         const nFams = heritage.fams
             .filter((fam) => fam.husb === indi.id || fam.wife === indi.id)
@@ -89,15 +89,13 @@ export function decomposeTree(tree: TreeObject, heritage: Heritage) {
             fams.add(f);
         });
     });
-    const splicedFams = Array
-        .from(fams)
-        .map((familyId) => {
-            const family = serachFamily(heritage, familyId);
-            if (!family) {
-                throw new Error('expected to find person');
-            }
-            return family;
-        });
+    const splicedFams = Array.from(fams).map((familyId) => {
+        const family = serachFamily(heritage, familyId);
+        if (!family) {
+            throw new Error("expected to find person");
+        }
+        return family;
+    });
     return {
         indis: splicedIndis,
         fams: splicedFams,
@@ -112,12 +110,12 @@ export function removeChild(tree: TreeObject, personId: string): TreeObject | nu
     for (let i = 0; i < tree.children.length; i++) {
         const child = tree.children[i];
         if (!child) {
-            throw new Error('child node is falsy');
+            throw new Error("child node is falsy");
         }
         if (child.indiId === personId) {
             const [removedChild] = tree.children.splice(i, 1);
             if (!removedChild) {
-                throw new Error('removed child node is falsy');
+                throw new Error("removed child node is falsy");
             }
             --i;
             return removedChild;
@@ -166,16 +164,16 @@ function familiesCleanup(newHeritage: Heritage) {
 const TreeType = {
     PARENT: "PARENT",
     PERSON: "PERSON",
-}
+};
 type TreeTypeValues = (typeof TreeType)[keyof typeof TreeType];
 type GetInitialPersonReturnType = {
     id: string;
     type: TreeTypeValues;
-}
+};
 function getInitialPerson(heritage: Heritage, personId: string): GetInitialPersonReturnType {
     const person = searchPerson(heritage, personId);
     if (!person) {
-        throw new Error('expected to find person');
+        throw new Error("expected to find person");
     }
     if (!person.famc) {
         return { id: person.id, type: TreeType.PERSON };
@@ -195,15 +193,20 @@ export function transformDatasetForPerson(heritage: Heritage, personId: string) 
     const rootPerson = getInitialPerson(heritage, personId);
     const tree = composeTree(heritageCopy, rootPerson.id);
     if (rootPerson.type === TreeType.PARENT) {
-        tree.children?.filter((s) => s.indiId !== personId).forEach((siblingId) => {
-            removeChild(tree, siblingId.indiId);
-            removeReferences(heritageCopy, siblingId.indiId);
-        });
+        tree.children
+            ?.filter((s) => s.indiId !== personId)
+            .forEach((siblingId) => {
+                removeChild(tree, siblingId.indiId);
+                removeReferences(heritageCopy, siblingId.indiId);
+            });
     }
     return decomposeTree(tree, heritageCopy);
 }
 
-export function transformHeritageDatasetForActiveBranches(heritage: Heritage, excludedBranches: string[]) {
+export function transformHeritageDatasetForActiveBranches(
+    heritage: Heritage,
+    excludedBranches: string[],
+) {
     const heritageCopy = structuredClone(heritage);
     const tree = composeTree(heritageCopy, "I1");
     excludedBranches.forEach((indiId) => {

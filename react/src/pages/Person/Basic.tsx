@@ -64,30 +64,58 @@ function createTable(person: BasicInfo) {
     const siblingsTable: PersonTableRow[] = [];
 
     if (person.firstName) {
-        basicInfoTable.push({ id: person.id, name: "Imię", value: person.firstName });
+        basicInfoTable.push({
+            id: person.id,
+            name: "Imię",
+            value: person.firstName,
+        });
     }
     if (person.lastName) {
-        basicInfoTable.push({ id: person.id, name: "Nazwisko", value: person.lastName });
+        basicInfoTable.push({
+            id: person.id,
+            name: "Nazwisko",
+            value: person.lastName,
+        });
     }
     if (person.birth?.date.year) {
-        basicInfoTable.push({ id: person.id, name: "Rok urodzenia", value: person.birth.date.year });
+        basicInfoTable.push({
+            id: person.id,
+            name: "Rok urodzenia",
+            value: person.birth.date.year,
+        });
     }
     if (person.death?.date.year) {
-        basicInfoTable.push({ id: person.id, name: "Rok śmierci", value: person.death.date.year });
+        basicInfoTable.push({
+            id: person.id,
+            name: "Rok śmierci",
+            value: person.death.date.year,
+        });
     }
     if (person.father) {
         if (!isPersonInvisible(person.father)) {
-            fatherTable.push({ id: person.father.id, name: "Imię i nazwisko", value: getFullName(person.father) });
+            fatherTable.push({
+                id: person.father.id,
+                name: "Imię i nazwisko",
+                value: getFullName(person.father),
+            });
         }
     }
     if (person.mother) {
         if (!isPersonInvisible(person.mother)) {
-            motherTable.push({ id: person.mother.id, name: "Imię i nazwisko", value: getFullName(person.mother) });
+            motherTable.push({
+                id: person.mother.id,
+                name: "Imię i nazwisko",
+                value: getFullName(person.mother),
+            });
         }
     }
     person.siblings.forEach((sibling) => {
         if (!isPersonInvisible(sibling)) {
-            siblingsTable.push({ id: sibling.id, name: "Imię i nazwisko", value: getFullName(sibling) });
+            siblingsTable.push({
+                id: sibling.id,
+                name: "Imię i nazwisko",
+                value: getFullName(sibling),
+            });
         }
     });
     return {

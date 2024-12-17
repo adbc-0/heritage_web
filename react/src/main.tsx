@@ -5,7 +5,7 @@ import "./index.css";
 import { App } from "./App.tsx";
 
 if (import.meta.env.DEV) {
-    console.warn('app running in dev mode');
+    console.warn("app running in dev mode");
 }
 const rootElement = document.getElementById("root");
 if (!rootElement) {
