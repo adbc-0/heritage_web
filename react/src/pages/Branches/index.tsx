@@ -87,7 +87,7 @@ export default function Branches() {
             }
             svgRef.replaceChildren();
         };
-    }, [branches, heritageDataset, navigate]);
+    }, [branches, heritageDataset]);
 
     function toggleBranch(branchName: string) {
         const copy = structuredClone(branches);

@@ -9,7 +9,7 @@ import tseslint from "typescript-eslint";
 export default tseslint.config(
     { ignores: ["dist"] },
     {
-        settings: { react: { version: "18.3" } },
+        settings: { react: { version: "19.0.0" } },
         extends: [
             js.configs.recommended,
             ...tseslint.configs.strictTypeChecked,
