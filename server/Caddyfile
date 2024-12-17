@@ -9,6 +9,17 @@ localhost {
 
     root * /srv
 
+    # ---------------------------------------- #
+
+    @static path /assets/*
+    @favicon path /icon.svg
+
+    header ?Cache-Control "no-store, no-cache, must-revalidate"
+    header @static Cache-Control "private, max-age=5184000, immutable"
+    header @favicon Cache-Control "private, max-age=5184000, must-revalidate"
+
+    # ---------------------------------------- #
+
     handle {
         try_files {path} /index.html
         file_server
