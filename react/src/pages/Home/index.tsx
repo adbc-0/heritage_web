@@ -1,8 +1,8 @@
 import { useEffect } from "react";
+import { useNavigate } from "react-router";
 import * as topola from "topola";
 
 import { useHeritage } from "@/contexts/heritageContext";
-import { useNavigate } from "react-router";
 import { RoutePaths } from "@/constants/RoutePaths";
 
 export default function Home() {
