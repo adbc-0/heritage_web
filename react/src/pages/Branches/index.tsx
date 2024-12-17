@@ -119,7 +119,7 @@ export default function Branches() {
     return (
         <div className="grid grid-rows-[auto_1fr]">
             <div className="flex flex-col items-center gap-2 justify-center mt-4">
-                <label htmlFor={branchMultiselectId}>Wyświetlane gałęzie</label>
+                <p id={branchMultiselectId}>Wyświetlane gałęzie</p>
                 <Popover
                     open={dropdownOpen}
                     onOpenChange={(newStatus) => {
@@ -128,17 +128,17 @@ export default function Branches() {
                 >
                     <PopoverTrigger>
                         <div
+                            aria-labelledby={branchMultiselectId}
                             className="flex justify-center items-center bg-background border rounded-md p-1 pr-2 mx-3"
                             role="combobox"
                             aria-controls={ariaDropdownControls}
-                            aria-labelledby={branchMultiselectId}
                             aria-expanded={false}
                             aria-haspopup="listbox"
                             tabIndex={-1}
                         >
                             <div className="flex justify-center flex-wrap gap-1">
                                 {renderedBranches.slice(0, SELECT_LIMIT).map((name) => (
-                                    <Badge key={name} className="h-8 gap-2">
+                                    <Badge key={name} className="h-8 gap-2" aria-label={name}>
                                         {name}
                                         <CircleX
                                             size={20}
