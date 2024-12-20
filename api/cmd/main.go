@@ -14,6 +14,10 @@ type env struct {
 	cors     string
 }
 
+type httpError struct {
+	Message string `json:"message"`
+}
+
 func setEnv(key string, defaultValue string) string {
 	value, ok := os.LookupEnv(key)
 	if !ok {
@@ -33,7 +37,6 @@ func healthCheck(w http.ResponseWriter, r *http.Request) {
 }
 
 func getHeritage(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
 	file, err := os.ReadFile("assets/heritage.json")
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
@@ -43,6 +46,7 @@ func getHeritage(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(file)
 }
@@ -50,7 +54,10 @@ func getHeritage(w http.ResponseWriter, r *http.Request) {
 func authUser(w http.ResponseWriter, r *http.Request) {
 	_, password, _ := r.BasicAuth()
 	if password != newEnv.password {
-		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		w.WriteHeader(http.StatusUnauthorized)
+		json.NewEncoder(w).Encode(httpError{
+			Message: "Incorrect password",
+		})
 		return
 	}
 	cookie := http.Cookie{
@@ -63,7 +70,7 @@ func authUser(w http.ResponseWriter, r *http.Request) {
 		SameSite: http.SameSiteLaxMode,
 	}
 	http.SetCookie(w, &cookie)
-	w.Write([]byte("cookie set!"))
+	w.WriteHeader(http.StatusNoContent)
 }
 
 func acceptPreflight(w http.ResponseWriter, r *http.Request) {

@@ -67,8 +67,3 @@ Caddy on server for easy https
 
 ### Maintenance
 - Updating Caddy image version
-
-Material Colors
-#1D0E4B - purple
-#4EFAE3 or #18E5A1 or #0E8B75 - emerald
-#BEDDFB - light blue
