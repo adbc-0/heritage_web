@@ -1,20 +1,28 @@
 import { createContext, useContext } from "react";
 
-import { AuthStatus, AuthStatusValues } from "@/constants/AuthStatus";
+import { AuthErrorTypeValues, AuthStatus, AuthStatusValues } from "@/constants/auth";
 
-type AuthContextT = {
+export type AuthContextType = {
+    authInProgress: boolean;
+    authError: AuthErrorTypeValues | null;
     authStatus: AuthStatusValues;
     authorize: () => void;
+    setAuthCookieAndAuthorize: (basicAuthString: string) => Promise<Response>;
     unauthorize: () => void;
 };
 
-export const AuthContext = createContext<AuthContextT>({
+export const AuthContext = createContext<AuthContextType>({
     authStatus: AuthStatus.UNKNOWN,
+    authInProgress: false,
+    authError: null,
+    setAuthCookieAndAuthorize: () => {
+        throw new Error("context used outside provider");
+    },
     authorize: () => {
-        throw new Error("error: Context used outside provider");
+        throw new Error("context used outside provider");
     },
     unauthorize: () => {
-        throw new Error("error: Context used outside provider");
+        throw new Error("context used outside provider");
     },
 });
 

@@ -4,7 +4,7 @@ import { RouterProvider } from "react-router/dom";
 
 import { HeritageProvider } from "./providers/HeritageProvider";
 import { Layout } from "./components/views/Layout";
-import { RoutePaths } from "./constants/RoutePaths";
+import { RouterPath } from "./constants/routePaths";
 import { Contact } from "./pages/Contact";
 import { Rodo } from "./pages/Rodo";
 import { SupportMe } from "./pages/SupportMe";
@@ -13,6 +13,8 @@ import { NoMatch } from "./pages/NoMatch";
 import { AuthProvider } from "./providers/AuthProvider";
 import { LoadingPage } from "./pages/LoadingPage";
 import { GlobalError } from "./pages/GlobalError/GlobalError";
+import { LoginPage } from "./pages/LoginPage";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 
 const LazyHome = lazy(() => import("./pages/Home"));
 const LazyPeople = lazy(() => import("./pages/People"));
@@ -21,7 +23,7 @@ const LazyPerson = lazy(() => import("./pages/Person"));
 
 const router = createBrowserRouter([
     {
-        path: RoutePaths.ROOT,
+        path: RouterPath.ROOT,
         element: <Layout />,
         errorElement: <GlobalError />,
         children: [
@@ -29,54 +31,82 @@ const router = createBrowserRouter([
                 index: true,
                 element: (
                     <Suspense fallback={<LoadingPage />}>
-                        <LazyHome />
+                        <ProtectedRoute>
+                            <LazyHome />
+                        </ProtectedRoute>
                     </Suspense>
                 ),
             },
             {
-                path: RoutePaths.OSOBY,
+                path: RouterPath.OSOBY,
                 element: (
                     <Suspense fallback={<LoadingPage />}>
-                        <LazyPeople />
+                        <ProtectedRoute>
+                            <LazyPeople />
+                        </ProtectedRoute>
                     </Suspense>
                 ),
             },
             {
-                path: `${RoutePaths.OSOBY}/:id`,
+                path: `${RouterPath.OSOBY}/:id`,
                 element: (
                     <Suspense fallback={<LoadingPage />}>
-                        <LazyPerson />
+                        <ProtectedRoute>
+                            <LazyPerson />
+                        </ProtectedRoute>
                     </Suspense>
                 ),
             },
             {
-                path: RoutePaths.GAŁĘZIE,
+                path: RouterPath.GAŁĘZIE,
                 element: (
                     <Suspense fallback={<LoadingPage />}>
-                        <LazyBranch />
+                        <ProtectedRoute>
+                            <LazyBranch />
+                        </ProtectedRoute>
                     </Suspense>
                 ),
             },
             {
-                path: RoutePaths.KONTAKT,
-                element: <Contact />,
+                path: RouterPath.KONTAKT,
+                element: (
+                    <ProtectedRoute>
+                        <Contact />
+                    </ProtectedRoute>
+                ),
             },
             {
-                path: RoutePaths.RODO,
-                element: <Rodo />,
+                path: RouterPath.RODO,
+                element: (
+                    <ProtectedRoute>
+                        <Rodo />
+                    </ProtectedRoute>
+                ),
             },
             {
-                path: RoutePaths.WSPARCIE,
-                element: <SupportMe />,
+                path: RouterPath.WSPARCIE,
+                element: (
+                    <ProtectedRoute>
+                        <SupportMe />
+                    </ProtectedRoute>
+                ),
             },
             {
-                path: RoutePaths.O_MNIE,
-                element: <AboutMe />,
+                path: RouterPath.O_MNIE,
+                element: (
+                    <ProtectedRoute>
+                        <AboutMe />
+                    </ProtectedRoute>
+                ),
             },
         ],
     },
     {
-        path: RoutePaths.MATCH_ALL,
+        path: RouterPath.LOGOWANIE,
+        element: <LoginPage />,
+    },
+    {
+        path: RouterPath.MATCH_ALL,
         element: <NoMatch />,
     },
 ]);

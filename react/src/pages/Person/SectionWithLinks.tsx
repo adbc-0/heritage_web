@@ -2,7 +2,7 @@ import { Fragment } from "react/jsx-runtime";
 
 import { PersonTableRow } from "@/typescript/person";
 import { Link } from "react-router";
-import { RoutePaths } from "@/constants/RoutePaths";
+import { RouterPath } from "@/constants/routePaths";
 
 type SectionProps = {
     title: string;
@@ -20,7 +20,7 @@ export function SectionWithLinks({ rows, title }: SectionProps) {
                 {rows.map(({ id, name, value }) => (
                     <Fragment key={`${id}-${name}-${String(value)}`}>
                         <p>{name}</p>
-                        <Link to={`${RoutePaths.OSOBY}/${id}`}>{value}</Link>
+                        <Link to={`${RouterPath.OSOBY}/${id}`}>{value}</Link>
                     </Fragment>
                 ))}
             </div>

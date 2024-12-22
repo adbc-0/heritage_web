@@ -1,73 +1,63 @@
 import { LockKeyhole } from "lucide-react";
-import { FormEvent, useId, useState } from "react";
+import { FormEvent, useEffect, useId } from "react";
+import { useNavigate } from "react-router";
 
-import { ENV } from "@/constants/Env";
+import { http } from "@/constants/httpStatusCodes";
+import { RouterPath } from "@/constants/routePaths";
+import { useHeritage } from "@/contexts/heritageContext";
 import { Button } from "@/components/ui/button";
+import { AuthErrorType, AuthStatus } from "@/constants/auth";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ApiError } from "@/typescript/api";
+import { useAuth } from "@/contexts/authContext";
 import { GlobalError } from "../GlobalError/GlobalError";
 
 type LoginFormInputs = {
     password: string;
 };
 
-type LoginFormProps = {
-    authorize: () => void;
-};
-
-const AuthorizationRoute = `${ENV.API_URL}/auth`;
-
-const AuthErrorType = {
-    WRONG_PASSWORD: "WRONG_PASSWORD",
-    UNKNOWN: "UNKNOWN",
-} as const;
-type AuthErrorTypeValues = (typeof AuthErrorType)[keyof typeof AuthErrorType];
-
-const incorrectPasswordErrorMessage = "Incorrect password";
-
-export function LoginForm({ authorize }: LoginFormProps) {
+export function LoginPage() {
+    const navigate = useNavigate();
     const passwordId = useId();
-    const [isAuthorizing, setIsAuthorizing] = useState(false);
-    const [authError, setAuthError] = useState<AuthErrorTypeValues | null>(null);
+
+    const { fetchHeritage, heritageError } = useHeritage();
+    const { authError, authInProgress, authStatus, setAuthCookieAndAuthorize } = useAuth();
+
+    useEffect(() => {
+        if (authStatus !== AuthStatus.AUTHORIZED) {
+            return;
+        }
+        void navigate(RouterPath.ROOT);
+    }, [authStatus, navigate]);
 
     async function login(e: FormEvent) {
         e.preventDefault();
-
-        setIsAuthorizing(true);
 
         const form = e.target as HTMLFormElement;
         const formData = new FormData(form);
         const formJson = Object.fromEntries(formData.entries()) as LoginFormInputs;
         const basicAuthString = btoa(`user:${formJson.password}`);
-        const response = await fetch(AuthorizationRoute, {
-            method: "POST",
-            headers: {
-                Authorization: `Basic ${basicAuthString}`,
-            },
-            credentials: "include",
-        });
-        if (response.status === 401) {
-            setIsAuthorizing(false);
-            const error = (await response.json()) as ApiError;
-            if (error.message === incorrectPasswordErrorMessage) {
-                setAuthError(AuthErrorType.WRONG_PASSWORD);
-                return;
-            }
-            setAuthError(AuthErrorType.UNKNOWN);
+
+        const authResponse = await setAuthCookieAndAuthorize(basicAuthString);
+        if (authResponse.status !== http.NO_CONTENT_STATUS_CODE) {
             return;
         }
+
+        const response = await fetchHeritage();
         if (!response.ok) {
-            setIsAuthorizing(false);
-            setAuthError(AuthErrorType.UNKNOWN);
             return;
         }
-        setIsAuthorizing(false);
-        setAuthError(null);
-        authorize();
+
+        void navigate(RouterPath.ROOT);
     }
 
+    if (authStatus === AuthStatus.AUTHORIZED) {
+        return null;
+    }
     if (authError === AuthErrorType.UNKNOWN) {
+        return <GlobalError />;
+    }
+    if (heritageError) {
         return <GlobalError />;
     }
 
@@ -98,7 +88,7 @@ export function LoginForm({ authorize }: LoginFormProps) {
                         name="password"
                         autoComplete="current-password"
                     />
-                    <Button className="w-full mt-3" type="submit" disabled={isAuthorizing}>
+                    <Button className="w-full mt-3" type="submit" disabled={authInProgress}>
                         Wyślij
                     </Button>
                 </div>

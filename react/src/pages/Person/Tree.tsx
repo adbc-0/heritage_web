@@ -2,14 +2,14 @@ import { ComponentRef, useEffect, useRef } from "react";
 import { Params, useNavigate, useParams } from "react-router";
 import * as topola from "topola";
 
-import { RoutePaths } from "@/constants/RoutePaths";
+import { RouterPath } from "@/constants/routePaths";
 import { useHeritage } from "@/contexts/heritageContext";
 import { transformDatasetForPerson } from "@/utils/heritage";
 
 // what will happen with ozimki root. Will dummy node be rendered?
 export function Tree() {
     const { id } = useParams<Params>();
-    const heritage = useHeritage();
+    const { heritage } = useHeritage();
     const navigate = useNavigate();
     const svgElement = useRef<ComponentRef<"svg">>(null);
     useEffect(() => {
@@ -27,7 +27,7 @@ export function Tree() {
                 chartType: topola.HourglassChart,
                 renderer: topola.SimpleRenderer,
                 indiCallback(data) {
-                    void navigate(`${RoutePaths.OSOBY}/${data.id}`);
+                    void navigate(`${RouterPath.OSOBY}/${data.id}`);
                 },
             })
             .render();

@@ -1,6 +1,6 @@
 import { NavLink, NavLinkRenderProps } from "react-router";
 
-import { RoutePaths } from "@/constants/RoutePaths";
+import { RouterPath } from "@/constants/routePaths";
 
 const navlinkStyle = ({ isActive }: NavLinkRenderProps) =>
     isActive
@@ -10,16 +10,16 @@ const navlinkStyle = ({ isActive }: NavLinkRenderProps) =>
 export function Footer() {
     return (
         <div className="bg-background border-t border-border flex justify-center gap-3 py-2 text-sm">
-            <NavLink to={RoutePaths.KONTAKT} className={navlinkStyle}>
+            <NavLink to={RouterPath.KONTAKT} className={navlinkStyle}>
                 Kontakt
             </NavLink>
-            <NavLink to={RoutePaths.RODO} className={navlinkStyle}>
+            <NavLink to={RouterPath.RODO} className={navlinkStyle}>
                 Rodo
             </NavLink>
-            <NavLink to={RoutePaths.WSPARCIE} className={navlinkStyle}>
+            <NavLink to={RouterPath.WSPARCIE} className={navlinkStyle}>
                 Wsparcie
             </NavLink>
-            <NavLink to={RoutePaths.O_MNIE} className={navlinkStyle}>
+            <NavLink to={RouterPath.O_MNIE} className={navlinkStyle}>
                 O mnie
             </NavLink>
         </div>

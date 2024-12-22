@@ -1,62 +1,73 @@
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useCallback, useEffect, useMemo, useState } from "react";
 
-import { ENV } from "@/constants/Env";
+import { ENV } from "@/constants/env";
+import { http } from "@/constants/httpStatusCodes";
+import { LoadingState, LoadingStateValues } from "@/constants/heritage";
 import { useAuth } from "@/contexts/authContext";
-import { HeritageContext } from "@/contexts/heritageContext";
+import { HeritageContext, HeritageContextType } from "@/contexts/heritageContext";
+import { LoadingPage } from "@/pages/LoadingPage";
 import { GlobalError } from "@/pages/GlobalError/GlobalError";
 import { Heritage } from "@/typescript/heritage";
-import { LoadingPage } from "@/pages/LoadingPage";
 
 type ReactChildren = {
     children: ReactElement | ReactElement[];
 };
 
-const LoadingState = {
-    IDLE: "IDLE",
-    DONE: "DONE",
-    LOADING: "LOADING",
-} as const;
-type LoadingStateValues = (typeof LoadingState)[keyof typeof LoadingState];
-
-const HeritageDataRoute = `${ENV.API_URL}/heritage`;
-const ForbiddenStatusCode = 401;
+const API_HERITAGE = `${ENV.API_URL}/heritage`;
 
 export function HeritageProvider({ children }: ReactChildren) {
     const { authorize, unauthorize } = useAuth();
     const [heritage, setHeritage] = useState<Heritage | null>(null);
-    const [unexpectedFetchingError, setUnexpectedFetchingError] = useState(false);
-    const [loadingState, setLoadingState] = useState<LoadingStateValues>(LoadingState.IDLE);
-    useEffect(() => {
-        async function getHeritageInfo() {
-            setLoadingState(LoadingState.LOADING);
-            const networkResponse = await fetch(HeritageDataRoute, {
-                credentials: "include",
-            });
-            if (networkResponse.ok) {
-                const rawHeritageJson = (await networkResponse.json()) as Heritage;
-                setHeritage(rawHeritageJson);
-                setLoadingState(LoadingState.DONE);
-                authorize();
-                return;
-            }
-            if (networkResponse.status === ForbiddenStatusCode) {
-                setLoadingState(LoadingState.DONE);
-                unauthorize();
-                return;
-            }
-            setLoadingState(LoadingState.DONE);
-            setUnexpectedFetchingError(true);
+    const [heritageError, setHeritageError] = useState(false);
+    const [heritageStatus, setHeritageStatus] = useState<LoadingStateValues>(LoadingState.IDLE);
+
+    const fetchHeritage = useCallback(async () => {
+        setHeritageStatus(LoadingState.LOADING);
+        const networkResponse = await fetch(API_HERITAGE, {
+            credentials: "include",
+        });
+        if (networkResponse.status === http.OK_STATUS_CODE) {
+            const rawHeritageJson = (await networkResponse.json()) as Heritage;
+            setHeritage(rawHeritageJson);
+            setHeritageStatus(LoadingState.DONE);
+            return networkResponse;
         }
-        void getHeritageInfo();
-    }, [authorize, unauthorize]);
-    if (unexpectedFetchingError) {
+        if (networkResponse.status === http.FORBIDDEN_STATUS_CODE) {
+            setHeritageStatus(LoadingState.DONE);
+            return networkResponse;
+        }
+        setHeritageStatus(LoadingState.DONE);
+        setHeritageError(true);
+        return networkResponse;
+    }, []);
+
+    useEffect(() => {
+        async function initHeritage() {
+            const networkResponse = await fetchHeritage();
+            if (networkResponse.status === http.OK_STATUS_CODE) {
+                authorize();
+            }
+            if (networkResponse.status === http.FORBIDDEN_STATUS_CODE) {
+                unauthorize();
+            }
+        }
+        void initHeritage();
+    }, [authorize, fetchHeritage, unauthorize]);
+
+    const heritageContextValue: HeritageContextType = useMemo(
+        () => ({ heritage, heritageError, heritageStatus, fetchHeritage }),
+        [heritage, heritageError, heritageStatus, fetchHeritage],
+    );
+
+    if (heritageError) {
         return <GlobalError />;
     }
-    if (loadingState === LoadingState.IDLE) {
+    if (heritageStatus === LoadingState.IDLE) {
         return <LoadingPage />;
     }
-    if (loadingState === LoadingState.LOADING) {
+    if (heritageStatus === LoadingState.LOADING) {
         return <LoadingPage />;
     }
-    return <HeritageContext value={heritage}>{children}</HeritageContext>;
+
+    return <HeritageContext value={heritageContextValue}>{children}</HeritageContext>;
 }

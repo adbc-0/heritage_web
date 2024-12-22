@@ -3,27 +3,29 @@ import { useNavigate } from "react-router";
 import * as topola from "topola";
 
 import { useHeritage } from "@/contexts/heritageContext";
-import { RoutePaths } from "@/constants/RoutePaths";
+import { RouterPath } from "@/constants/routePaths";
 
 export default function Home() {
-    const heritageDataset = useHeritage();
+    const { heritage } = useHeritage();
     const navigate = useNavigate();
+
     useEffect(() => {
-        if (!heritageDataset) {
+        if (!heritage) {
             return;
         }
         topola
             .createChart({
-                json: heritageDataset,
+                json: heritage,
                 svgSelector: "#relative",
                 chartType: topola.HourglassChart,
                 renderer: topola.SimpleRenderer,
                 indiCallback(data) {
-                    void navigate(`${RoutePaths.OSOBY}/${data.id}`);
+                    void navigate(`${RouterPath.OSOBY}/${data.id}`);
                 },
             })
             .render();
-    }, [heritageDataset, navigate]);
+    }, [heritage, navigate]);
+
     return (
         <div className="bg-background m-3 border border-border">
             <svg id="relative" />

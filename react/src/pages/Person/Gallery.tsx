@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Params, useParams } from "react-router";
 
-import { ENV } from "@/constants/Env";
+import { ENV } from "@/constants/env";
 import { useHeritage } from "@/contexts/heritageContext";
 
 type UserData = {
@@ -12,7 +12,7 @@ const assetsRoute = (personId: string) => `${ENV.API_URL}/people/${personId}`;
 
 export function Gallery() {
     const { id } = useParams<Params>();
-    const heritage = useHeritage();
+    const { heritage } = useHeritage();
 
     const [links, setLinks] = useState<string[]>([]);
 

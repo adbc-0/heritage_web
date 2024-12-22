@@ -128,7 +128,7 @@ function createTable(person: BasicInfo) {
 
 export function Basic() {
     const { id } = useParams<Params>();
-    const heritage = useHeritage();
+    const { heritage } = useHeritage();
 
     if (!id) {
         throw new Error("expected person id");

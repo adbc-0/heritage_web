@@ -5,7 +5,7 @@ import * as topola from "topola";
 
 import { useHeritage } from "@/contexts/heritageContext";
 import { transformHeritageDatasetForActiveBranches } from "@/utils/heritage";
-import { RoutePaths } from "@/constants/RoutePaths";
+import { RouterPath } from "@/constants/routePaths";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -52,7 +52,7 @@ const defaultBranches = [
 
 export default function Branches() {
     const navigate = useNavigate();
-    const heritageDataset = useHeritage();
+    const { heritage } = useHeritage();
     const branchMultiselectId = useId();
     const ariaDropdownControls = useId();
     const svgElement = useRef<ComponentRef<"svg">>(null);
@@ -63,7 +63,7 @@ export default function Branches() {
         .map((branch) => branch.name);
 
     useEffect(() => {
-        if (!heritageDataset) {
+        if (!heritage) {
             return;
         }
         const svgRef = svgElement.current;
@@ -71,7 +71,7 @@ export default function Branches() {
             .filter((branch) => !branch.active)
             .map((branch) => branch.rootIndiId);
         const heritageDatasetWithFilteredBranches = transformHeritageDatasetForActiveBranches(
-            heritageDataset,
+            heritage,
             inactiveBranches,
         );
         topola
@@ -81,7 +81,7 @@ export default function Branches() {
                 chartType: topola.HourglassChart,
                 renderer: topola.SimpleRenderer,
                 indiCallback(data) {
-                    void navigate(`${RoutePaths.OSOBY}/${data.id}`);
+                    void navigate(`${RouterPath.OSOBY}/${data.id}`);
                 },
             })
             .render();
@@ -91,7 +91,7 @@ export default function Branches() {
             }
             svgRef.replaceChildren();
         };
-    }, [branches, heritageDataset, navigate]);
+    }, [branches, heritage, navigate]);
 
     function toggleBranch(branchName: string) {
         const copy = structuredClone(branches);

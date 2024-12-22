@@ -1,4 +1,4 @@
-export const RoutePaths = {
+export const RouterPath = {
     ROOT: "/",
     OSOBY: "/osoby",
     GAŁĘZIE: "/galezie",
@@ -6,5 +6,6 @@ export const RoutePaths = {
     RODO: "/rodo",
     WSPARCIE: "/wsparcie",
     O_MNIE: "/o-mnie",
+    LOGOWANIE: "/logowanie",
     MATCH_ALL: "*",
 } as const;

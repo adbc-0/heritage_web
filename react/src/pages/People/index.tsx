@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { ArrowDown01, ArrowDown10, ArrowDownAZ, ArrowDownZa } from "lucide-react";
 
 import { isPersonInvisible, searchPerson, serachFamily } from "@/utils/heritage";
-import { RoutePaths } from "@/constants/RoutePaths";
+import { RouterPath } from "@/constants/routePaths";
 import { useHeritage } from "@/contexts/heritageContext";
 import {
     Table,
@@ -221,7 +221,7 @@ function renderSortingIcon(selectedCriterion: SortByType) {
 }
 
 export default function People() {
-    const heritage = useHeritage();
+    const { heritage } = useHeritage();
     const navigate = useNavigate();
 
     const [filterPeopleQuery, setFilterPeopleQuery] = useState("");
@@ -355,7 +355,7 @@ export default function People() {
                                 className="cursor-pointer"
                                 key={person.id}
                                 onClick={() => {
-                                    void navigate(`${RoutePaths.OSOBY}/${person.id}`);
+                                    void navigate(`${RouterPath.OSOBY}/${person.id}`);
                                 }}
                             >
                                 <TableCell className="text-center">{person.firstName}</TableCell>

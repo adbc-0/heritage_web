@@ -3,7 +3,7 @@ import { NavLink, NavLinkRenderProps } from "react-router";
 
 import LOGO from "@/assets/logo.svg";
 
-import { RoutePaths } from "@/constants/RoutePaths";
+import { RouterPath } from "@/constants/routePaths";
 
 const navlinkStyle = ({ isActive }: NavLinkRenderProps) =>
     isActive
@@ -14,14 +14,14 @@ export function DesktopNavbar() {
     preload(LOGO, { as: "image", type: "image/svg+xml" });
     return (
         <nav className="bg-background grid grid-cols-[auto_1fr] px-8 py-3 items-center border-b border-border gap-2">
-            <NavLink to={RoutePaths.ROOT} className="flex items-center gap-2 text-xl font-semibold">
+            <NavLink to={RouterPath.ROOT} className="flex items-center gap-2 text-xl font-semibold">
                 <img src={LOGO} width={170} height={32} className="cursor-pointer" alt="logo" />
             </NavLink>
             <div className="justify-self-end flex gap-1 text-sm font-medium">
-                <NavLink to={RoutePaths.OSOBY} className={navlinkStyle}>
+                <NavLink to={RouterPath.OSOBY} className={navlinkStyle}>
                     Osoby
                 </NavLink>
-                <NavLink to={RoutePaths.GAŁĘZIE} className={navlinkStyle}>
+                <NavLink to={RouterPath.GAŁĘZIE} className={navlinkStyle}>
                     Gałęzie
                 </NavLink>
             </div>
