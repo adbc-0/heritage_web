@@ -161,7 +161,7 @@ export default function Branches() {
                         <div className="w-full">
                             {branches.map(({ name: branchName, active }) => (
                                 <div key={branchName} className="hover:bg-accent">
-                                    <div className="flex items-center gap-2 mx-2">
+                                    <div className="flex items-center gap-2 p-1 mx-2">
                                         <Checkbox
                                             checked={active}
                                             onClick={() => {
