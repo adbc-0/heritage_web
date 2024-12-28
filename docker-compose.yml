@@ -4,14 +4,17 @@ services:
         build:
             context: ./api
             dockerfile: ./docker/Dockerfile
+        depends_on:
+            - postgres
         environment:
             MODE: "PROD"
             PASSWORD: "DEV"
             CORS: "https://localhost"
+            DATABASE_URL: "postgres://postgres:password@postgres:5432/heritage"
         ports:
-          - 8080:8080
+            - 8080:8080
         networks:
-          - backend
+            - backend
 
     web_server:
         container_name: heritage_server
@@ -32,9 +35,28 @@ services:
         networks:
             - backend
 
+    postgres:
+        container_name: heritage_postgres
+        image: postgres:17.2
+        environment:
+            POSTGRES_DB: "heritage"
+            POSTGRES_PASSWORD: "password"
+            POSTGRES_USER: "postgres"
+        ports:
+            - 5432:5432
+        volumes:
+            - pg_data:/var/lib/postgresql/data
+            - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+        healthcheck:
+            test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+            interval: 3s
+        networks:
+            - backend
+
 volumes:
     caddy_data:
     caddy_config:
+    pg_data:
 
 networks:
     backend:

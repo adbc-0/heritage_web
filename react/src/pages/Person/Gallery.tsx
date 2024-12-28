@@ -8,7 +8,7 @@ type UserData = {
     files: string[];
 };
 
-const assetsRoute = (personId: string) => `${ENV.API_URL}/people/${personId}`;
+const galleryRoute = (personId: string) => `${ENV.API_URL}/people/${personId}/gallery`;
 
 export function Gallery() {
     const { id } = useParams<Params>();
@@ -21,7 +21,7 @@ export function Gallery() {
             if (!id) {
                 return;
             }
-            const request = await fetch(assetsRoute(id));
+            const request = await fetch(galleryRoute(id));
             if (!request.ok) {
                 return;
             }
@@ -33,13 +33,13 @@ export function Gallery() {
         }
         void fetchFileNames();
     }, [id]);
+
     if (!id) {
         throw new Error("expected person id");
     }
     if (!heritage) {
         return null;
     }
-
     if (!links.length) {
         return (
             <div>
@@ -47,7 +47,6 @@ export function Gallery() {
             </div>
         );
     }
-
     return (
         <div>
             <div className="grid grid-cols-5 gap-3 mx-4 mb-4">

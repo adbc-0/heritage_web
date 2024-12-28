@@ -1,11 +1,14 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
 	"os"
+
+	"github.com/jackc/pgx/v5"
 )
 
 type env struct {
@@ -16,6 +19,11 @@ type env struct {
 
 type httpError struct {
 	Message string `json:"message"`
+}
+
+type note struct {
+	Id   string `json:"id"`
+	Note string `json:"note"`
 }
 
 func setEnv(key string, defaultValue string) string {
@@ -113,7 +121,7 @@ func ensureBasicAuth(next http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
-func getPerson(w http.ResponseWriter, r *http.Request) {
+func getPersonGallery(w http.ResponseWriter, r *http.Request) {
 	userId := r.PathValue("id")
 	if userId == "" {
 		http.Error(w, "Path parameter is required", http.StatusBadRequest)
@@ -146,13 +154,55 @@ func getPerson(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func getPersonNotes(conn *pgx.Conn) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		userId := r.PathValue("id")
+		if userId == "" {
+			http.Error(w, "Path parameter is required", http.StatusBadRequest)
+			return
+		}
+
+		rows, err := conn.Query(context.Background(), "SELECT id, note FROM notes WHERE person_indi_id=$1", userId)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Query failed: %v\n", err)
+			os.Exit(1)
+		}
+		defer rows.Close()
+
+		notes, err := pgx.CollectRows(rows, pgx.RowToStructByName[note])
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Failed collecting rows: %v\n", err)
+			os.Exit(1)
+		}
+
+		w.WriteHeader(http.StatusOK)
+		w.Header().Set("Content-Type", "application/json")
+		err = json.NewEncoder(w).Encode(map[string]interface{}{
+			"notes": notes,
+		})
+		if err != nil {
+			http.Error(w, fmt.Sprintf("Error building the response, %v", err), http.StatusInternalServerError)
+			return
+		}
+	}
+}
+
 func main() {
+	// consider using pools -> pgxpool.New -> https://ectobit.com/blog/pgx-v5-3/
+	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
+		os.Exit(1)
+	}
+	defer conn.Close(context.Background())
+
 	fs := http.FileServer(http.Dir("assets/people"))
 	http.Handle("/assets/people/", ensureBasicAuth(cors(handlerToHandlerFunc(http.StripPrefix("/assets/people/", fs)))))
 
 	http.HandleFunc("GET /api/health", cors(healthCheck))
 	http.HandleFunc("GET /api/heritage", cors(ensureBasicAuth((getHeritage))))
-	http.HandleFunc("GET /api/people/{id}", cors(getPerson))
+	http.HandleFunc("GET /api/people/{id}/gallery", cors(getPersonGallery))
+	http.HandleFunc("GET /api/people/{id}/notes", cors(getPersonNotes(conn)))
 
 	http.HandleFunc("OPTIONS /api/auth", cors(acceptPreflight))
 	http.HandleFunc("POST /api/auth", cors(authUser))
@@ -161,7 +211,7 @@ func main() {
 		fmt.Println("App running in dev mode on port :8080")
 	}
 
-	err := http.ListenAndServe(":8080", nil)
+	err = http.ListenAndServe(":8080", nil)
 
 	if err != nil {
 		if errors.Is(err, http.ErrServerClosed) {
