@@ -9,7 +9,7 @@ services:
         environment:
             MODE: "PROD"
             PASSWORD: "DEV"
-            CORS: "https://localhost"
+            CORS: "http://localhost:5173"
             DATABASE_URL: "postgres://postgres:password@postgres:5432/heritage"
         ports:
             - 8080:8080

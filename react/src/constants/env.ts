@@ -5,5 +5,5 @@ if (import.meta.env.PROD && !API_URL) {
 }
 
 export const ENV = {
-    API_URL: API_URL ?? "http://localhost:8080/api",
+    API_URL: API_URL ?? "https://localhost/api",
 };

@@ -1,5 +1,13 @@
 # Heritage single page application deployable on VPS
 
+## Heritage Data
+
+User heritage data project to generate new json file and postgres init script.
+
+## Local Development
+
+Project and it's env variables are setup to allow easy frontend local development while api runs in docker.
+
 ## Deployment
 
 ### VPS
