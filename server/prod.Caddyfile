@@ -1,6 +1,4 @@
-localhost {
-    tls internal
-
+naszrod.pl {
     handle /api/* {
         reverse_proxy heritage_api:8080
     }

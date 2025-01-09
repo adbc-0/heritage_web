@@ -59,6 +59,29 @@ func getHeritage(w http.ResponseWriter, r *http.Request) {
 	w.Write(file)
 }
 
+func createAuthCookie() http.Cookie {
+	if newEnv.mode == "DEV" {
+		return http.Cookie{
+			Name:     "auth",
+			Value:    newEnv.password,
+			Path:     "/",
+			MaxAge:   3600,
+			Secure:   true,
+			SameSite: http.SameSiteNoneMode,
+		}
+	} else {
+		return http.Cookie{
+			Name:     "auth",
+			Value:    newEnv.password,
+			Path:     "/",
+			MaxAge:   3600,
+			HttpOnly: true,
+			Secure:   true,
+			SameSite: http.SameSiteNoneMode,
+		}
+	}
+}
+
 func authUser(w http.ResponseWriter, r *http.Request) {
 	_, password, _ := r.BasicAuth()
 	if password != newEnv.password {
@@ -68,15 +91,7 @@ func authUser(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
-	cookie := http.Cookie{
-		Name:     "auth",
-		Value:    password,
-		Path:     "/",
-		MaxAge:   3600,
-		HttpOnly: true,
-		Secure:   true,
-		SameSite: http.SameSiteLaxMode,
-	}
+	cookie := createAuthCookie()
 	http.SetCookie(w, &cookie)
 	w.WriteHeader(http.StatusNoContent)
 }

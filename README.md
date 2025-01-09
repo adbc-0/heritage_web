@@ -1,12 +1,31 @@
 # Heritage single page application deployable on VPS
 
-## Heritage Data
-
-User heritage data project to generate new json file and postgres init script.
-
 ## Local Development
 
-Project and it's env variables are setup to allow easy frontend local development while api runs in docker.
+### Requirements
+
+- Docker
+- Adding local domain to /etc/host. Script append_host.sh can be used here.
+
+### Run Locally
+
+Build project
+
+```
+docker compose -f compose-dev.yml build
+```
+
+Run project
+
+```
+docker compose -f compose-dev.yml up -d
+```
+
+### Run Dev
+
+## Data
+
+Use heritage data project to generate new json file and postgres init script.
 
 ## Deployment
 
@@ -32,49 +51,26 @@ Docker cleanup
 docker system prune -a
 ```
 
-## Backend
-
-### Docker
-
-Build docker image:
-
-```
-docker build -t heritage-api .
-```
-
-Run container in detached mode:
-
-```
-docker run -d -p 8080:8080 --name heritage_api heritage-api
-```
-
-### Postgres
+## Postgres
 
 Postgres is used as a database for storing user notes
 
 ### Maintenance
 
+- Updating Postgres image version
+
+## Rest Api
+
+### Maintenance
+
 - Updating Golang image version
 
-## Frontend
+## Web App
 
 ### SVG
 
-Svg generated using inkscape. Font used: Monsterrat
-
-### Docker
-
-Build docker image
-
-```
-docker build -f docker/react.Dockerfile -t heritage-react .
-```
-
-Run container
-
-```
-docker run -d -p 80:80 --name heritage_react heritage-react
-```
+SVG generated using inkscape.
+Font used for logo: Monsterrat
 
 ### Maintenance
 

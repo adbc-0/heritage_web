@@ -1,0 +1,11 @@
+naszrod.local {
+    tls internal
+
+    handle /api/* {
+        reverse_proxy rest-api:8080
+    }
+
+    handle {
+        reverse_proxy web-app:5173
+    }
+}

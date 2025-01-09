@@ -1,0 +1,63 @@
+name: heritage-prod
+
+services:
+    postgres:
+        container_name: postgres
+        image: postgres:17.2
+        environment:
+            POSTGRES_DB: "heritage"
+            POSTGRES_PASSWORD: "password"
+            POSTGRES_USER: "postgres"
+        ports:
+            - 5432:5432
+        volumes:
+            - pg_data:/var/lib/postgresql/data
+            - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+        healthcheck:
+            test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+            interval: 5s
+            timeout: 5s
+            retries: 5
+        networks:
+            - reverse_proxy
+
+    rest-api:
+        container_name: rest-api
+        build:
+            context: ./api
+            dockerfile: ./docker/prod.Dockerfile
+        depends_on:
+            postgres:
+                condition: service_healthy
+        environment:
+            MODE: "PROD"
+            PASSWORD: "DEV"
+            CORS: "https://naszrod.pl"
+            DATABASE_URL: "postgres://postgres:password@postgres:5432/heritage"
+        ports:
+            - 8080:8080
+        networks:
+            - reverse_proxy
+
+    server:
+        container_name: server
+        build:
+            context: ./react
+            dockerfile: ./docker/prod.Dockerfile
+        restart: unless-stopped
+        ports:
+            - 443:443
+        volumes:
+            - caddy_data:/data
+            - caddy_config:/config
+            - ./server/prod.Caddyfile:/etc/caddy/Caddyfile
+        networks:
+            - reverse_proxy
+
+volumes:
+    caddy_data:
+    caddy_config:
+    pg_data:
+
+networks:
+    reverse_proxy:

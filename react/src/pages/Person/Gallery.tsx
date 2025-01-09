@@ -55,10 +55,10 @@ export function Gallery() {
                         key={link}
                         target="_blank"
                         rel="noreferrer"
-                        href={`http://localhost:8080/assets/people/I84/${link}`}
+                        href={`http://naszrod.local/api/assets/people/I84/${link}`}
                     >
                         <img
-                            src={`http://localhost:8080/assets/people/I84/${link}`}
+                            src={`http://naszrod.local/api/assets/people/I84/${link}`}
                             alt="unknown"
                         />
                     </a>
