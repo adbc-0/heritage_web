@@ -45,10 +45,9 @@ export function LoginPage() {
 
         const response = await fetchHeritage();
         if (!response.ok) {
-            return;
+            // ToDo: set heritage error?
+            throw new Error("Could not get heritage data");
         }
-
-        void navigate(RouterPath.ROOT);
     }
 
     if (authStatus === AuthStatus.AUTHORIZED) {
