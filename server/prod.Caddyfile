@@ -1,6 +1,6 @@
 naszrod.pl {
     handle /api/* {
-        reverse_proxy heritage_api:8080
+        reverse_proxy rest-api:8080
     }
 
     encode zstd gzip

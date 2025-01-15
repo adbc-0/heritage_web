@@ -39,6 +39,18 @@ Use heritage data project to generate new json file and postgres init script.
 
 ### Docker
 
+Build project
+
+```
+docker compose -f compose-prod.yml build
+```
+
+Run project
+
+```
+docker compose -f compose-prod.yml up -d
+```
+
 Estimate size that docker takes
 
 ```
