@@ -1,9 +1,14 @@
+import { isNil } from "@/lib/utils";
+
 const API_URL = import.meta.env.VITE_API_URL;
 
-if (import.meta.env.PROD && !API_URL) {
-    throw new Error("missing env variables");
+function required(variable: string | undefined) {
+    if (isNil(variable)) {
+        throw new Error("missing required env variable");
+    }
+    return variable;
 }
 
 export const ENV = {
-    API_URL: API_URL ?? "https://naszrod.local/api",
-};
+    API_URL: required(API_URL),
+} as const;

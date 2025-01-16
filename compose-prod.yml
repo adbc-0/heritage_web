@@ -30,9 +30,7 @@ services:
             postgres:
                 condition: service_healthy
         environment:
-            MODE: "PROD"
             PASSWORD: "DEV"
-            CORS: "https://naszrod.pl"
             DATABASE_URL: "postgres://postgres:password@postgres:5432/heritage"
         ports:
             - 8080:8080

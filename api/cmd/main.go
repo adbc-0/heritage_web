@@ -12,9 +12,10 @@ import (
 )
 
 type env struct {
-	mode     string
-	password string
-	cors     string
+	// mode     string
+	password           string
+	dbConnectionString string
+	// cors     string
 }
 
 type httpError struct {
@@ -26,7 +27,15 @@ type note struct {
 	Note string `json:"note"`
 }
 
-func setEnv(key string, defaultValue string) string {
+func setEnv(key string) string {
+	value, ok := os.LookupEnv(key)
+	if !ok {
+		panic("Missing required env variable")
+	}
+	return value
+}
+
+func setEnvWithFallback(key string, defaultValue string) string {
 	value, ok := os.LookupEnv(key)
 	if !ok {
 		return defaultValue
@@ -35,9 +44,10 @@ func setEnv(key string, defaultValue string) string {
 }
 
 var newEnv = env{
-	mode:     setEnv("MODE", "DEV"),
-	password: setEnv("PASSWORD", "DEV"),
-	cors:     setEnv("CORS", "http://localhost:5173"),
+	// mode:     setEnv("MODE", "DEV"),
+	password:           setEnvWithFallback("PASSWORD", "DEV"),
+	dbConnectionString: setEnv("DATABASE_URL"),
+	// cors:     setEnv("CORS", "http://localhost:5173"),
 }
 
 func healthCheck(w http.ResponseWriter, r *http.Request) {
@@ -59,29 +69,6 @@ func getHeritage(w http.ResponseWriter, r *http.Request) {
 	w.Write(file)
 }
 
-func createAuthCookie() http.Cookie {
-	if newEnv.mode == "DEV" {
-		return http.Cookie{
-			Name:     "auth",
-			Value:    newEnv.password,
-			Path:     "/",
-			MaxAge:   3600,
-			Secure:   true,
-			SameSite: http.SameSiteNoneMode,
-		}
-	} else {
-		return http.Cookie{
-			Name:     "auth",
-			Value:    newEnv.password,
-			Path:     "/",
-			MaxAge:   3600,
-			HttpOnly: true,
-			Secure:   true,
-			SameSite: http.SameSiteNoneMode,
-		}
-	}
-}
-
 func authUser(w http.ResponseWriter, r *http.Request) {
 	_, password, _ := r.BasicAuth()
 	if password != newEnv.password {
@@ -91,7 +78,15 @@ func authUser(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
-	cookie := createAuthCookie()
+	cookie := http.Cookie{
+		Name:     "auth",
+		Value:    newEnv.password,
+		Path:     "/",
+		MaxAge:   3600,
+		HttpOnly: true,
+		Secure:   true,
+		SameSite: http.SameSiteNoneMode,
+	}
 	http.SetCookie(w, &cookie)
 	w.WriteHeader(http.StatusNoContent)
 }
@@ -100,19 +95,19 @@ func acceptPreflight(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNoContent)
 }
 
-func setCORSHeaders(w http.ResponseWriter) {
-	w.Header().Set("Access-Control-Allow-Credentials", "true")
-	w.Header().Set("Access-Control-Allow-Origin", newEnv.cors)
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
-	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-}
+// func setCORSHeaders(w http.ResponseWriter) {
+// 	w.Header().Set("Access-Control-Allow-Credentials", "true")
+// 	w.Header().Set("Access-Control-Allow-Origin", newEnv.cors)
+// 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+// 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+// }
 
-func cors(next http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		setCORSHeaders(w)
-		next(w, r)
-	}
-}
+// func cors(next http.HandlerFunc) http.HandlerFunc {
+// 	return func(w http.ResponseWriter, r *http.Request) {
+// 		setCORSHeaders(w)
+// 		next(w, r)
+// 	}
+// }
 
 func handlerToHandlerFunc(fs http.Handler) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -204,7 +199,7 @@ func getPersonNotes(conn *pgx.Conn) http.HandlerFunc {
 
 func main() {
 	// consider using pools -> pgxpool.New -> https://ectobit.com/blog/pgx-v5-3/
-	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
+	conn, err := pgx.Connect(context.Background(), newEnv.dbConnectionString)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
 		os.Exit(1)
@@ -212,19 +207,15 @@ func main() {
 	defer conn.Close(context.Background())
 
 	fs := http.FileServer(http.Dir("assets/people"))
-	http.Handle("/assets/people/", ensureBasicAuth(cors(handlerToHandlerFunc(http.StripPrefix("/assets/people/", fs)))))
+	http.Handle("/assets/people/", ensureBasicAuth(handlerToHandlerFunc(http.StripPrefix("/assets/people/", fs))))
 
-	http.HandleFunc("GET /api/health", cors(healthCheck))
-	http.HandleFunc("GET /api/heritage", cors(ensureBasicAuth((getHeritage))))
-	http.HandleFunc("GET /api/people/{id}/gallery", cors(getPersonGallery))
-	http.HandleFunc("GET /api/people/{id}/notes", cors(getPersonNotes(conn)))
+	http.HandleFunc("GET /api/health", healthCheck)
+	http.HandleFunc("GET /api/heritage", ensureBasicAuth((getHeritage)))
+	http.HandleFunc("GET /api/people/{id}/gallery", getPersonGallery)
+	http.HandleFunc("GET /api/people/{id}/notes", getPersonNotes(conn))
 
-	http.HandleFunc("OPTIONS /api/auth", cors(acceptPreflight))
-	http.HandleFunc("POST /api/auth", cors(authUser))
-
-	if newEnv.mode == "DEV" {
-		fmt.Println("App running in dev mode on port :8080")
-	}
+	http.HandleFunc("OPTIONS /api/auth", acceptPreflight)
+	http.HandleFunc("POST /api/auth", authUser)
 
 	err = http.ListenAndServe(":8080", nil)
 

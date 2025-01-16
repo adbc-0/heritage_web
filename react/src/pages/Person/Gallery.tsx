@@ -55,12 +55,9 @@ export function Gallery() {
                         key={link}
                         target="_blank"
                         rel="noreferrer"
-                        href={`http://naszrod.local/api/assets/people/I84/${link}`}
+                        href={`${ENV.API_URL}/assets/people/I84/${link}`}
                     >
-                        <img
-                            src={`http://naszrod.local/api/assets/people/I84/${link}`}
-                            alt="unknown"
-                        />
+                        <img src={`${ENV.API_URL}/assets/people/I84/${link}`} alt="unknown" />
                     </a>
                 ))}
             </div>
