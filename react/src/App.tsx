@@ -2,6 +2,7 @@ import { lazy, Suspense } from "react";
 import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
 
+import { DeviceModeProvider } from "./providers/DeviceModeProvider";
 import { HeritageProvider } from "./providers/HeritageProvider";
 import { Layout } from "./components/views/Layout";
 import { RouterPath } from "./constants/routePaths";
@@ -113,10 +114,12 @@ const router = createBrowserRouter([
 
 export function App() {
     return (
-        <AuthProvider>
-            <HeritageProvider>
-                <RouterProvider router={router} />
-            </HeritageProvider>
-        </AuthProvider>
+        <DeviceModeProvider>
+            <AuthProvider>
+                <HeritageProvider>
+                    <RouterProvider router={router} />
+                </HeritageProvider>
+            </AuthProvider>
+        </DeviceModeProvider>
     );
 }

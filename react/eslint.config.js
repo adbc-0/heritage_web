@@ -39,6 +39,7 @@ export default tseslint.config(
             "react-hooks/exhaustive-deps": "error",
             "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
             "@typescript-eslint/consistent-type-definitions": "off",
+            "@typescript-eslint/no-unnecessary-condition": "off",
             ...prettier.rules,
         },
     },

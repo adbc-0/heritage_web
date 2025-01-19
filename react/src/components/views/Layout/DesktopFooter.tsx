@@ -7,7 +7,7 @@ const navlinkStyle = ({ isActive }: NavLinkRenderProps) =>
         ? "text-highlight bg-highlight-background border border-highlight-background rounded-3xl py-2 px-3"
         : "text-foreground bg-background border border-background rounded-3xl py-2 px-3 hover:bg-accent";
 
-export function Footer() {
+export function DesktopFooter() {
     return (
         <div className="bg-background border-t border-border flex justify-center gap-3 py-2 text-sm">
             <NavLink to={RouterPath.KONTAKT} className={navlinkStyle}>
