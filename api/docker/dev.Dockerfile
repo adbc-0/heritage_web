@@ -13,6 +13,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o go-api /app/cmd
 FROM scratch
 WORKDIR /app
 COPY --from=builder app/go-api .
-COPY assets/ assets/
+
+COPY public/ public/
 
 CMD ["./go-api"]

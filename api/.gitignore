@@ -1,5 +1,5 @@
 # env
 .env
 
-# assets
-/assets/people
+# public files
+/public

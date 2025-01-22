@@ -55,7 +55,7 @@ func healthCheck(w http.ResponseWriter, r *http.Request) {
 }
 
 func getHeritage(w http.ResponseWriter, r *http.Request) {
-	file, err := os.ReadFile("assets/heritage.json")
+	file, err := os.ReadFile("public/heritage.json")
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
 			http.Error(w, "no heritage file could be found", http.StatusNotFound)
@@ -138,7 +138,40 @@ func getPersonGallery(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	entries, err := os.ReadDir("assets/people/" + userId)
+	entries, err := os.ReadDir("public/" + userId + "/photos")
+	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			http.Error(w, "No such file or directory", http.StatusNotFound)
+			return
+		}
+		http.Error(w, "Error reading files from directory", http.StatusInternalServerError)
+		return
+	}
+
+	fileNames := []string{}
+	for _, v := range entries {
+		fileNames = append(fileNames, v.Name())
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+	err = json.NewEncoder(w).Encode(map[string]interface{}{
+		"files": fileNames,
+	})
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Error building the response, %v", err), http.StatusInternalServerError)
+		return
+	}
+}
+
+func getPersonDocuments(w http.ResponseWriter, r *http.Request) {
+	userId := r.PathValue("id")
+	if userId == "" {
+		http.Error(w, "Path parameter is required", http.StatusBadRequest)
+		return
+	}
+
+	entries, err := os.ReadDir("public/" + userId + "/documents")
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
 			http.Error(w, "No such file or directory", http.StatusNotFound)
@@ -206,12 +239,13 @@ func main() {
 	}
 	defer conn.Close(context.Background())
 
-	fs := http.FileServer(http.Dir("assets/people"))
-	http.Handle("/assets/people/", ensureBasicAuth(handlerToHandlerFunc(http.StripPrefix("/assets/people/", fs))))
+	fs := http.FileServer(http.Dir("public"))
+	http.Handle("/api/public/", ensureBasicAuth(handlerToHandlerFunc(http.StripPrefix("/api/public/", fs))))
 
 	http.HandleFunc("GET /api/health", healthCheck)
 	http.HandleFunc("GET /api/heritage", ensureBasicAuth((getHeritage)))
 	http.HandleFunc("GET /api/people/{id}/gallery", getPersonGallery)
+	http.HandleFunc("GET /api/people/{id}/documents", getPersonDocuments)
 	http.HandleFunc("GET /api/people/{id}/notes", getPersonNotes(conn))
 
 	http.HandleFunc("OPTIONS /api/auth", acceptPreflight)

@@ -2,45 +2,48 @@ import { useEffect, useState } from "react";
 import { Params, useParams } from "react-router";
 
 import { ENV } from "@/constants/env";
+import { stripFileExtension } from "@/lib/utils";
 import { useHeritage } from "@/contexts/heritageContext";
 
 type UserData = {
     files: string[];
 };
 
-const galleryRoute = (personId: string) => `${ENV.API_URL}/people/${personId}/gallery`;
+function makePhotosRoute(personId: string) {
+    return `${ENV.API_URL}/people/${personId}/gallery`;
+}
 
 export function Gallery() {
-    const { id } = useParams<Params>();
+    const { id: personId } = useParams<Params>();
     const { heritage } = useHeritage();
 
-    const [links, setLinks] = useState<string[]>([]);
+    const [filenames, setFilenames] = useState<string[]>([]);
 
     useEffect(() => {
         async function fetchFileNames() {
-            if (!id) {
+            if (!personId) {
                 return;
             }
-            const request = await fetch(galleryRoute(id));
+            const request = await fetch(makePhotosRoute(personId));
             if (!request.ok) {
                 return;
             }
             const response = (await request.json()) as UserData;
-            setLinks(response.files);
+            setFilenames(response.files);
         }
-        if (!id) {
+        if (!personId) {
             return;
         }
         void fetchFileNames();
-    }, [id]);
+    }, [personId]);
 
-    if (!id) {
-        throw new Error("expected person id");
+    if (!personId) {
+        throw new Error("missing person id");
     }
     if (!heritage) {
         return null;
     }
-    if (!links.length) {
+    if (!filenames.length) {
         return (
             <div>
                 <h2 className="text-center font-semibold my-3">Brak zdjęć</h2>
@@ -49,15 +52,24 @@ export function Gallery() {
     }
     return (
         <div>
-            <div className="grid grid-cols-5 gap-3 mx-4 mb-4">
-                {links.map((link) => (
+            <div className="grid grid-cols-1 sm:grid-cols-3 ld:grid-cols-5 gap-3 mx-4 mb-4">
+                {filenames.map((filename) => (
                     <a
-                        key={link}
+                        key={filename}
                         target="_blank"
                         rel="noreferrer"
-                        href={`${ENV.API_URL}/assets/people/I84/${link}`}
+                        href={`${ENV.API_URL}/public/${personId}/photos/${filename}`}
                     >
-                        <img src={`${ENV.API_URL}/assets/people/I84/${link}`} alt="unknown" />
+                        <figure className="bg-background rounded-md shadow-md">
+                            <img
+                                src={`${ENV.API_URL}/public/${personId}/photos/${filename}`}
+                                alt={filename}
+                                className="rounded-t-md"
+                            />
+                            <figcaption className="text-center p-1 text-nowrap overflow-hidden text-ellipsis text-sm">
+                                {stripFileExtension(filename)}
+                            </figcaption>
+                        </figure>
                     </a>
                 ))}
             </div>

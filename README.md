@@ -37,6 +37,24 @@ Use heritage data project to generate new json file and postgres init script.
 - Setup SSH. Download repositories.
 - Run docker compose.
 
+Connect to vps
+
+```
+ssh name@host
+```
+
+Copy files on service to local dir. Use -r option to copy directory.
+
+```
+scp username@domain:/home/xxx/xxx/11.jpeg /Users/username/Desktop/
+```
+
+Copy files in local dir to remote service. Use -r option to copy directory.
+
+```
+scp /Users/username/Desktop/11.jpeg username@domain:/home/xxx/xxx
+```
+
 ### Docker
 
 Build project
