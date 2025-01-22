@@ -81,7 +81,8 @@ function filterOutPeople(people: Person[], searchQuery: string): Person[] {
 }
 
 const SortBy = {
-    NAME: "NAME",
+    FIRST_NAME: "FIRST_NAME",
+    NICK_NAME: "NICK_NAME",
     LAST_NAME: "LAST_NAME",
     FATHER: "FATHER",
     MOTHER: "MOTHER",
@@ -100,7 +101,7 @@ function isNil(v: unknown): v is null | undefined {
     return typeof v === "undefined" || v === null;
 }
 
-function sortByTextAsc(accessor: "firstName" | "lastName" | "dad" | "mom") {
+function sortByTextAsc(accessor: "firstName" | "lastName" | "dad" | "mom" | "nickName") {
     return function (a: Person, b: Person) {
         const aValue = a[accessor];
         const bValue = b[accessor];
@@ -113,7 +114,7 @@ function sortByTextAsc(accessor: "firstName" | "lastName" | "dad" | "mom") {
         return aValue.localeCompare(bValue);
     };
 }
-function sortByTextDesc(accessor: "firstName" | "lastName" | "dad" | "mom") {
+function sortByTextDesc(accessor: "firstName" | "lastName" | "dad" | "mom" | "nickName") {
     return function (a: Person, b: Person) {
         const aValue = a[accessor];
         const bValue = b[accessor];
@@ -154,9 +155,13 @@ function sortByNumberDesc(accessor: "birth" | "death") {
 }
 
 const sortingAlgorithmByType = {
-    [SortBy.NAME]: {
+    [SortBy.FIRST_NAME]: {
         ASC: sortByTextAsc("firstName"),
         DESC: sortByTextDesc("firstName"),
+    },
+    [SortBy.NICK_NAME]: {
+        ASC: sortByTextAsc("nickName"),
+        DESC: sortByTextDesc("nickName"),
     },
     [SortBy.LAST_NAME]: {
         ASC: sortByTextAsc("lastName"),
@@ -185,7 +190,11 @@ function sortBy(strategy: SortByType, direction: DirectionType) {
 }
 
 const sortingIconByTypeMap = {
-    [SortBy.NAME]: {
+    [SortBy.FIRST_NAME]: {
+        ASC: <ArrowDownAZ />,
+        DESC: <ArrowDownZa />,
+    },
+    [SortBy.NICK_NAME]: {
         ASC: <ArrowDownAZ />,
         DESC: <ArrowDownZa />,
     },
@@ -225,7 +234,7 @@ export default function People() {
     const navigate = useNavigate();
 
     const [filterPeopleQuery, setFilterPeopleQuery] = useState("");
-    const [sortByCriterion, setSortByCriterion] = useState<SortByType>(SortBy.NAME);
+    const [sortByCriterion, setSortByCriterion] = useState<SortByType>(SortBy.FIRST_NAME);
     const [sortDirection, setSortDirection] = useState<DirectionType>(Direction.ASC);
 
     const people = useMemo(() => {
@@ -236,7 +245,6 @@ export default function People() {
 
     function changeSortingCriterion(criterion: SortByType) {
         if (criterion === sortByCriterion) {
-            console.log(sortByCriterion, sortDirection);
             setSortDirection((current) =>
                 current === Direction.ASC ? Direction.DESC : Direction.ASC,
             );
@@ -265,11 +273,29 @@ export default function People() {
                                     type="button"
                                     className="w-full flex justify-center items-center gap-1"
                                     onClick={() => {
-                                        changeSortingCriterion(SortBy.NAME);
+                                        changeSortingCriterion(SortBy.FIRST_NAME);
                                     }}
                                 >
                                     Imię
-                                    {renderSortingIcon(SortBy.NAME)(sortByCriterion, sortDirection)}
+                                    {renderSortingIcon(SortBy.FIRST_NAME)(
+                                        sortByCriterion,
+                                        sortDirection,
+                                    )}
+                                </button>
+                            </TableHead>
+                            <TableHead>
+                                <button
+                                    type="button"
+                                    className="w-full flex justify-center items-center gap-1"
+                                    onClick={() => {
+                                        changeSortingCriterion(SortBy.NICK_NAME);
+                                    }}
+                                >
+                                    Przezwisko
+                                    {renderSortingIcon(SortBy.NICK_NAME)(
+                                        sortByCriterion,
+                                        sortDirection,
+                                    )}
                                 </button>
                             </TableHead>
                             <TableHead>
@@ -359,6 +385,7 @@ export default function People() {
                                 }}
                             >
                                 <TableCell className="text-center">{person.firstName}</TableCell>
+                                <TableCell className="text-center">{person.nickName}</TableCell>
                                 <TableCell className="text-center">{person.lastName}</TableCell>
                                 <TableCell className="text-center">{person.dad}</TableCell>
                                 <TableCell className="text-center">{person.mom}</TableCell>

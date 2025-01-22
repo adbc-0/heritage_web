@@ -8,6 +8,7 @@ type Event = {
 export type Indi = {
     id: string;
     firstName?: string;
+    nickName?: string;
     lastName?: string;
     fams: string[];
     famc?: string;
