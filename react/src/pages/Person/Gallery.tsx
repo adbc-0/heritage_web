@@ -51,28 +51,27 @@ export function Gallery() {
         );
     }
     return (
-        <div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 ld:grid-cols-5 gap-3 mx-4 mb-4">
-                {filenames.map((filename) => (
-                    <a
-                        key={filename}
-                        target="_blank"
-                        rel="noreferrer"
-                        href={`${ENV.API_URL}/public/${personId}/photos/${filename}`}
-                    >
-                        <figure className="bg-background rounded-md shadow-md">
-                            <img
-                                src={`${ENV.API_URL}/public/${personId}/photos/${filename}`}
-                                alt={filename}
-                                className="rounded-t-md"
-                            />
-                            <figcaption className="text-center p-1 text-nowrap overflow-hidden text-ellipsis text-sm">
-                                {stripFileExtension(filename)}
-                            </figcaption>
-                        </figure>
-                    </a>
-                ))}
-            </div>
+        <div className="grid grid-cols-2 sm:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-10 auto-rows-fr gap-3 mx-4 mb-4">
+            {filenames.map((filename) => (
+                <a
+                    key={filename}
+                    className="bg-background rounded-md shadow-md"
+                    target="_blank"
+                    rel="noreferrer"
+                    href={`${ENV.API_URL}/public/${personId}/photos/${filename}`}
+                >
+                    <figure className="flex flex-col h-full">
+                        <img
+                            src={`${ENV.API_URL}/public/${personId}/photos/thumbnails/${filename}`}
+                            alt={filename}
+                            className="rounded-t-md grow object-cover"
+                        />
+                        <figcaption className="text-center p-1 text-nowrap overflow-hidden text-ellipsis text-sm">
+                            {stripFileExtension(filename)}
+                        </figcaption>
+                    </figure>
+                </a>
+            ))}
         </div>
     );
 }
