@@ -187,6 +187,9 @@ func getPersonDocuments(w http.ResponseWriter, r *http.Request) {
 
 	fileNames := []string{}
 	for _, v := range entries {
+		if v.IsDir() {
+			continue
+		}
 		fileNames = append(fileNames, v.Name())
 	}
 
