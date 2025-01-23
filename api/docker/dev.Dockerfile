@@ -15,5 +15,6 @@ WORKDIR /app
 COPY --from=builder app/go-api .
 
 COPY public/ public/
+COPY required/ required/
 
 CMD ["./go-api"]

@@ -55,7 +55,7 @@ func healthCheck(w http.ResponseWriter, r *http.Request) {
 }
 
 func getHeritage(w http.ResponseWriter, r *http.Request) {
-	file, err := os.ReadFile("public/heritage.json")
+	file, err := os.ReadFile("required/heritage.json")
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
 			http.Error(w, "no heritage file could be found", http.StatusNotFound)
@@ -150,11 +150,15 @@ func getPersonGallery(w http.ResponseWriter, r *http.Request) {
 
 	fileNames := []string{}
 	for _, v := range entries {
+		if v.IsDir() {
+			continue
+		}
 		fileNames = append(fileNames, v.Name())
 	}
 
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
+
 	err = json.NewEncoder(w).Encode(map[string]interface{}{
 		"files": fileNames,
 	})
