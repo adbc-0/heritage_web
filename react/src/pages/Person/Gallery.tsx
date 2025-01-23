@@ -51,7 +51,7 @@ export function Gallery() {
         );
     }
     return (
-        <div className="grid grid-cols-2 sm:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-10 auto-rows-fr gap-3 mx-4 mb-4">
+        <div className="grid grid-cols-2 sm:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-10 auto-rows-[minmax(auto,190px)] gap-3 mx-4 mb-4">
             {filenames.map((filename) => (
                 <a
                     key={filename}
@@ -64,7 +64,7 @@ export function Gallery() {
                         <img
                             src={`${ENV.API_URL}/public/${personId}/photos/thumbnails/${filename}`}
                             alt={filename}
-                            className="rounded-t-md grow object-cover"
+                            className="rounded-t-md grow object-cover h-1"
                         />
                         <figcaption className="text-center p-1 text-nowrap overflow-hidden text-ellipsis text-sm">
                             {stripFileExtension(filename)}
