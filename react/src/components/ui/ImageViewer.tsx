@@ -52,10 +52,12 @@ function usePreviewContext() {
 // ToDo: Remove hardcoded url for image fetching
 type ImagePreviewType = {
     ref: Ref<HTMLDialogElement>;
+    personId: string;
 };
-function ImagePreview({ ref }: ImagePreviewType) {
+function ImagePreview({ ref, personId }: ImagePreviewType) {
     const { openedImage, moveToNextImage, moveToPrevImage, closePreview } = usePreviewContext();
 
+    const [, setZoomedIn] = useState(false);
     // ToDo: Improve swiping to not rerender website on coord change. Use ref instead.
     const [touchStart, setTouchStart] = useState(0);
     const [touchEnd, setTouchEnd] = useState(0);
@@ -79,6 +81,10 @@ function ImagePreview({ ref }: ImagePreviewType) {
             moveToPrevImage();
         }
     }
+
+    const toggleZoomIn = () => {
+        setZoomedIn((currentState) => !currentState);
+    };
 
     const switchPhotosOnKeyDown = useCallback(
         (event: globalThis.KeyboardEvent) => {
@@ -133,9 +139,11 @@ function ImagePreview({ ref }: ImagePreviewType) {
                         <CircleArrowRight />
                     </button>
                     <img
-                        src={`${ENV.API_URL}/public/I70/photos/${openedImage}`}
+                        src={`${ENV.API_URL}/public/${personId}/photos/${openedImage}`}
                         alt={openedImage}
                         className="w-full h-full object-contain"
+                        aria-hidden
+                        onClick={toggleZoomIn}
                         onTouchStart={handleTouchStart}
                         onTouchMove={handleTouchMove}
                         onTouchEnd={handleTouchEnd}
@@ -155,11 +163,11 @@ function ImagePreview({ ref }: ImagePreviewType) {
     );
 }
 
-//  ToDo: Zoom feature
 type ImageViewerType = ReactChildren & {
     allImages: string[];
+    personId: string;
 };
-export function ImageViewer({ children, allImages }: ImageViewerType) {
+export function ImageViewer({ children, allImages, personId }: ImageViewerType) {
     const dialogRef = useRef<ComponentRef<"dialog">>(null);
     const [openedImage, setOpenedImage] = useState<string | null>(null);
 
@@ -241,7 +249,7 @@ export function ImageViewer({ children, allImages }: ImageViewerType) {
 
     return (
         <ViewerContext.Provider value={provider}>
-            <ImagePreview ref={dialogRef} />
+            <ImagePreview ref={dialogRef} personId={personId} />
             {children}
         </ViewerContext.Provider>
     );

@@ -52,7 +52,7 @@ export function Gallery() {
         );
     }
     return (
-        <ImageViewer allImages={filenames}>
+        <ImageViewer allImages={filenames} personId={personId}>
             <div className="grid grid-cols-2 sm:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-10 auto-rows-[minmax(auto,190px)] gap-3 mx-4 mb-4">
                 {filenames.map((filename) => (
                     <ImageThumbnail
