@@ -28,7 +28,7 @@ export default function Home() {
 
     return (
         <div className="bg-background m-3 border border-border">
-            <svg id="relative" />
+            <svg id="relative" className="cursor-move" />
         </div>
     );
 }

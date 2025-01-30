@@ -41,7 +41,7 @@ export function Tree() {
     return (
         <div className="m-3 h-full">
             <div className="mt-3 mx-auto bg-background border border-border w-[90%] md:w-[75%] h-full">
-                <svg ref={svgElement} id="relative" className="rounded-md" />
+                <svg ref={svgElement} id="relative" className="rounded-md cursor-move" />
             </div>
         </div>
     );
