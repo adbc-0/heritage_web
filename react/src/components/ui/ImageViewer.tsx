@@ -3,6 +3,7 @@ import {
     createContext,
     ReactElement,
     Ref,
+    TouchEvent,
     useCallback,
     useContext,
     useEffect,
@@ -48,11 +49,36 @@ function usePreviewContext() {
     return useContext(ViewerContext);
 }
 
+// ToDo: Remove hardcoded url for image fetching
 type ImagePreviewType = {
     ref: Ref<HTMLDialogElement>;
 };
 function ImagePreview({ ref }: ImagePreviewType) {
     const { openedImage, moveToNextImage, moveToPrevImage, closePreview } = usePreviewContext();
+
+    // ToDo: Improve swiping to not rerender website on coord change. Use ref instead.
+    const [touchStart, setTouchStart] = useState(0);
+    const [touchEnd, setTouchEnd] = useState(0);
+
+    function handleTouchStart(event: TouchEvent<HTMLImageElement>) {
+        // @ts-expect-error I expect browser to always return list with coords
+        setTouchStart(event.targetTouches[0].clientX);
+    }
+
+    function handleTouchMove(event: TouchEvent<HTMLImageElement>) {
+        // @ts-expect-error I expect browser to always return list with coords
+        setTouchEnd(event.targetTouches[0].clientX);
+    }
+
+    function handleTouchEnd() {
+        if (touchStart - touchEnd > 100) {
+            moveToNextImage();
+        }
+
+        if (touchStart - touchEnd < -100) {
+            moveToPrevImage();
+        }
+    }
 
     const switchPhotosOnKeyDown = useCallback(
         (event: globalThis.KeyboardEvent) => {
@@ -66,6 +92,7 @@ function ImagePreview({ ref }: ImagePreviewType) {
         [moveToNextImage, moveToPrevImage],
     );
 
+    // switch photos on arrow press
     useEffect(() => {
         window.addEventListener("keydown", switchPhotosOnKeyDown);
         return () => {
@@ -109,6 +136,9 @@ function ImagePreview({ ref }: ImagePreviewType) {
                         src={`${ENV.API_URL}/public/I70/photos/${openedImage}`}
                         alt={openedImage}
                         className="w-full h-full object-contain"
+                        onTouchStart={handleTouchStart}
+                        onTouchMove={handleTouchMove}
+                        onTouchEnd={handleTouchEnd}
                     />
                 </>
             ) : null}
@@ -125,8 +155,6 @@ function ImagePreview({ ref }: ImagePreviewType) {
     );
 }
 
-//  ToDo: Hide icons when last and first image
-//  ToDo: Swipe gesture for photos
 //  ToDo: Zoom feature
 type ImageViewerType = ReactChildren & {
     allImages: string[];

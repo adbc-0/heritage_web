@@ -136,6 +136,8 @@ export function Basic() {
     if (!heritage) {
         return null;
     }
+
+    // ToDo: Throw error on missing person
     const person = getBasicPersonData(heritage, id);
     const table = createTable(person);
 
