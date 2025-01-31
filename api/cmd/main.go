@@ -11,7 +11,7 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-type env struct {
+type environment struct {
 	// mode     string
 	password           string
 	dbConnectionString string
@@ -27,7 +27,7 @@ type note struct {
 	Note string `json:"note"`
 }
 
-func setEnv(key string) string {
+func setEnvVar(key string) string {
 	value, ok := os.LookupEnv(key)
 	if !ok {
 		panic("Missing required env variable")
@@ -35,7 +35,7 @@ func setEnv(key string) string {
 	return value
 }
 
-func setEnvWithFallback(key string, defaultValue string) string {
+func setEnvVarWithFallback(key string, defaultValue string) string {
 	value, ok := os.LookupEnv(key)
 	if !ok {
 		return defaultValue
@@ -43,10 +43,12 @@ func setEnvWithFallback(key string, defaultValue string) string {
 	return value
 }
 
-var newEnv = env{
+var cookieValidityTime = 1 * 86400 // validity in days
+
+var env = environment{
 	// mode:     setEnv("MODE", "DEV"),
-	password:           setEnvWithFallback("PASSWORD", "DEV"),
-	dbConnectionString: setEnv("DATABASE_URL"),
+	password:           setEnvVarWithFallback("PASSWORD", "DEV"),
+	dbConnectionString: setEnvVar("DATABASE_URL"),
 	// cors:     setEnv("CORS", "http://localhost:5173"),
 }
 
@@ -71,7 +73,7 @@ func getHeritage(w http.ResponseWriter, r *http.Request) {
 
 func authUser(w http.ResponseWriter, r *http.Request) {
 	_, password, _ := r.BasicAuth()
-	if password != newEnv.password {
+	if password != env.password {
 		w.WriteHeader(http.StatusUnauthorized)
 		json.NewEncoder(w).Encode(httpError{
 			Message: "Incorrect password",
@@ -80,9 +82,9 @@ func authUser(w http.ResponseWriter, r *http.Request) {
 	}
 	cookie := http.Cookie{
 		Name:     "auth",
-		Value:    newEnv.password,
+		Value:    env.password,
 		Path:     "/",
-		MaxAge:   3600,
+		MaxAge:   cookieValidityTime,
 		HttpOnly: true,
 		Secure:   true,
 		SameSite: http.SameSiteNoneMode,
@@ -123,7 +125,7 @@ func ensureBasicAuth(next http.HandlerFunc) http.HandlerFunc {
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)
 			return
 		}
-		if authCookie.Value != newEnv.password {
+		if authCookie.Value != env.password {
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)
 			return
 		}
@@ -239,7 +241,7 @@ func getPersonNotes(conn *pgx.Conn) http.HandlerFunc {
 
 func main() {
 	// consider using pools -> pgxpool.New -> https://ectobit.com/blog/pgx-v5-3/
-	conn, err := pgx.Connect(context.Background(), newEnv.dbConnectionString)
+	conn, err := pgx.Connect(context.Background(), env.dbConnectionString)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
 		os.Exit(1)
