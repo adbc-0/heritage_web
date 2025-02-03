@@ -41,16 +41,16 @@ Connect to vps
 ssh name@host
 ```
 
-Copy files on service to local dir. Use -r option to copy directory.
+Copy files from server to local dir. Use -r to copy recurseively.
 
 ```
 scp -r user@host:/root/app/heritage/api/public/I70 ~/Downloads
 ```
 
-Copy files in local dir to remote service. Use -r option to copy directory.
+Copy files from local dir to remote server. Use -r to copy recurseively.
 
 ```
-scp /Users/username/Desktop/11.jpeg username@host:/home/xxx/xxx
+scp -r ~/Downloads user@host:/root/app/heritage/api/public
 ```
 
 ### Docker Commands

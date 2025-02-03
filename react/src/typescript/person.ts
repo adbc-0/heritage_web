@@ -3,3 +3,9 @@ export type PersonTableRow = {
     name: string;
     value: string | number;
 };
+
+export type File = {
+    filename: string;
+    fullSizeSrc: string;
+    thumbnailSrc: string;
+};
