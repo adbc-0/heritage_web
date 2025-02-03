@@ -10,4 +10,4 @@ RUN corepack enable
 FROM base AS build
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
 
-CMD ["pnpm", "run", "dev"] 
+CMD ["pnpm", "run", "dev"]
