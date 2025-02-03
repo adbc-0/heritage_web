@@ -1,6 +1,6 @@
 export function AboutMe() {
     return (
-        <div className="grow flex flex-col justify-center gap-2 text-center px-8">
+        <div className="flex flex-col justify-center gap-4 px-8 py-6 max-w-screen-xl m-auto">
             <p>Naszród.pl to strona poświęcona na tworzenie drzewa genealogicznego.</p>
             <p>
                 Od czasów zamierzchłej podstawówki, kiedy otrzymałam zadanie domowe w postaci
@@ -31,7 +31,7 @@ export function AboutMe() {
                 informacji od siebie 🙂.
             </p>
             <p>Pozdrawiam!</p>
-            <p>M</p>
+            <p>Marysia Ozimek</p>
         </div>
     );
 }
