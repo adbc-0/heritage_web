@@ -211,30 +211,33 @@ type ImageT = {
 };
 function Image({ moveToNextImage, moveToPrevImage }: ImageT) {
     const { imageIsInspected, inspectedImage, closeInspection } = useDialogContext();
-    // ToDo: Improve swiping to not rerender website on coord change. Use ref instead.
-    const [touchStart, setTouchStart] = useState(0);
-    const [touchEnd, setTouchEnd] = useState(0);
+    const touchStartCoordinateRef = useRef(0);
+    const touchEndCoordinateRef = useRef(0);
 
     function handleTouchStart(event: TouchEvent<HTMLImageElement>) {
         // @ts-expect-error I expect browser to always return list with coords
         const x = event.targetTouches[0].clientX;
-        setTouchStart(x);
-        setTouchEnd(x);
+        touchStartCoordinateRef.current = x;
+        touchEndCoordinateRef.current = x;
     }
 
     function handleTouchMove(event: TouchEvent<HTMLImageElement>) {
         // @ts-expect-error I expect browser to always return list with coords
-        setTouchEnd(event.targetTouches[0].clientX);
+        const x = event.targetTouches[0].clientX;
+        touchEndCoordinateRef.current = x;
     }
 
     function handleTouchEnd() {
-        const swipedToTheRight = touchStart - touchEnd > SWIPE_TRESHOLD;
+        const startX = touchStartCoordinateRef.current;
+        const endX = touchEndCoordinateRef.current;
+
+        const swipedToTheRight = startX - endX > SWIPE_TRESHOLD;
         if (swipedToTheRight) {
             moveToNextImage();
             return;
         }
 
-        const swipedToTheLeft = touchStart - touchEnd < -SWIPE_TRESHOLD;
+        const swipedToTheLeft = startX - endX < -SWIPE_TRESHOLD;
         if (swipedToTheLeft) {
             moveToPrevImage();
             return;
