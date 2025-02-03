@@ -98,10 +98,10 @@ export function ImagesThumbnails({ children }: ReactChildren) {
     );
 }
 
-type ThumbnailT = {
+type ThumbnailProps = {
     file: File;
 };
-export function Thumbnail({ file }: ThumbnailT) {
+export function Thumbnail({ file }: ThumbnailProps) {
     const { openInspection: openDialog } = useDialogContext();
     return (
         <button
@@ -126,10 +126,10 @@ export function Thumbnail({ file }: ThumbnailT) {
     );
 }
 
-type ImageInspectionT = {
+type ImageInspectionProps = {
     allFiles: File[];
 };
-export function ImageInspection({ allFiles }: ImageInspectionT) {
+export function ImageInspection({ allFiles }: ImageInspectionProps) {
     const { dialogRef, inspectedImage, setImage } = useDialogContext();
 
     const moveToNextImage = useCallback(() => {
@@ -205,11 +205,11 @@ export function ImageInspection({ allFiles }: ImageInspectionT) {
     );
 }
 
-type ImageT = {
+type ImageProps = {
     moveToNextImage: () => void;
     moveToPrevImage: () => void;
 };
-function Image({ moveToNextImage, moveToPrevImage }: ImageT) {
+function Image({ moveToNextImage, moveToPrevImage }: ImageProps) {
     const { imageIsInspected, inspectedImage, closeInspection } = useDialogContext();
     const touchStartCoordinateRef = useRef(0);
     const touchEndCoordinateRef = useRef(0);
