@@ -217,7 +217,9 @@ function Image({ moveToNextImage, moveToPrevImage }: ImageT) {
 
     function handleTouchStart(event: TouchEvent<HTMLImageElement>) {
         // @ts-expect-error I expect browser to always return list with coords
-        setTouchStart(event.targetTouches[0].clientX);
+        const x = event.targetTouches[0].clientX;
+        setTouchStart(x);
+        setTouchEnd(x);
     }
 
     function handleTouchMove(event: TouchEvent<HTMLImageElement>) {
@@ -226,12 +228,16 @@ function Image({ moveToNextImage, moveToPrevImage }: ImageT) {
     }
 
     function handleTouchEnd() {
-        if (touchStart - touchEnd > SWIPE_TRESHOLD) {
+        const swipedToTheRight = touchStart - touchEnd > SWIPE_TRESHOLD;
+        if (swipedToTheRight) {
             moveToNextImage();
+            return;
         }
 
-        if (touchStart - touchEnd < -SWIPE_TRESHOLD) {
+        const swipedToTheLeft = touchStart - touchEnd < -SWIPE_TRESHOLD;
+        if (swipedToTheLeft) {
             moveToPrevImage();
+            return;
         }
     }
 
