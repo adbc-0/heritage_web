@@ -92,7 +92,7 @@ export function Images({ children }: ReactChildren) {
 
 export function ImagesThumbnails({ children }: ReactChildren) {
     return (
-        <div className="grid grid-cols-2 sm:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-10 auto-rows-[minmax(auto,190px)] gap-3 mx-4 mb-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 auto-rows-[minmax(auto,200px)] md:auto-rows-[minmax(auto,250px)]  xl:auto-rows-[minmax(auto,300px)]  gap-6 mx-4 mb-4">
             {children}
         </div>
     );
@@ -106,7 +106,7 @@ export function Thumbnail({ file }: ThumbnailProps) {
     return (
         <button
             type="button"
-            className="bg-background rounded-md shadow-md"
+            className="bg-background rounded-md shadow-lg"
             onClick={() => {
                 openDialog(file);
             }}
@@ -118,7 +118,7 @@ export function Thumbnail({ file }: ThumbnailProps) {
                     className="rounded-t-md grow object-cover h-1"
                     loading="lazy"
                 />
-                <figcaption className="text-center p-1 text-nowrap overflow-hidden text-ellipsis text-sm">
+                <figcaption className="text-center p-2 text-nowrap overflow-hidden text-ellipsis text-sm">
                     {stripFileExtension(file.filename)}
                 </figcaption>
             </figure>
