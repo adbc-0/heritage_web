@@ -1,6 +1,6 @@
 export function Rodo() {
     return (
-        <div className="flex flex-col justify-center gap-4 px-8 py-6 max-w-screen-xl m-auto">
+        <div className="flex flex-col justify-center gap-4 px-8 py-6 max-w-screen-lg m-auto">
             <p>
                 Rozporządzenie Parlamentu Europejskiego i Rady (UE) 2016/679 z dnia 27 kwietnia 2016
                 roku, przekazuje w motywie 27. preambuły, że “Niniejsze rozporządzenie nie ma

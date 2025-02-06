@@ -8,7 +8,7 @@ export function SupportMe() {
     }
 
     return (
-        <div className="flex flex-col justify-center gap-4 px-8 py-6 max-w-screen-xl m-auto">
+        <div className="flex flex-col justify-center gap-4 px-8 py-6 max-w-screen-lg m-auto">
             <p>
                 Strona sama w sobie nie zarabia nic, ale jednak opłacać ją trzeba. Jeśli chcecie by
                 praca nie poszła na marne i by była tu dalej dostępna wrzućcie &quot;grosza&quot; na
