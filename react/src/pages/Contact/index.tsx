@@ -8,7 +8,7 @@ export function Contact() {
     }
 
     return (
-        <div className="flex flex-col justify-center gap-4 px-8 py-6 max-w-screen-lg m-auto">
+        <div className="flex flex-col justify-center gap-4 px-8 py-6 max-w-(--breakpoint-lg) m-auto">
             <p>
                 Napisz do mnie jeśli masz jakieś informacje, które chciał/abyś zamieścić na stronie.
             </p>
