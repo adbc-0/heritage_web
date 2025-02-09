@@ -10,7 +10,7 @@ export function SupportMe() {
                 praca nie poszła na marne i by była tu dalej dostępna wrzućcie &quot;grosza&quot; na
                 ten cel by strona mogła działać dalej 🙂
             </p>
-            <Clipboard text={BANK_ACCOUNT_NUMBER} />
+            <Clipboard className="mt-4" text={BANK_ACCOUNT_NUMBER} />
         </div>
     );
 }

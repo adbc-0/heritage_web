@@ -9,7 +9,7 @@ export function Contact() {
                 Napisz do mnie jeśli masz jakieś informacje, które chciał/abyś zamieścić na stronie.
             </p>
             <p>Zdjęcia, ciekawostki, dokumenty. Zbieram wszystko co posiadasz 🙂</p>
-            <Clipboard text={CONTACT_MAIL} />
+            <Clipboard className="mt-4" text={CONTACT_MAIL} />
         </div>
     );
 }
