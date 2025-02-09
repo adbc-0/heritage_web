@@ -284,21 +284,21 @@ function Image({ moveToNextImage, moveToPrevImage }: ImageProps) {
             </span>
             <button
                 type="button"
-                className="absolute top-[15px] right-[15px] bg-black bg-opacity-50 p-2 rounded-3xl"
+                className="cursor-pointer absolute top-[15px] right-[15px] bg-black bg-opacity-50 p-2 rounded-3xl"
                 onClick={closeInspection}
             >
                 <CircleX />
             </button>
             <button
                 type="button"
-                className="absolute left-[20px] top-1/2 select-none bg-black bg-opacity-50 p-2 rounded-3xl"
+                className="cursor-pointer absolute left-[20px] top-1/2 select-none bg-black bg-opacity-50 p-2 rounded-3xl"
                 onClick={moveToNextImage}
             >
                 <CircleArrowLeft />
             </button>
             <button
                 type="button"
-                className="absolute right-[20px] top-1/2 select-none bg-black bg-opacity-50 p-2 rounded-3xl"
+                className="cursor-pointer absolute right-[20px] top-1/2 select-none bg-black bg-opacity-50 p-2 rounded-3xl"
                 onClick={moveToPrevImage}
             >
                 <CircleArrowRight />
@@ -306,7 +306,7 @@ function Image({ moveToNextImage, moveToPrevImage }: ImageProps) {
             <a href={inspectedImage.fullSizeSrc} download={inspectedImage.filename}>
                 <button
                     type="button"
-                    className="absolute bottom-[15px] right-[15px] bg-black bg-opacity-50 p-2 rounded-md"
+                    className="cursor-pointer absolute bottom-[15px] right-[15px] bg-black bg-opacity-50 p-2 rounded-md"
                 >
                     <ImageDown />
                 </button>

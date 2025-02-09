@@ -129,7 +129,7 @@ export default function Branches() {
                     <PopoverTrigger>
                         <div
                             aria-labelledby={branchMultiselectId}
-                            className="flex justify-center items-center bg-background border border-border rounded-md p-1 pr-2 mx-3"
+                            className="flex justify-center items-center bg-background border border-border rounded-md p-1 pr-2 mx-3 cursor-pointer"
                             role="combobox"
                             aria-controls={ariaDropdownControls}
                             aria-expanded={false}
@@ -164,8 +164,9 @@ export default function Branches() {
                         <div className="w-full">
                             {branches.map(({ name: branchName, active }) => (
                                 <div key={branchName} className="hover:bg-accent">
-                                    <div className="flex items-center gap-2 p-1 mx-2">
+                                    <div className="flex items-center gap-2 p-1 mx-2 cursor-pointer">
                                         <Checkbox
+                                            className="cursor-pointer"
                                             checked={active}
                                             onClick={() => {
                                                 toggleBranch(branchName);
