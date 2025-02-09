@@ -28,6 +28,7 @@ export default function Person() {
         const person = heritage.indis.find((person) => person.id === id);
         if (!person) {
             void navigate("/404", { replace: true });
+            return;
         }
         setPersonLoaded(true);
     }, [heritage, id, navigate]);
