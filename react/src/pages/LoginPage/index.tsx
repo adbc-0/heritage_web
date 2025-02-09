@@ -27,7 +27,7 @@ export function LoginPage() {
         if (authStatus !== AuthStatus.AUTHORIZED) {
             return;
         }
-        void navigate(RouterPath.ROOT);
+        void navigate(RouterPath.ROOT, { replace: true });
     }, [authStatus, navigate]);
 
     async function login(e: FormEvent) {
@@ -61,35 +61,36 @@ export function LoginPage() {
     }
 
     return (
-        <div className="h-[100dvh] flex items-center justify-center border border-border">
+        <div className="min-h-[100dvh] flex items-center justify-center sm:bg-background-darker sm:border border-border">
             <form onSubmit={(e) => void login(e)}>
-                <div className="flex flex-col gap-2 items-center p-5 border border-border rounded-t-md">
+                <div className="flex flex-col gap-5 items-center px-6 py-8 bg-background rounded-3xl">
                     <LockKeyhole size={60} />
-                    <h1 className="text-xl font-bold tracking-tight mt-2">Wymagane hasło</h1>
-                    <p className="text-sm text-muted-foreground">
-                        Dostęp do zasobów jest chroniony hasłem
-                    </p>
-                </div>
-                <div className="bg-background-darker p-5 border border-border rounded-b-md border-t-0">
+                    <div className="text-center">
+                        <h1 className="text-xl font-bold tracking-tight">Wymagane hasło</h1>
+                        <p className="text-sm text-muted-foreground">
+                            Dostęp do zawartości jest chroniony hasłem
+                        </p>
+                    </div>
                     {authError === AuthErrorType.WRONG_PASSWORD && (
-                        <div className="bg-red-50 border border-red-800 p-2 rounded-md mb-3">
-                            <p className="text-red-800 text-center text-sm">Niepoprawne hasło</p>
+                        <div className="bg-red-50 border border-red-800 py-2 px-4 rounded-md">
+                            <p className="text-red-800 text-center">Niepoprawne hasło</p>
                         </div>
                     )}
-                    <Label className="text-xs text-muted-foreground" htmlFor={passwordId}>
-                        HASŁO
-                    </Label>
-                    <Input
-                        required
-                        id={passwordId}
-                        className="bg-white"
-                        type="password"
-                        name="password"
-                        autoComplete="current-password"
-                    />
-                    <Button className="w-full mt-3" type="submit" disabled={authInProgress}>
-                        Wyślij
-                    </Button>
+                    <div>
+                        <Label className="text-sm" htmlFor={passwordId}>
+                            Hasło
+                        </Label>
+                        <Input
+                            id={passwordId}
+                            className="bg-white"
+                            type="password"
+                            name="password"
+                            autoComplete="current-password"
+                        />
+                        <Button className="w-full mt-3" type="submit" disabled={authInProgress}>
+                            Wyślij
+                        </Button>
+                    </div>
                 </div>
             </form>
         </div>

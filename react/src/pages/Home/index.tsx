@@ -27,8 +27,10 @@ export default function Home() {
     }, [heritage, navigate]);
 
     return (
-        <div className="bg-background m-3 border border-border">
-            <svg id="relative" className="cursor-move" />
+        <div className="h-full py-2">
+            <div className="bg-background border border-border h-full">
+                <svg id="relative" className="cursor-move" />
+            </div>
         </div>
     );
 }
