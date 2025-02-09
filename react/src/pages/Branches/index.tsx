@@ -129,7 +129,7 @@ export default function Branches() {
                     <PopoverTrigger>
                         <div
                             aria-labelledby={branchMultiselectId}
-                            className="flex justify-center items-center bg-background border rounded-md p-1 pr-2 mx-3"
+                            className="flex justify-center items-center bg-background border border-border rounded-md p-1 pr-2 mx-3"
                             role="combobox"
                             aria-controls={ariaDropdownControls}
                             aria-expanded={false}

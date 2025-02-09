@@ -264,10 +264,10 @@ export default function People() {
                     setFilterPeopleQuery(event.target.value.toLowerCase());
                 }}
             />
-            <div className="max-w-[calc(100vw-4rem)] rounded-md border bg-background block">
+            <div className="max-w-[calc(100vw-4rem)] rounded-md border border-border bg-background block">
                 <Table>
                     <TableHeader>
-                        <TableRow>
+                        <TableRow className="border-border">
                             <TableHead>
                                 <button
                                     type="button"
@@ -378,7 +378,7 @@ export default function People() {
                     <TableBody>
                         {people.map((person) => (
                             <TableRow
-                                className="cursor-pointer"
+                                className="cursor-pointer border-border"
                                 key={person.id}
                                 onClick={() => {
                                     void navigate(`${RouterPath.OSOBY}/${person.id}`);
