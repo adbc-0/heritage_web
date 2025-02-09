@@ -157,7 +157,10 @@ export default function Branches() {
                             <ChevronDown className="ml-2" color="grey" size={20} />
                         </div>
                     </PopoverTrigger>
-                    <PopoverContent id={ariaDropdownControls} className="flex flex-row p-0">
+                    <PopoverContent
+                        id={ariaDropdownControls}
+                        className="flex flex-row p-0 border-border"
+                    >
                         <div className="w-full">
                             {branches.map(({ name: branchName, active }) => (
                                 <div key={branchName} className="hover:bg-accent">

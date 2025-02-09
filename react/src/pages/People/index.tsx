@@ -268,10 +268,10 @@ export default function People() {
                 <Table>
                     <TableHeader>
                         <TableRow className="border-border">
-                            <TableHead>
+                            <TableHead className="cursor-pointer">
                                 <button
                                     type="button"
-                                    className="w-full flex justify-center items-center gap-1"
+                                    className="w-full flex justify-center items-center gap-1 cursor-pointer"
                                     onClick={() => {
                                         changeSortingCriterion(SortBy.FIRST_NAME);
                                     }}
@@ -286,7 +286,7 @@ export default function People() {
                             <TableHead>
                                 <button
                                     type="button"
-                                    className="w-full flex justify-center items-center gap-1"
+                                    className="w-full flex justify-center items-center gap-1 cursor-pointer"
                                     onClick={() => {
                                         changeSortingCriterion(SortBy.NICK_NAME);
                                     }}
@@ -301,7 +301,7 @@ export default function People() {
                             <TableHead>
                                 <button
                                     type="button"
-                                    className="w-full flex justify-center items-center gap-1"
+                                    className="w-full flex justify-center items-center gap-1 cursor-pointer"
                                     onClick={() => {
                                         changeSortingCriterion(SortBy.LAST_NAME);
                                     }}
@@ -316,7 +316,7 @@ export default function People() {
                             <TableHead>
                                 <button
                                     type="button"
-                                    className="w-full flex justify-center items-center gap-1"
+                                    className="w-full flex justify-center items-center gap-1 cursor-pointer"
                                     onClick={() => {
                                         changeSortingCriterion(SortBy.FATHER);
                                     }}
@@ -331,7 +331,7 @@ export default function People() {
                             <TableHead>
                                 <button
                                     type="button"
-                                    className="w-full flex justify-center items-center gap-1"
+                                    className="w-full flex justify-center items-center gap-1 cursor-pointer"
                                     onClick={() => {
                                         changeSortingCriterion(SortBy.MOTHER);
                                     }}
@@ -346,7 +346,7 @@ export default function People() {
                             <TableHead>
                                 <button
                                     type="button"
-                                    className="w-full flex justify-center items-center gap-1"
+                                    className="w-full flex justify-center items-center gap-1 cursor-pointer"
                                     onClick={() => {
                                         changeSortingCriterion(SortBy.BIRTH);
                                     }}
@@ -361,7 +361,7 @@ export default function People() {
                             <TableHead>
                                 <button
                                     type="button"
-                                    className="w-full flex justify-center items-center gap-1"
+                                    className="w-full flex justify-center items-center gap-1 cursor-pointer"
                                     onClick={() => {
                                         changeSortingCriterion(SortBy.DEATH);
                                     }}
