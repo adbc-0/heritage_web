@@ -198,7 +198,7 @@ export function ImageInspection({ allFiles }: ImageInspectionProps) {
     return (
         <dialog
             ref={dialogRef}
-            className="bg-zinc-800 backdrop:bg-black backdrop:bg-opacity-55 h-full w-full rounded-lg"
+            className="bg-zinc-800 backdrop:bg-black backdrop:bg-opacity-55 h-full w-full rounded-lg m-auto"
         >
             <Image moveToNextImage={moveToNextImage} moveToPrevImage={moveToPrevImage} />
         </dialog>
