@@ -1,14 +1,11 @@
 package main
 
 import (
-	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
 	"os"
-
-	"github.com/jackc/pgx/v5"
 )
 
 type environment struct {
@@ -206,47 +203,42 @@ func getPersonDocuments(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func getPersonNotes(conn *pgx.Conn) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		userId := r.PathValue("id")
-		if userId == "" {
-			http.Error(w, "Path parameter is required", http.StatusBadRequest)
-			return
-		}
+func getPersonNotes(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"notes": []string{},
+	})
 
-		rows, err := conn.Query(context.Background(), "SELECT id, note FROM notes WHERE person_indi_id=$1", userId)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Query failed: %v\n", err)
-			os.Exit(1)
-		}
-		defer rows.Close()
+	// 	userId := r.PathValue("id")
+	// 	if userId == "" {
+	// 		http.Error(w, "Path parameter is required", http.StatusBadRequest)
+	// 		return
+	// 	}
 
-		notes, err := pgx.CollectRows(rows, pgx.RowToStructByName[note])
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Failed collecting rows: %v\n", err)
-			os.Exit(1)
-		}
+	// 	rows, err := conn.Query(context.Background(), "SELECT id, note FROM notes WHERE person_indi_id=$1", userId)
+	// 	if err != nil {
+	// 		fmt.Fprintf(os.Stderr, "Query failed: %v\n", err)
+	// 		os.Exit(1)
+	// 	}
+	// 	defer rows.Close()
 
-		w.WriteHeader(http.StatusOK)
-		w.Header().Set("Content-Type", "application/json")
-		err = json.NewEncoder(w).Encode(map[string]interface{}{
-			"notes": notes,
-		})
-		if err != nil {
-			http.Error(w, fmt.Sprintf("Error building the response, %v", err), http.StatusInternalServerError)
-			return
-		}
-	}
+	// 	notes, err := pgx.CollectRows(rows, pgx.RowToStructByName[note])
+	// 	if err != nil {
+	// 		fmt.Fprintf(os.Stderr, "Failed collecting rows: %v\n", err)
+	// 		os.Exit(1)
+	// 	}
+	// }
 }
 
 func main() {
 	// consider using pools -> pgxpool.New -> https://ectobit.com/blog/pgx-v5-3/
-	conn, err := pgx.Connect(context.Background(), env.dbConnectionString)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
-		os.Exit(1)
-	}
-	defer conn.Close(context.Background())
+	// conn, err := pgx.Connect(context.Background(), env.dbConnectionString)
+	// if err != nil {
+	// 	fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
+	// 	os.Exit(1)
+	// }
+	// defer conn.Close(context.Background())
 
 	fs := http.FileServer(http.Dir("public"))
 	http.Handle("/api/public/", ensureBasicAuth(handlerToHandlerFunc(http.StripPrefix("/api/public/", fs))))
@@ -255,12 +247,12 @@ func main() {
 	http.HandleFunc("GET /api/heritage", ensureBasicAuth((getHeritage)))
 	http.HandleFunc("GET /api/people/{id}/gallery", getPersonGallery)
 	http.HandleFunc("GET /api/people/{id}/documents", getPersonDocuments)
-	http.HandleFunc("GET /api/people/{id}/notes", getPersonNotes(conn))
+	http.HandleFunc("GET /api/people/{id}/notes", getPersonNotes)
 
 	http.HandleFunc("OPTIONS /api/auth", acceptPreflight)
 	http.HandleFunc("POST /api/auth", authUser)
 
-	err = http.ListenAndServe(":8080", nil)
+	err := http.ListenAndServe(":8080", nil)
 
 	if err != nil {
 		if errors.Is(err, http.ErrServerClosed) {
