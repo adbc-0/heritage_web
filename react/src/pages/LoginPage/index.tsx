@@ -88,7 +88,7 @@ export function LoginPage() {
                             autoComplete="current-password"
                         />
                         <Button
-                            className="cursor-pointer w-full mt-3"
+                            className="cursor-pointer w-full mt-3 active:scale-95 transition-transform"
                             type="submit"
                             disabled={authInProgress}
                         >
