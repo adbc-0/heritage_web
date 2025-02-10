@@ -72,7 +72,7 @@ export function LoginPage() {
                         </p>
                     </div>
                     {authError === AuthErrorType.WRONG_PASSWORD && (
-                        <div className="bg-red-50 border border-red-800 py-2 px-4 rounded-md">
+                        <div className="w-full bg-red-50 py-2 px-4 rounded-md">
                             <p className="text-red-800 text-center">Niepoprawne hasło</p>
                         </div>
                     )}
