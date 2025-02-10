@@ -93,20 +93,23 @@ export default function Branches() {
         };
     }, [branches, heritage, navigate]);
 
-    function toggleBranch(branchName: string) {
-        const copy = structuredClone(branches);
-        const branch = copy.find(({ name }) => name === branchName);
-        if (!branch) {
-            throw new Error("Branch was not found");
-        }
-        const userIsAttemptingToRemoveLastActiveBranch =
-            branch.active && renderedBranches.length === 1;
-        if (userIsAttemptingToRemoveLastActiveBranch) {
-            return;
-        }
-        branch.active = !branch.active;
-        setBranches(copy);
-    }
+    const toggleBranch = useCallback(
+        (branchName: string) => {
+            const copy = structuredClone(branches);
+            const branch = copy.find(({ name }) => name === branchName);
+            if (!branch) {
+                throw new Error("Branch was not found");
+            }
+            const userIsAttemptingToRemoveLastActiveBranch =
+                branch.active && renderedBranches.length === 1;
+            if (userIsAttemptingToRemoveLastActiveBranch) {
+                return;
+            }
+            branch.active = !branch.active;
+            setBranches(copy);
+        },
+        [branches, renderedBranches.length],
+    );
 
     function removeActiveBranchWithIcon(
         event: React.MouseEvent<SVGSVGElement>,
@@ -116,11 +119,20 @@ export default function Branches() {
         toggleBranch(branchName);
     }
 
-    const selectElementKeyListener = useCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
+    const drodownKeyListener = useCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === "Enter") {
             setDropdownOpen(true);
         }
     }, []);
+
+    const dropdownOptionKeyListener = useCallback(
+        (branchName: string) => (event: React.KeyboardEvent<HTMLInputElement>) => {
+            if (event.key === "Enter") {
+                toggleBranch(branchName);
+            }
+        },
+        [toggleBranch],
+    );
 
     return (
         <div className="grid grid-rows-[auto_1fr]">
@@ -136,13 +148,13 @@ export default function Branches() {
                         <PopoverTrigger asChild>
                             <div
                                 aria-labelledby={branchMultiselectId}
-                                className="flex justify-center items-center bg-background border border-border rounded-md p-1 pr-2 cursor-pointer"
+                                className="flex justify-center items-center bg-background border border-border rounded-md p-1 pr-2 cursor-pointer focus-visible:outline-2 focus-visible:outline-primary"
                                 role="combobox"
                                 aria-controls={ariaDropdownControls}
                                 aria-expanded={dropdownOpen}
                                 aria-haspopup="listbox"
                                 tabIndex={0}
-                                onKeyUp={selectElementKeyListener}
+                                onKeyUp={drodownKeyListener}
                             >
                                 <div className="flex justify-center flex-wrap gap-1">
                                     {renderedBranches.slice(0, SELECT_LIMIT).map((name) => (
@@ -169,24 +181,29 @@ export default function Branches() {
                             id={ariaDropdownControls}
                             className="flex flex-row p-0 border-border"
                         >
-                            <div className="w-full">
+                            <div role="list" className="w-full">
                                 {branches.map(({ name: branchName, active }) => (
                                     <div key={branchName} className="hover:bg-accent">
-                                        <div className="flex items-center gap-2 p-1 mx-2 cursor-pointer">
+                                        <div
+                                            tabIndex={0}
+                                            role="checkbox"
+                                            aria-checked={active}
+                                            className="flex items-center gap-2 py-1 px-3 cursor-pointer focus-visible:outline-2 focus-visible:outline-primary"
+                                            onClick={() => {
+                                                toggleBranch(branchName);
+                                            }}
+                                            onKeyUp={dropdownOptionKeyListener(branchName)}
+                                        >
                                             <Checkbox
+                                                tabIndex={-1}
                                                 className="cursor-pointer"
                                                 checked={active}
-                                                onClick={() => {
-                                                    toggleBranch(branchName);
-                                                }}
                                             />
                                             <Button
+                                                tabIndex={-1}
                                                 className="cursor-pointer w-full rounded-none p-0 text-left justify-start"
                                                 variant="ghost"
                                                 type="button"
-                                                onClick={() => {
-                                                    toggleBranch(branchName);
-                                                }}
                                             >
                                                 {branchName}
                                             </Button>
