@@ -46,7 +46,7 @@ export function Documents() {
     if (!filenames.length) {
         return (
             <div>
-                <h2 className="text-center font-semibold my-3">Brak dokumentów</h2>
+                <h2 className="text-center font-semibold my-10">Brak dokumentów</h2>
             </div>
         );
     }

@@ -39,21 +39,36 @@ export default function Person() {
 
     return (
         <Tabs defaultValue="basic" className="mt-1">
-            <div className="overflow-x-auto m-1">
-                <TabsList className="flex justify-start p-0">
-                    <TabsTrigger className="grow cursor-pointer" value="basic">
+            <div className="overflow-x-auto m-1 px-2">
+                <TabsList className="flex justify-start p-0 bg-background md:max-w-lg md:m-auto">
+                    <TabsTrigger
+                        className="grow cursor-pointer data-[state=active]:bg-background-darker ml-1"
+                        value="basic"
+                    >
                         Informacje
                     </TabsTrigger>
-                    <TabsTrigger className="grow cursor-pointer" value="tree">
+                    <TabsTrigger
+                        className="grow cursor-pointer data-[state=active]:bg-background-darker"
+                        value="tree"
+                    >
                         Drzewo
                     </TabsTrigger>
-                    <TabsTrigger className="grow cursor-pointer" value="photos">
+                    <TabsTrigger
+                        className="grow cursor-pointer data-[state=active]:bg-background-darker"
+                        value="photos"
+                    >
                         Zdjęcia
                     </TabsTrigger>
-                    <TabsTrigger className="grow cursor-pointer" value="documents">
+                    <TabsTrigger
+                        className="grow cursor-pointer data-[state=active]:bg-background-darker"
+                        value="documents"
+                    >
                         Dokumenty
                     </TabsTrigger>
-                    <TabsTrigger className="grow cursor-pointer" value="notes">
+                    <TabsTrigger
+                        className="grow cursor-pointer data-[state=active]:bg-background-darker mr-1"
+                        value="notes"
+                    >
                         Notatki
                     </TabsTrigger>
                 </TabsList>

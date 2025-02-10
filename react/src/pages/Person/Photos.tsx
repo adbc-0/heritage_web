@@ -62,7 +62,7 @@ export function Photos() {
     if (!files.length) {
         return (
             <div>
-                <h2 className="text-center font-semibold my-3">Brak zdjęć</h2>
+                <h2 className="text-center font-semibold my-10">Brak zdjęć</h2>
             </div>
         );
     }
