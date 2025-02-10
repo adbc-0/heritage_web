@@ -1,4 +1,5 @@
-import { ClipboardCopy } from "lucide-react";
+import { useState } from "react";
+import { Check, ClipboardCopy } from "lucide-react";
 import { TooltipContent, TooltipProvider, TooltipTrigger } from "@radix-ui/react-tooltip";
 
 import { cn } from "@/lib/utils";
@@ -9,9 +10,17 @@ type ClipboardProps = {
     text: string;
 };
 export function Clipboard({ text, className }: ClipboardProps) {
+    const [textCopiedToClipboard, setTextCopiedToClipboard] = useState(false);
+
     function copyToClipboard() {
         void navigator.clipboard.writeText(text);
+        setTextCopiedToClipboard(true);
+
+        setTimeout(() => {
+            setTextCopiedToClipboard(false);
+        }, 2_000);
     }
+
     return (
         <TooltipProvider delayDuration={0}>
             <Tooltip>
@@ -24,11 +33,15 @@ export function Clipboard({ text, className }: ClipboardProps) {
                     <p>{text}</p>
                     <TooltipTrigger asChild>
                         <button
-                            className="bg-background-darker p-1 rounded-lg cursor-pointer"
+                            className="bg-background-darker hover:bg-background-darker/90 p-1 rounded-lg cursor-pointer"
                             type="button"
                             onClick={copyToClipboard}
                         >
-                            <ClipboardCopy size={26} />
+                            {textCopiedToClipboard ? (
+                                <Check size={26} className="text-primary" />
+                            ) : (
+                                <ClipboardCopy size={26} />
+                            )}
                         </button>
                     </TooltipTrigger>
                 </div>

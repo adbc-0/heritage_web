@@ -1,4 +1,4 @@
-import { ComponentRef, useEffect, useId, useRef, useState } from "react";
+import React, { ComponentRef, useCallback, useEffect, useId, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import { ChevronDown, CircleX } from "lucide-react";
 import * as topola from "topola";
@@ -116,78 +116,87 @@ export default function Branches() {
         toggleBranch(branchName);
     }
 
+    const selectElementKeyListener = useCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === "Enter") {
+            setDropdownOpen(true);
+        }
+    }, []);
+
     return (
         <div className="grid grid-rows-[auto_1fr]">
             <div className="flex flex-col items-center gap-2 justify-center mt-4">
                 <p id={branchMultiselectId}>Wyświetlane gałęzie</p>
-                <Popover
-                    open={dropdownOpen}
-                    onOpenChange={(newStatus) => {
-                        setDropdownOpen(newStatus);
-                    }}
-                >
-                    <PopoverTrigger>
-                        <div
-                            aria-labelledby={branchMultiselectId}
-                            className="flex justify-center items-center bg-background border border-border rounded-md p-1 pr-2 mx-3 cursor-pointer"
-                            role="combobox"
-                            aria-controls={ariaDropdownControls}
-                            aria-expanded={false}
-                            aria-haspopup="listbox"
-                            tabIndex={-1}
-                        >
-                            <div className="flex justify-center flex-wrap gap-1">
-                                {renderedBranches.slice(0, SELECT_LIMIT).map((name) => (
-                                    <Badge key={name} className="h-8 gap-2" aria-label={name}>
-                                        {name}
-                                        <CircleX
-                                            size={20}
-                                            onClick={(event) => {
-                                                removeActiveBranchWithIcon(event, name);
-                                            }}
-                                        />
-                                    </Badge>
-                                ))}
-                                {renderedBranches.length > 2 && (
-                                    <span className="h-8 text-nowrap text-xs font-medium content-center text-primary mx-1">
-                                        +{renderedBranches.length - 2} więcej
-                                    </span>
-                                )}
-                            </div>
-                            <ChevronDown className="ml-2" color="grey" size={20} />
-                        </div>
-                    </PopoverTrigger>
-                    <PopoverContent
-                        id={ariaDropdownControls}
-                        className="flex flex-row p-0 border-border"
+                <div className="mx-3">
+                    <Popover
+                        open={dropdownOpen}
+                        onOpenChange={(newStatus) => {
+                            setDropdownOpen(newStatus);
+                        }}
                     >
-                        <div className="w-full">
-                            {branches.map(({ name: branchName, active }) => (
-                                <div key={branchName} className="hover:bg-accent">
-                                    <div className="flex items-center gap-2 p-1 mx-2 cursor-pointer">
-                                        <Checkbox
-                                            className="cursor-pointer"
-                                            checked={active}
-                                            onClick={() => {
-                                                toggleBranch(branchName);
-                                            }}
-                                        />
-                                        <Button
-                                            className="w-full rounded-none p-0 text-left justify-start"
-                                            variant="ghost"
-                                            type="button"
-                                            onClick={() => {
-                                                toggleBranch(branchName);
-                                            }}
-                                        >
-                                            {branchName}
-                                        </Button>
-                                    </div>
+                        <PopoverTrigger asChild>
+                            <div
+                                aria-labelledby={branchMultiselectId}
+                                className="flex justify-center items-center bg-background border border-border rounded-md p-1 pr-2 cursor-pointer"
+                                role="combobox"
+                                aria-controls={ariaDropdownControls}
+                                aria-expanded={dropdownOpen}
+                                aria-haspopup="listbox"
+                                tabIndex={0}
+                                onKeyUp={selectElementKeyListener}
+                            >
+                                <div className="flex justify-center flex-wrap gap-1">
+                                    {renderedBranches.slice(0, SELECT_LIMIT).map((name) => (
+                                        <Badge key={name} className="h-8 gap-2" aria-label={name}>
+                                            {name}
+                                            <CircleX
+                                                size={20}
+                                                onClick={(event) => {
+                                                    removeActiveBranchWithIcon(event, name);
+                                                }}
+                                            />
+                                        </Badge>
+                                    ))}
+                                    {renderedBranches.length > 2 && (
+                                        <span className="h-8 text-nowrap text-xs font-medium content-center text-primary mx-1">
+                                            +{renderedBranches.length - 2} więcej
+                                        </span>
+                                    )}
                                 </div>
-                            ))}
-                        </div>
-                    </PopoverContent>
-                </Popover>
+                                <ChevronDown className="ml-2" color="grey" size={20} />
+                            </div>
+                        </PopoverTrigger>
+                        <PopoverContent
+                            id={ariaDropdownControls}
+                            className="flex flex-row p-0 border-border"
+                        >
+                            <div className="w-full">
+                                {branches.map(({ name: branchName, active }) => (
+                                    <div key={branchName} className="hover:bg-accent">
+                                        <div className="flex items-center gap-2 p-1 mx-2 cursor-pointer">
+                                            <Checkbox
+                                                className="cursor-pointer"
+                                                checked={active}
+                                                onClick={() => {
+                                                    toggleBranch(branchName);
+                                                }}
+                                            />
+                                            <Button
+                                                className="cursor-pointer w-full rounded-none p-0 text-left justify-start"
+                                                variant="ghost"
+                                                type="button"
+                                                onClick={() => {
+                                                    toggleBranch(branchName);
+                                                }}
+                                            >
+                                                {branchName}
+                                            </Button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </PopoverContent>
+                    </Popover>
+                </div>
             </div>
             <div className="bg-background m-3 border border-border">
                 <svg ref={svgElement} id="relative" className="cursor-move" />

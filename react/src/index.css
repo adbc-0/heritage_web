@@ -6,6 +6,8 @@
 
 @layer base, utilites;
 
+/* ToDo: Change colors to green */
+/* hsl(113.71deg 100% 24.31%) */
 @layer base {
     :root {
         --background: 0 0% 100%;

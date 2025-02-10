@@ -87,7 +87,11 @@ export function LoginPage() {
                             name="password"
                             autoComplete="current-password"
                         />
-                        <Button className="w-full mt-3" type="submit" disabled={authInProgress}>
+                        <Button
+                            className="cursor-pointer w-full mt-3"
+                            type="submit"
+                            disabled={authInProgress}
+                        >
                             Wyślij
                         </Button>
                     </div>
