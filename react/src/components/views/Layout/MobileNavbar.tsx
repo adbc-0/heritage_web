@@ -6,6 +6,7 @@ import {
     Sheet,
     SheetClose,
     SheetContent,
+    SheetDescription,
     SheetHeader,
     SheetTitle,
     SheetTrigger,
@@ -13,7 +14,7 @@ import {
 
 export function MobileNavbar() {
     return (
-        <nav className="fixed bottom-0 flex justify-around bg-background w-full p-2 pt-3 border-t h-[4.25rem]">
+        <nav className="fixed bottom-0 flex justify-around bg-background w-full p-2 pt-3 border-t border-border h-[4.25rem]">
             <NavLink to={RouterPath.ROOT}>
                 <House className="m-auto" />
                 <span>Główna</span>
@@ -34,6 +35,7 @@ export function MobileNavbar() {
                 <SheetContent className="flex flex-col justify-center">
                     <SheetHeader>
                         <SheetTitle>Nasz Ród</SheetTitle>
+                        <SheetDescription />
                     </SheetHeader>
                     <SheetClose asChild>
                         <NavLink to={RouterPath.ROOT} className="flex gap-2 p-2">
@@ -55,6 +57,7 @@ export function MobileNavbar() {
                     </SheetClose>
                     <SheetHeader>
                         <SheetTitle>O stronie</SheetTitle>
+                        <SheetDescription />
                     </SheetHeader>
                     <SheetClose asChild>
                         <NavLink to={RouterPath.O_MNIE} className="flex gap-2 p-2">
@@ -82,35 +85,6 @@ export function MobileNavbar() {
                     </SheetClose>
                 </SheetContent>
             </Sheet>
-            {/* <Drawer>
-                <DrawerTrigger>
-                    <Menu className="m-auto" />
-                    <span>Menu</span>
-                </DrawerTrigger>
-                <DrawerContent>
-                    <NavLink to={RouterPath.ROOT} className="p-2">
-                        <span>Główna</span>
-                    </NavLink>
-                    <NavLink to={RouterPath.OSOBY} className="p-2">
-                        <span>Osoby</span>
-                    </NavLink>
-                    <NavLink to={RouterPath.GAŁĘZIE} className="p-2">
-                        <span>Gałęzie</span>
-                    </NavLink>
-                    <NavLink to={RouterPath.O_MNIE} className="p-2">
-                        O mnie
-                    </NavLink>
-                    <NavLink to={RouterPath.RODO} className="p-2">
-                        Rodo
-                    </NavLink>
-                    <NavLink to={RouterPath.KONTAKT} className="p-2">
-                        Kontakt
-                    </NavLink>
-                    <NavLink to={RouterPath.WSPARCIE} className="p-2">
-                        Wsparcie
-                    </NavLink>
-                </DrawerContent>
-            </Drawer> */}
         </nav>
     );
 }
