@@ -39,8 +39,8 @@ export default function Person() {
 
     return (
         <Tabs defaultValue="basic" className="mt-1">
-            <div className="overflow-x-auto m-1 px-2">
-                <TabsList className="flex justify-start p-0 bg-background md:max-w-lg md:m-auto">
+            <div className="flex sm:justify-center overflow-x-auto">
+                <TabsList className="bg-background grow sm:grow-0">
                     <TabsTrigger
                         className="grow cursor-pointer data-[state=active]:bg-background-darker ml-1"
                         value="basic"
