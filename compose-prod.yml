@@ -31,7 +31,7 @@ services:
     #     condition: service_healthy
     environment:
       PASSWORD: "DEV"
-    #   DATABASE_URL: "postgres://postgres:password@postgres:5432/heritage"
+      DATABASE_URL: "postgres://postgres:password@postgres:5432/heritage"
     ports:
       - 8080:8080
     networks:
