@@ -6,10 +6,6 @@ import { DeviceModeProvider } from "./providers/DeviceModeProvider";
 import { HeritageProvider } from "./providers/HeritageProvider";
 import { Layout } from "./components/views/Layout";
 import { RouterPath } from "./constants/routePaths";
-import { Contact } from "./pages/Contact";
-import { Rodo } from "./pages/Rodo";
-import { SupportMe } from "./pages/SupportMe";
-import { AboutMe } from "./pages/AboutMe";
 import { NoMatch } from "./pages/NoMatch";
 import { AuthProvider } from "./providers/AuthProvider";
 import { LoadingPage } from "./pages/LoadingPage";
@@ -21,6 +17,10 @@ const LazyHome = lazy(() => import("./pages/Home"));
 const LazyPeople = lazy(() => import("./pages/People"));
 const LazyBranch = lazy(() => import("./pages/Branches"));
 const LazyPerson = lazy(() => import("./pages/Person"));
+const LazyContact = lazy(() => import("./pages/Contact"));
+const LazyRodo = lazy(() => import("./pages/Rodo"));
+const LazySupport = lazy(() => import("./pages/SupportMe"));
+const LazyAboutMe = lazy(() => import("./pages/AboutMe"));
 
 const router = createBrowserRouter([
     {
@@ -71,33 +71,41 @@ const router = createBrowserRouter([
             {
                 path: RouterPath.KONTAKT,
                 element: (
-                    <ProtectedRoute>
-                        <Contact />
-                    </ProtectedRoute>
+                    <Suspense fallback={<LoadingPage />}>
+                        <ProtectedRoute>
+                            <LazyContact />
+                        </ProtectedRoute>
+                    </Suspense>
                 ),
             },
             {
                 path: RouterPath.RODO,
                 element: (
-                    <ProtectedRoute>
-                        <Rodo />
-                    </ProtectedRoute>
+                    <Suspense fallback={<LoadingPage />}>
+                        <ProtectedRoute>
+                            <LazyRodo />
+                        </ProtectedRoute>
+                    </Suspense>
                 ),
             },
             {
                 path: RouterPath.WSPARCIE,
                 element: (
-                    <ProtectedRoute>
-                        <SupportMe />
-                    </ProtectedRoute>
+                    <Suspense fallback={<LoadingPage />}>
+                        <ProtectedRoute>
+                            <LazySupport />
+                        </ProtectedRoute>
+                    </Suspense>
                 ),
             },
             {
                 path: RouterPath.O_MNIE,
                 element: (
-                    <ProtectedRoute>
-                        <AboutMe />
-                    </ProtectedRoute>
+                    <Suspense fallback={<LoadingPage />}>
+                        <ProtectedRoute>
+                            <LazyAboutMe />
+                        </ProtectedRoute>
+                    </Suspense>
                 ),
             },
         ],

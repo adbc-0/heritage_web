@@ -2,7 +2,7 @@ import { Clipboard } from "@/components/ui/clipboard";
 
 const CONTACT_MAIL = "m.b.ozimek@gmail.com";
 
-export function Contact() {
+export default function Contact() {
     return (
         <div className="h-full flex flex-col justify-center gap-4 px-8 py-6 max-w-xl md:max-w-3xl lg:max-w-5xl xl:max-w-6xl 2xl:max-w-7xl m-auto">
             <p>

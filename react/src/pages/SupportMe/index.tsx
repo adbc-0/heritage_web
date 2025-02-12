@@ -2,7 +2,7 @@ import { Clipboard } from "@/components/ui/clipboard";
 
 const BANK_ACCOUNT_NUMBER = "47 1140 2004 0000 3202 8322 9234";
 
-export function SupportMe() {
+export default function SupportMe() {
     return (
         <div className="h-full flex flex-col justify-center items-center gap-4 px-8 py-6 max-w-xl md:max-w-3xl lg:max-w-5xl xl:max-w-6xl 2xl:max-w-7xl m-auto">
             <p>
