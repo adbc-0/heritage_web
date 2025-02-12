@@ -135,7 +135,7 @@ export default function Branches() {
     );
 
     return (
-        <div className="grid grid-rows-[auto_1fr]">
+        <div className="h-full grid grid-rows-[auto_1fr]">
             <div className="flex flex-col items-center gap-2 justify-center mt-4">
                 <p id={branchMultiselectId}>Wyświetlane gałęzie</p>
                 <div className="mx-3">

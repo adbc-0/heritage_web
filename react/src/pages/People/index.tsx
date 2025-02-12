@@ -255,7 +255,7 @@ export default function People() {
     }
 
     return (
-        <div className="p-8">
+        <div className="p-8 h-full">
             <Input
                 className="max-w-sm bg-background mb-4"
                 placeholder="Wyszukaj osobę..."

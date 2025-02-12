@@ -26,7 +26,7 @@ export function Clipboard({ text, className }: ClipboardProps) {
             <Tooltip>
                 <div
                     className={cn(
-                        "m-auto flex items-center w-fit gap-3 sm:text-lg bg-background py-2 px-3 border border-border rounded-lg",
+                        "flex items-center w-fit gap-3 sm:text-lg bg-background py-2 px-3 border border-border rounded-lg",
                         className,
                     )}
                 >

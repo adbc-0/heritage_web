@@ -13,19 +13,22 @@ export function Layout() {
         return (
             <div className="min-h-full grid grid-rows-[auto_1fr_auto] grid-cols-1 bg-background-darker">
                 <DesktopNavbar />
-                <Outlet />
+                <main>
+                    <Outlet />
+                </main>
                 <DesktopFooter />
             </div>
         );
     }
     if (deviceType === DeviceType.MOBILE) {
         return (
-            <div className="min-h-full grid grid-rows-[auto_1fr_auto] grid-cols-1 bg-background-darker">
+            <div className="min-h-full grid grid-rows-[auto_1fr] grid-cols-1 bg-background-darker">
                 <MobileHeader />
-                <div className="mb-[4.25rem]">
+                {/* ToDo: Add some variable for tying it up with footer height */}
+                <main className="mb-[4.25rem]">
                     <Outlet />
-                    <MobileNavbar />
-                </div>
+                </main>
+                <MobileNavbar />
             </div>
         );
     }

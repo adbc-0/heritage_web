@@ -38,7 +38,7 @@ export default function Person() {
     }
 
     return (
-        <Tabs defaultValue="basic" className="mt-1">
+        <Tabs defaultValue="basic" className="mt-1 h-full">
             <div className="flex sm:justify-center overflow-x-auto">
                 <TabsList className="bg-background grow sm:grow-0">
                     <TabsTrigger
