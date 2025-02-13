@@ -1,4 +1,4 @@
-import { ReactElement, useMemo, useState } from "react";
+import { ReactElement, useMemo } from "react";
 
 import { hasTouchSupport } from "@/lib/utils";
 import { DeviceTypeContext } from "@/contexts/deviceMode";
@@ -8,8 +8,9 @@ type ReactChildren = {
     children: ReactElement | ReactElement[];
 };
 
+const deviceType = hasTouchSupport() ? DeviceType.MOBILE : DeviceType.DESKTOP;
+
 export function DeviceModeProvider({ children }: ReactChildren) {
-    const [deviceType] = useState(hasTouchSupport() ? DeviceType.MOBILE : DeviceType.DESKTOP);
-    const deviceTypeContextValue = useMemo(() => ({ deviceType }), [deviceType]);
+    const deviceTypeContextValue = useMemo(() => ({ deviceType }), []);
     return <DeviceTypeContext value={deviceTypeContextValue}>{children}</DeviceTypeContext>;
 }
