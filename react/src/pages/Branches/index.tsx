@@ -136,9 +136,11 @@ export default function Branches() {
 
     return (
         <div className="h-full grid grid-rows-[auto_1fr]">
-            <div className="flex flex-col items-center gap-2 justify-center mt-4">
-                <p id={branchMultiselectId}>Wyświetlane gałęzie</p>
-                <div className="mx-3">
+            <div className="flex flex-col gap-1 mx-3 sm:mx-auto justify-center mt-4">
+                <p id={branchMultiselectId} className="text-sm font-medium">
+                    Wyświetlane gałęzie
+                </p>
+                <div className="">
                     <Popover
                         open={dropdownOpen}
                         onOpenChange={(newStatus) => {
@@ -147,9 +149,10 @@ export default function Branches() {
                     >
                         <PopoverTrigger asChild>
                             <div
-                                aria-labelledby={branchMultiselectId}
+                                // id={branchMultiselectId}
                                 className="flex justify-center items-center bg-background border border-border rounded-md p-1 pr-2 cursor-pointer focus-visible:outline-2 focus-visible:outline-primary"
                                 role="combobox"
+                                aria-labelledby={branchMultiselectId}
                                 aria-controls={ariaDropdownControls}
                                 aria-expanded={dropdownOpen}
                                 aria-haspopup="listbox"
