@@ -38,11 +38,11 @@ export default function Person() {
     }
 
     return (
-        <Tabs defaultValue="basic" className="mt-1 h-full">
-            <div className="flex sm:justify-center overflow-x-auto">
-                <TabsList className="bg-background grow sm:grow-0">
+        <Tabs defaultValue="basic" className="flex flex-col h-full">
+            <div className="flex overflow-x-auto m-0 sm:mt-1 sm:justify-center">
+                <TabsList className="bg-background grow rounded-none sm:grow-0 sm:rounded-lg">
                     <TabsTrigger
-                        className="grow cursor-pointer data-[state=active]:bg-background-darker ml-1"
+                        className="grow cursor-pointer data-[state=active]:bg-background-darker"
                         value="basic"
                     >
                         Informacje
@@ -66,7 +66,7 @@ export default function Person() {
                         Dokumenty
                     </TabsTrigger>
                     <TabsTrigger
-                        className="grow cursor-pointer data-[state=active]:bg-background-darker mr-1"
+                        className="grow cursor-pointer data-[state=active]:bg-background-darker"
                         value="notes"
                     >
                         Notatki
@@ -76,7 +76,7 @@ export default function Person() {
             <TabsContent value="basic">
                 <Basic />
             </TabsContent>
-            <TabsContent className="h-[90%]" value="tree">
+            <TabsContent className="m-0 my-2 grow" value="tree">
                 <Tree />
             </TabsContent>
             <TabsContent value="photos">

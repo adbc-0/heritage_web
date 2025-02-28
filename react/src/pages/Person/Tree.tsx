@@ -6,7 +6,7 @@ import { RouterPath } from "@/constants/routePaths";
 import { useHeritage } from "@/contexts/heritageContext";
 import { transformDatasetForPerson } from "@/utils/heritage";
 
-// what will happen with ozimki root. Will dummy node be rendered?
+// ToDo: what will happen with ozimki root. Will dummy node be rendered?
 export function Tree() {
     const { id } = useParams<Params>();
     const { heritage } = useHeritage();
@@ -39,10 +39,8 @@ export function Tree() {
         };
     }, [heritage, id, navigate]);
     return (
-        <div className="m-3 h-full">
-            <div className="mt-3 mx-auto bg-background border border-border w-[90%] md:w-[75%] h-full">
-                <svg ref={svgElement} id="relative" className="rounded-md cursor-move" />
-            </div>
+        <div className="bg-background border border-border h-full">
+            <svg ref={svgElement} id="relative" className="rounded-md cursor-move" />
         </div>
     );
 }

@@ -136,7 +136,7 @@ export default function Branches() {
 
     return (
         <div className="h-full grid grid-rows-[auto_1fr]">
-            <div className="flex flex-col gap-1 mx-3 sm:mx-auto justify-center mt-4">
+            <div className="flex flex-col gap-1 mx-3 sm:mx-auto justify-center mt-2">
                 <p id={branchMultiselectId} className="text-sm font-medium">
                     Wyświetlane gałęzie
                 </p>
@@ -218,7 +218,7 @@ export default function Branches() {
                     </Popover>
                 </div>
             </div>
-            <div className="bg-background m-3 border border-border">
+            <div className="bg-background my-2 border border-border">
                 <svg ref={svgElement} id="relative" className="cursor-move" />
             </div>
         </div>
