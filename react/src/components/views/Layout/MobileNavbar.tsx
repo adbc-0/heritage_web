@@ -27,7 +27,7 @@ export function MobileNavbar() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
     return (
-        <nav className="fixed bottom-0 flex justify-around items-center bg-background w-full p-2 pt-3 border-t border-border h-[4.25rem]">
+        <nav className="fixed left-0 bottom-0 flex justify-around items-center bg-background w-full p-2 pt-3 border-t border-border h-[4.25rem]">
             <NavLink to={RouterPath.ROOT} className={navlinkStyle}>
                 <House size={22} className="m-auto" />
                 <span className="text-xs font-medium block text-center">Główna</span>
