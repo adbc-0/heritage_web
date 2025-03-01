@@ -255,7 +255,7 @@ export default function People() {
     }
 
     return (
-        <div className="px-8 pb-8 pt-4 h-full">
+        <div className="px-8 py-4 h-full">
             <Input
                 className="max-w-sm bg-background mb-4"
                 placeholder="Wyszukaj osobę..."

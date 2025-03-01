@@ -24,8 +24,7 @@ export function Layout() {
         return (
             <div className="min-h-full grid grid-rows-[auto_1fr] grid-cols-1 bg-background-darker">
                 <MobileHeader />
-                {/* ToDo: Add some variable for tying it up with footer height */}
-                <main className="mb-[4.25rem]">
+                <main>
                     <Outlet />
                 </main>
                 <MobileNavbar />
