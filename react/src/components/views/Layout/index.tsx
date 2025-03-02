@@ -22,7 +22,7 @@ export function Layout() {
     }
     if (deviceType === DeviceType.MOBILE) {
         return (
-            <div className="min-h-full grid grid-rows-[auto_1fr] grid-cols-1 bg-background-darker">
+            <div className="min-h-full grid grid-rows-[auto_1fr_auto] grid-cols-1 bg-background-darker">
                 <MobileHeader />
                 <main>
                     <Outlet />
