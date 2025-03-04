@@ -1,6 +1,6 @@
 export default function Rodo() {
     return (
-        <div className="h-full flex flex-col justify-center gap-4 px-8 py-6 max-w-xl md:max-w-3xl m-auto">
+        <div className="min-h-full flex flex-col justify-center gap-4 px-8 py-6 max-w-xl md:max-w-3xl m-auto">
             <p>
                 Rozporządzenie Parlamentu Europejskiego i Rady (UE) 2016/679 z dnia 27 kwietnia 2016
                 roku, przekazuje w motywie 27. preambuły, że “Niniejsze rozporządzenie nie ma
