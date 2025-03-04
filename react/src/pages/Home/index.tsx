@@ -28,7 +28,7 @@ export default function Home() {
 
     return (
         <div className="h-full py-2">
-            <div className="bg-background border border-border h-full">
+            <div className="bg-background border-y border-border h-full">
                 <svg id="relative" className="cursor-move" />
             </div>
         </div>

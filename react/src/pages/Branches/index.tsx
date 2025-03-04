@@ -218,7 +218,7 @@ export default function Branches() {
                     </Popover>
                 </div>
             </div>
-            <div className="bg-background my-2 border border-border">
+            <div className="bg-background my-2 border-y border-border">
                 <svg ref={svgElement} id="relative" className="cursor-move" />
             </div>
         </div>

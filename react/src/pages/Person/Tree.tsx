@@ -39,7 +39,7 @@ export function Tree() {
         };
     }, [heritage, id, navigate]);
     return (
-        <div className="bg-background border border-border h-full">
+        <div className="bg-background border-y border-border h-full">
             <svg ref={svgElement} id="relative" className="rounded-md cursor-move" />
         </div>
     );
