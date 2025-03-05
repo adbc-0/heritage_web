@@ -11,7 +11,7 @@ export function Layout() {
     const { deviceType } = useDeviceDetect();
     if (deviceType === DeviceType.DESKTOP) {
         return (
-            <div className="min-h-full grid grid-rows-[auto_1fr_auto] grid-cols-1 bg-background-darker">
+            <div className="min-h-full grid grid-rows-[min-content_auto_min-content] grid-cols-1 bg-background-darker">
                 <DesktopNavbar />
                 <main>
                     <Outlet />
@@ -22,7 +22,7 @@ export function Layout() {
     }
     if (deviceType === DeviceType.MOBILE) {
         return (
-            <div className="min-h-full grid grid-rows-[auto_1fr_auto] grid-cols-1 bg-background-darker">
+            <div className="min-h-full grid grid-rows-[min-content_auto_min-content] grid-cols-1 bg-background-darker">
                 <MobileHeader />
                 <main>
                     <Outlet />
