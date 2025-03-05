@@ -111,8 +111,17 @@ const router = createBrowserRouter([
         ],
     },
     {
-        path: "/testpage",
-        element: <div className="h-full flex flex-col justify-center">Test</div>,
+        path: "/testpage/v1",
+        element: <div className="h-full flex flex-col justify-center text-center">Test</div>,
+    },
+    {
+        path: "/testpage/v2",
+        element: (
+            <div className="flex flex-col h-full">
+                <div>Nav</div>
+                <div className="grow h-full flex flex-col justify-center text-center">Test</div>
+            </div>
+        ),
     },
     {
         path: RouterPath.LOGOWANIE,
