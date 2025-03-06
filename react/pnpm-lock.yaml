@@ -75,8 +75,8 @@ importers:
         specifier: 1.0.7
         version: 1.0.7(tailwindcss@4.0.9)
       topola:
-        specifier: file:lib/topola-3.7.4.tgz
-        version: file:lib/topola-3.7.4.tgz
+        specifier: file:lib/topola-3.7.5.tgz
+        version: file:lib/topola-3.7.5.tgz
       typescript:
         specifier: 5.7.3
         version: 5.7.3
@@ -2166,9 +2166,9 @@ packages:
     resolution: {integrity: sha512-65P7iz6X5yEr1cwcgvQxbbIw7Uk3gOy5dIdtZ4rDveLqhrdJP+Li/Hx6tyK0NEb+2GCyneCMJiGqrADCSNk8sQ==}
     engines: {node: '>=8.0'}
 
-  topola@file:lib/topola-3.7.4.tgz:
-    resolution: {integrity: sha512-HR7rjq1D8aIXaoBXfoJXCrdRB8EwVPrHxDXcvHCVsNYAfsXeUdVRFBmPtRHooTmsDuQrS5nGxLkL20qEwMBZPA==, tarball: file:lib/topola-3.7.4.tgz}
-    version: 3.7.4
+  topola@file:lib/topola-3.7.5.tgz:
+    resolution: {integrity: sha512-uls0e8TBy6SZ04scYwLAfpM0c/cynSG127jsABdaQc9ZrexazcVdn3HP0Skq2K57ZTk1jAA/e0HJy9l1rzjpzQ==, tarball: file:lib/topola-3.7.5.tgz}
+    version: 3.7.5
 
   tree-crawl@1.2.2:
     resolution: {integrity: sha512-z1Or/cFreevESD/U7w1mFdxcQi9MOCZtRwD8zD+o1AetbE4jZEWlqiGMSnLKDXrwfmPNU7bqvq3hz9d/cmZ87g==}
@@ -4506,7 +4506,7 @@ snapshots:
     dependencies:
       is-number: 7.0.0
 
-  topola@file:lib/topola-3.7.4.tgz:
+  topola@file:lib/topola-3.7.5.tgz:
     dependencies:
       array-flat-polyfill: 1.0.1
       d3-array: 2.12.1
