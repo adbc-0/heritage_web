@@ -4,7 +4,7 @@ const CONTACT_MAIL = "m.b.ozimek@gmail.com";
 
 export default function Contact() {
     return (
-        <div className="h-full flex flex-col justify-center gap-4 px-8 py-6 max-w-xl md:max-w-3xl m-auto">
+        <div className="h-full flex flex-col gap-4 px-8 py-8 max-w-xl md:max-w-3xl m-auto">
             <p>
                 Napisz do mnie jeśli masz jakieś informacje, które chciał/abyś zamieścić na stronie.
             </p>

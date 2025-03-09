@@ -61,7 +61,7 @@ export function LoginPage() {
     }
 
     return (
-        <div className="min-h-[100dvh] flex items-center justify-center sm:bg-background-darker sm:border border-border">
+        <div className="flex items-center justify-center pt-12 sm:pt-0 sm:h-full sm:bg-background-darker sm:border sm:border-border">
             <form onSubmit={(e) => void login(e)}>
                 <div className="flex flex-col gap-5 items-center px-6 py-8 bg-background rounded-3xl">
                     <LockKeyhole size={60} />

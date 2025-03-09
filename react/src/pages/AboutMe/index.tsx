@@ -1,6 +1,6 @@
 export default function AboutMe() {
     return (
-        <div className="h-full flex flex-col justify-center gap-4 px-8 py-6 max-w-xl md:max-w-3xl lg:max-w-5xl xl:max-w-6xl 2xl:max-w-7xl m-auto">
+        <div className="h-full flex flex-col gap-4 px-8 py-8 max-w-xl md:max-w-3xl lg:max-w-5xl xl:max-w-6xl 2xl:max-w-7xl m-auto">
             <p>Naszród.pl to strona poświęcona na tworzenie drzewa genealogicznego.</p>
             <p>
                 Od czasów zamierzchłej podstawówki, kiedy otrzymałam zadanie domowe w postaci
