@@ -10,7 +10,7 @@ const navlinkStyle = ({ isActive }: NavLinkRenderProps) =>
         ? "text-highlight bg-highlight-background border border-highlight-background rounded-3xl py-2 px-3"
         : "text-foreground bg-background border border-background rounded-3xl py-2 px-3 hover:bg-accent";
 
-export function DesktopNavbar() {
+export function DesktopTopbar() {
     preload(LOGO, { as: "image", type: "image/svg+xml" });
     return (
         <nav className="bg-background grid grid-cols-[auto_1fr] px-8 py-3 items-center border-b border-border gap-2">

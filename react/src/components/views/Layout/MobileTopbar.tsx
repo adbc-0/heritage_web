@@ -20,7 +20,7 @@ const sidebarNavlinkStyle = ({ isActive }: NavLinkRenderProps) =>
         ? "flex gap-2 p-2 bg-highlight-background text-highlight rounded-md"
         : "flex gap-2 p-2 bg-background text-foreground rounded-md";
 
-export function MobileHeader() {
+export function MobileTopbar() {
     preload(LOGO, { as: "image", type: "image/svg+xml" });
 
     const [sidebarOpen, setSidebarOpen] = useState(false);

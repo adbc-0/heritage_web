@@ -2,9 +2,9 @@ import { Outlet } from "react-router";
 
 import { useDeviceDetect } from "@/contexts/deviceMode";
 import { DeviceType } from "@/constants/deviceType";
-import { DesktopNavbar } from "./DesktopNavbar";
+import { DesktopTopbar } from "./DesktopTopbar";
 import { DesktopFooter } from "./DesktopFooter";
-import { MobileHeader } from "./MobileHeader";
+import { MobileTopbar } from "./MobileTopbar";
 
 // Next version:
 // Remove bottom nav bar from mobile
@@ -20,7 +20,7 @@ export function Layout() {
     if (deviceType === DeviceType.DESKTOP) {
         return (
             <div className="min-h-full grid grid-rows-[min-content_auto_min-content] grid-cols-1 bg-background-darker">
-                <DesktopNavbar />
+                <DesktopTopbar />
                 <main>
                     <Outlet />
                 </main>
@@ -31,7 +31,7 @@ export function Layout() {
     if (deviceType === DeviceType.MOBILE) {
         return (
             <div className="min-h-full grid grid-rows-[min-content_auto_min-content] grid-cols-1 bg-background-darker">
-                <MobileHeader />
+                <MobileTopbar />
                 <main>
                     <Outlet />
                 </main>
