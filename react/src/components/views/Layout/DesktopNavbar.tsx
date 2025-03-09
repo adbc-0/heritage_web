@@ -21,9 +21,6 @@ export function DesktopNavbar() {
                 <NavLink to={RouterPath.OSOBY} className={navlinkStyle}>
                     Osoby
                 </NavLink>
-                <NavLink to={RouterPath.GAŁĘZIE} className={navlinkStyle}>
-                    Gałęzie
-                </NavLink>
             </div>
         </nav>
     );

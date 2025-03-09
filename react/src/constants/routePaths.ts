@@ -1,7 +1,6 @@
 export const RouterPath = {
     ROOT: "/",
     OSOBY: "/osoby",
-    GAŁĘZIE: "/galezie",
     KONTAKT: "/kontakt",
     RODO: "/rodo",
     WSPARCIE: "/wsparcie",

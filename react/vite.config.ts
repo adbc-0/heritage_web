@@ -9,9 +9,6 @@ export default defineConfig({
     server: {
         allowedHosts: ["naszrod.local"],
         host: true,
-        hmr: {
-            clientPort: 443,
-        },
     },
     build: {
         target: "esnext",

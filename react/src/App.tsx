@@ -15,7 +15,6 @@ import { ProtectedRoute } from "./components/ProtectedRoute";
 
 const LazyHome = lazy(() => import("./pages/Home"));
 const LazyPeople = lazy(() => import("./pages/People"));
-const LazyBranch = lazy(() => import("./pages/Branches"));
 const LazyPerson = lazy(() => import("./pages/Person"));
 const LazyContact = lazy(() => import("./pages/Contact"));
 const LazyRodo = lazy(() => import("./pages/Rodo"));
@@ -54,16 +53,6 @@ const router = createBrowserRouter([
                     <Suspense fallback={<LoadingPage />}>
                         <ProtectedRoute>
                             <LazyPerson />
-                        </ProtectedRoute>
-                    </Suspense>
-                ),
-            },
-            {
-                path: RouterPath.GAŁĘZIE,
-                element: (
-                    <Suspense fallback={<LoadingPage />}>
-                        <ProtectedRoute>
-                            <LazyBranch />
                         </ProtectedRoute>
                     </Suspense>
                 ),

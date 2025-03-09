@@ -3,9 +3,17 @@ import { Outlet } from "react-router";
 import { useDeviceDetect } from "@/contexts/deviceMode";
 import { DeviceType } from "@/constants/deviceType";
 import { DesktopNavbar } from "./DesktopNavbar";
-import { MobileNavbar } from "./MobileNavbar";
 import { DesktopFooter } from "./DesktopFooter";
 import { MobileHeader } from "./MobileHeader";
+
+// Next version:
+// Remove bottom nav bar from mobile
+
+// Centering vertically elements on mobile chrome (and possibly safari) properly is not possible.
+// When entering website using url initial innerHeight is calculated with added virtual keyboard (for example 900px instead of 600px).
+// It also makes bottom navbar
+// Related stack overflow thread:
+//  - https://stackoverflow.com/questions/76026292/why-is-window-innerheight-incorrect-until-i-tap-chrome-android
 
 export function Layout() {
     const { deviceType } = useDeviceDetect();
@@ -27,23 +35,8 @@ export function Layout() {
                 <main>
                     <Outlet />
                 </main>
-                <MobileNavbar />
             </div>
         );
     }
     throw new Error("unhandled device type");
 }
-
-////////////// DESKTOP
-// STATIC NAVBAR -> 4rem
-// MARGIN TOP    -> 1rem
-// BASE          -> (100% - 2rem - 4rem - 3rem)
-// MARGIN BOTTOM -> 1rem
-// STATIC FOOTER -> 3rem
-
-////////////// MOBILE
-// STATIC NAVBAR -> 3.5rem
-// MARGIN TOP    -> 1rem
-// BASE          -> (100% - 2rem - 3rem - 3rem)
-// MARGIN BOTTOM -> 1rem
-// STATIC FOOTER -> 4.25rem
