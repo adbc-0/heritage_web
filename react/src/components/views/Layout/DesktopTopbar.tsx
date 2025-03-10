@@ -18,6 +18,9 @@ export function DesktopTopbar() {
                 <img src={LOGO} width={170} height={32} className="cursor-pointer" alt="logo" />
             </NavLink>
             <div className="justify-self-end flex gap-1 text-sm font-medium">
+                <NavLink to={RouterPath.ROOT} className={navlinkStyle}>
+                    Drzewo
+                </NavLink>
                 <NavLink to={RouterPath.OSOBY} className={navlinkStyle}>
                     Osoby
                 </NavLink>

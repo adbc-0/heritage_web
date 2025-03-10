@@ -38,8 +38,8 @@ export default function Person() {
     }
 
     return (
-        <Tabs defaultValue="basic" className="flex flex-col h-full">
-            <div className="flex overflow-x-auto m-0 sm:mt-1 sm:justify-center">
+        <Tabs defaultValue="basic" className="flex flex-col h-full sm:pt-3">
+            <div className="flex overflow-x-auto sm:justify-center">
                 <TabsList className="bg-background grow rounded-none sm:grow-0 sm:rounded-lg">
                     <TabsTrigger
                         className="grow cursor-pointer data-[state=active]:bg-background-darker"
@@ -73,19 +73,19 @@ export default function Person() {
                     </TabsTrigger>
                 </TabsList>
             </div>
-            <TabsContent value="basic">
+            <TabsContent className="m-0" value="basic">
                 <Basic />
             </TabsContent>
-            <TabsContent className="m-0 my-2 grow" value="tree">
+            <TabsContent className="m-0 sm:mt-3 grow" value="tree">
                 <Tree />
             </TabsContent>
-            <TabsContent value="photos">
+            <TabsContent className="m-0" value="photos">
                 <Photos />
             </TabsContent>
-            <TabsContent value="documents">
+            <TabsContent className="m-0" value="documents">
                 <Documents />
             </TabsContent>
-            <TabsContent value="notes">
+            <TabsContent className="m-0" value="notes">
                 <Notes />
             </TabsContent>
         </Tabs>

@@ -47,7 +47,7 @@ export function MobileTopbar() {
                         }}
                     >
                         <House />
-                        <span>Strona główna</span>
+                        <span>Drzewo</span>
                     </NavLink>
                     <NavLink
                         to={RouterPath.OSOBY}

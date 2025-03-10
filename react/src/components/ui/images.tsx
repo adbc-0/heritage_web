@@ -92,7 +92,7 @@ export function Images({ children }: ReactChildren) {
 
 export function ImagesThumbnails({ children }: ReactChildren) {
     return (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 auto-rows-[minmax(auto,200px)] md:auto-rows-[minmax(auto,250px)]  xl:auto-rows-[minmax(auto,300px)]  gap-6 mx-4 mb-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 auto-rows-[minmax(auto,200px)] md:auto-rows-[minmax(auto,250px)] xl:auto-rows-[minmax(auto,300px)] gap-6 m-4">
             {children}
         </div>
     );

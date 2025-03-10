@@ -142,7 +142,7 @@ export function Basic() {
     const table = createTable(person);
 
     return (
-        <section className="mb-4">
+        <section className="py-3">
             <Section title="Podstawowe informacje" rows={table.basicInfoTable} />
             <SectionWithLinks title="Ojciec" rows={table.fatherTable} />
             <SectionWithLinks title="Matka" rows={table.motherTable} />

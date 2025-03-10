@@ -33,7 +33,7 @@ export function Clipboard({ text, className }: ClipboardProps) {
                     <p>{text}</p>
                     <TooltipTrigger asChild>
                         <button
-                            className="bg-background-darker hover:bg-background-darker/90 p-1 rounded-lg cursor-pointer"
+                            className="hover:bg-background-darker/90 p-1 rounded-lg cursor-pointer"
                             type="button"
                             onClick={copyToClipboard}
                         >

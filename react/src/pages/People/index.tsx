@@ -267,11 +267,11 @@ export default function People() {
             <div className="max-w-[calc(100vw-4rem)] rounded-md border border-border bg-background block">
                 <Table>
                     <TableHeader>
-                        <TableRow className="border-border">
-                            <TableHead className="cursor-pointer">
+                        <TableRow className="border-border hover:bg-inherit">
+                            <TableHead>
                                 <button
                                     type="button"
-                                    className="w-full flex justify-center items-center gap-1 cursor-pointer"
+                                    className="w-full flex justify-center items-center gap-1 cursor-pointer py-1 rounded-md hover:bg-muted/50"
                                     onClick={() => {
                                         changeSortingCriterion(SortBy.FIRST_NAME);
                                     }}
@@ -286,7 +286,7 @@ export default function People() {
                             <TableHead>
                                 <button
                                     type="button"
-                                    className="w-full flex justify-center items-center gap-1 cursor-pointer"
+                                    className="w-full flex justify-center items-center gap-1 cursor-pointer py-1 rounded-md hover:bg-muted/50"
                                     onClick={() => {
                                         changeSortingCriterion(SortBy.LAST_NAME);
                                     }}
@@ -301,7 +301,7 @@ export default function People() {
                             <TableHead>
                                 <button
                                     type="button"
-                                    className="w-full flex justify-center items-center gap-1 cursor-pointer"
+                                    className="w-full flex justify-center items-center gap-1 cursor-pointer py-1 rounded-md hover:bg-muted/50"
                                     onClick={() => {
                                         changeSortingCriterion(SortBy.NICK_NAME);
                                     }}
@@ -316,7 +316,7 @@ export default function People() {
                             <TableHead>
                                 <button
                                     type="button"
-                                    className="w-full flex justify-center items-center gap-1 cursor-pointer"
+                                    className="w-full flex justify-center items-center gap-1 cursor-pointer py-1 rounded-md hover:bg-muted/50"
                                     onClick={() => {
                                         changeSortingCriterion(SortBy.FATHER);
                                     }}
@@ -331,7 +331,7 @@ export default function People() {
                             <TableHead>
                                 <button
                                     type="button"
-                                    className="w-full flex justify-center items-center gap-1 cursor-pointer"
+                                    className="w-full flex justify-center items-center gap-1 cursor-pointer py-1 rounded-md hover:bg-muted/50"
                                     onClick={() => {
                                         changeSortingCriterion(SortBy.MOTHER);
                                     }}
@@ -346,7 +346,7 @@ export default function People() {
                             <TableHead>
                                 <button
                                     type="button"
-                                    className="w-full flex justify-center items-center gap-1 cursor-pointer"
+                                    className="w-full flex justify-center items-center gap-1 cursor-pointer py-1 rounded-md hover:bg-muted/50"
                                     onClick={() => {
                                         changeSortingCriterion(SortBy.BIRTH);
                                     }}
@@ -361,7 +361,7 @@ export default function People() {
                             <TableHead>
                                 <button
                                     type="button"
-                                    className="w-full flex justify-center items-center gap-1 cursor-pointer"
+                                    className="w-full flex justify-center items-center gap-1 cursor-pointer py-1 rounded-md hover:bg-muted/50"
                                     onClick={() => {
                                         changeSortingCriterion(SortBy.DEATH);
                                     }}
@@ -376,27 +376,37 @@ export default function People() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {people.map((person) => (
-                            <TableRow
-                                className="cursor-pointer border-border"
-                                key={person.id}
-                                onClick={() => {
-                                    void navigate(`${RouterPath.OSOBY}/${person.id}`);
-                                }}
-                            >
-                                <TableCell className="text-center">{person.firstName}</TableCell>
-                                <TableCell className="text-center">{person.nickName}</TableCell>
-                                <TableCell className="text-center">{person.lastName}</TableCell>
-                                <TableCell className="text-center">{person.dad}</TableCell>
-                                <TableCell className="text-center">{person.mom}</TableCell>
-                                <TableCell className="text-center">
-                                    {person.birth?.date.year}
-                                </TableCell>
-                                <TableCell className="text-center">
-                                    {person.death?.date.year}
+                        {people.length ? (
+                            people.map((person) => (
+                                <TableRow
+                                    className="cursor-pointer border-border"
+                                    key={person.id}
+                                    onClick={() => {
+                                        void navigate(`${RouterPath.OSOBY}/${person.id}`);
+                                    }}
+                                >
+                                    <TableCell className="text-center">
+                                        {person.firstName}
+                                    </TableCell>
+                                    <TableCell className="text-center">{person.nickName}</TableCell>
+                                    <TableCell className="text-center">{person.lastName}</TableCell>
+                                    <TableCell className="text-center">{person.dad}</TableCell>
+                                    <TableCell className="text-center">{person.mom}</TableCell>
+                                    <TableCell className="text-center">
+                                        {person.birth?.date.year}
+                                    </TableCell>
+                                    <TableCell className="text-center">
+                                        {person.death?.date.year}
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        ) : (
+                            <TableRow className="border-border hover:bg-inherit">
+                                <TableCell colSpan={7} className="text-center">
+                                    Brak wyników.
                                 </TableCell>
                             </TableRow>
-                        ))}
+                        )}
                     </TableBody>
                 </Table>
             </div>
