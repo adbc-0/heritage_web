@@ -32,6 +32,9 @@ services:
         environment:
             PASSWORD: "DEV"
             DATABASE_URL: "postgres://postgres:password@postgres:5432/heritage"
+        volumes:
+            - ./api/public:/app/public
+            - ./api/required:/app/required
         ports:
             - 8080:8080
         networks:
