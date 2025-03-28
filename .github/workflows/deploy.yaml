@@ -26,7 +26,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: extract metadata (tags, labels) for rest-api Docker image
-        id: meta
+        id: meta_rest-api
         uses: docker/metadata-action@v5
         with:
           images: |
@@ -38,11 +38,11 @@ jobs:
           context: ./api
           file: ./api/docker/prod.Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.meta_rest-api.outputs.tags }}
+          labels: ${{ steps.meta_rest-api.outputs.labels }}
 
       - name: extract metadata (tags, labels) for server Docker image
-        id: meta
+        id: meta_server
         uses: docker/metadata-action@v5
         with:
           images: |
@@ -54,8 +54,8 @@ jobs:
           context: ./react
           file: ./react/docker/prod.Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.meta_server.outputs.tags }}
+          labels: ${{ steps.meta_server.outputs.labels }}
           build-args: |
             "VITE_API_URL=${{ secrets.API_URL }}"
 
