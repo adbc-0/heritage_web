@@ -1,4 +1,4 @@
-naszrod.pl {
+{$DOMAIN} {
     handle /api/* {
         reverse_proxy rest-api:8080
     }

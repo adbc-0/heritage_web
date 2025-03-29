@@ -1,4 +1,4 @@
-naszrod.local {
+{$DOMAIN} {
     tls internal
 
     handle /api/* {

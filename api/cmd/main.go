@@ -11,7 +11,7 @@ import (
 type environment struct {
 	// mode     string
 	password           string
-	dbConnectionString string
+	// dbConnectionString string
 	// cors     string
 }
 
@@ -19,18 +19,18 @@ type httpError struct {
 	Message string `json:"message"`
 }
 
-type note struct {
-	Id   string `json:"id"`
-	Note string `json:"note"`
-}
+// type note struct {
+// 	Id   string `json:"id"`
+// 	Note string `json:"note"`
+// }
 
-func setEnvVar(key string) string {
-	value, ok := os.LookupEnv(key)
-	if !ok {
-		panic("Missing required env variable")
-	}
-	return value
-}
+// func setEnvVar(key string) string {
+// 	value, ok := os.LookupEnv(key)
+// 	if !ok {
+// 		panic("Missing required env variable")
+// 	}
+// 	return value
+// }
 
 func setEnvVarWithFallback(key string, defaultValue string) string {
 	value, ok := os.LookupEnv(key)
@@ -45,7 +45,7 @@ var cookieValidityTime = 1 * 86400 // validity in days
 var env = environment{
 	// mode:     setEnv("MODE", "DEV"),
 	password:           setEnvVarWithFallback("PASSWORD", "DEV"),
-	dbConnectionString: setEnvVar("DATABASE_URL"),
+	// dbConnectionString: setEnvVar("DATABASE_URL"),
 	// cors:     setEnv("CORS", "http://localhost:5173"),
 }
 

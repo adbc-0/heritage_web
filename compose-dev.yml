@@ -31,7 +31,6 @@ services:
                 condition: service_healthy
         environment:
             PASSWORD: "DEV"
-            DATABASE_URL: "postgres://postgres:password@postgres:5432/heritage"
         volumes:
             - ./api/public:/app/public
             - ./api/required:/app/required
@@ -43,6 +42,8 @@ services:
     server:
         container_name: server
         image: caddy:2.9.1-alpine
+        environment:
+            DOMAIN: "naszrod.local"
         restart: unless-stopped
         ports:
             - 443:443
@@ -58,6 +59,8 @@ services:
         build:
             context: ./react
             dockerfile: ./docker/dev.Dockerfile
+        environment:
+            VITE_API_URL: "https://naszrod.local/api"
         depends_on:
             - server
         ports:
