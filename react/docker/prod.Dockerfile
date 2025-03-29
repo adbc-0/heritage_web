@@ -10,7 +10,6 @@ RUN corepack enable
 FROM base AS build
 
 ARG VITE_API_URL
-ENV VITE_API_URL=$VITE_API_URL
 
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
 RUN pnpm run build
