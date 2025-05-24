@@ -269,7 +269,6 @@ function parseDataForStratification(entryNode: Node, json: Heritage) {
     const personMap = createPeopleMap(json);
     const connectionMap = createConnectionsMap(json);
     const personToFamilyMap = createPersonToConnectionsMap(json);
-    const spousesThatExistOnTree = [];
 
     const entryNodeConnections = searchForNodeConnections(json, entryNode.id);
     if (entryNodeConnections.length > 1) {
@@ -321,7 +320,6 @@ function parseDataForStratification(entryNode: Node, json: Heritage) {
         // Ignore is already added as spouse to avoid duplication
         const personAlreadyAdded = addedAsSpouse.has(entry.person.id);
         if (personAlreadyAdded) {
-            spousesThatExistOnTree.push(entry.person);
             continue;
         }
 
