@@ -34,12 +34,10 @@ function getBasicPersonData(heritage: Heritage, personId: string) {
         return basic;
     }
     if (parents.husb) {
-        const father = searchPerson(heritage, parents.husb);
-        basic.father = father;
+        basic.father = searchPerson(heritage, parents.husb);
     }
     if (parents.wife) {
-        const mother = searchPerson(heritage, parents.wife);
-        basic.mother = mother;
+        basic.mother = searchPerson(heritage, parents.wife);
     }
     parents.children
         ?.filter((sibling) => sibling !== personId)

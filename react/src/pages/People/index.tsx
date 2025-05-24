@@ -288,11 +288,11 @@ export default function People() {
                                     type="button"
                                     className="w-full flex justify-center items-center gap-1 cursor-pointer py-1 rounded-md hover:bg-muted/50"
                                     onClick={() => {
-                                        changeSortingCriterion(SortBy.LAST_NAME);
+                                        changeSortingCriterion(SortBy.NICK_NAME);
                                     }}
                                 >
-                                    Nazwisko
-                                    {renderSortingIcon(SortBy.LAST_NAME)(
+                                    Przezwisko
+                                    {renderSortingIcon(SortBy.NICK_NAME)(
                                         sortByCriterion,
                                         sortDirection,
                                     )}
@@ -303,11 +303,11 @@ export default function People() {
                                     type="button"
                                     className="w-full flex justify-center items-center gap-1 cursor-pointer py-1 rounded-md hover:bg-muted/50"
                                     onClick={() => {
-                                        changeSortingCriterion(SortBy.NICK_NAME);
+                                        changeSortingCriterion(SortBy.LAST_NAME);
                                     }}
                                 >
-                                    Przezwisko
-                                    {renderSortingIcon(SortBy.NICK_NAME)(
+                                    Nazwisko
+                                    {renderSortingIcon(SortBy.LAST_NAME)(
                                         sortByCriterion,
                                         sortDirection,
                                     )}
