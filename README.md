@@ -21,13 +21,13 @@ Connect to vps
 ssh name@host
 ```
 
-Copy files from server to local dir. Use -r to copy recurseively.
+Copy files from server to local dir. Use -r to copy recursively.
 
 ```
 scp -r user@host:/root/app/heritage/api/public/I70 ~/Downloads
 ```
 
-Copy files from local dir to remote server. Use -r to copy recurseively.
+Copy files from local dir to remote server. Use -r to copy recursively.
 
 ```
 scp -r ~/Downloads user@host:/root/app/heritage/api/public
@@ -47,6 +47,12 @@ Full docker cleanup
 
 ```
 docker system prune -a
+```
+
+Login using github pesonal access token
+
+```
+echo <personal_access_token> | docker login ghcr.io -u <github-login> --password-stdin
 ```
 
 ## Web App
