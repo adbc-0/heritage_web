@@ -3,7 +3,7 @@ name: heritage-dev
 services:
     postgres:
         container_name: postgres
-        image: postgres:17.2
+        image: postgres:17.5
         environment:
             POSTGRES_DB: "heritage"
             POSTGRES_PASSWORD: "password"
@@ -41,7 +41,7 @@ services:
 
     server:
         container_name: server
-        image: caddy:2.9.1-alpine
+        image: caddy:2.10.0-alpine
         environment:
             DOMAIN: "naszrod.local"
         restart: unless-stopped
