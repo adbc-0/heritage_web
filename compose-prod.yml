@@ -1,37 +1,39 @@
 # THIS IS JUST AN EXAMPLE OF PRODUCTION compose.yml FILE
-name: heritage-prod
+# In current project setup images are created on push by github actions
 
-services:
-  rest-api:
-    container_name: rest-api
-    image: ...
-    environment:
-      PASSWORD: ...
-    volumes:
-      - ./api/public:/app/public
-      - ./api/required:/app/required
-    ports:
-      - 8080:8080
-    networks:
-      - reverse_proxy
-
-  server:
-    container_name: server
-    image: ...
-    restart: unless-stopped
-    ports:
-      - 443:443
-    volumes:
-      - caddy_data:/data
-      - caddy_config:/config
-      - ./server/prod.Caddyfile:/etc/caddy/Caddyfile
-    networks:
-      - reverse_proxy
-
-volumes:
-  caddy_data:
-  caddy_config:
-  pg_data:
-
-networks:
-  reverse_proxy:
+#name: heritage-prod
+#
+#services:
+#  rest-api:
+#    container_name: rest-api
+#    image: ...
+#    environment:
+#      PASSWORD: ...
+#    volumes:
+#      - ./api/public:/app/public
+#      - ./api/required:/app/required
+#    ports:
+#      - 8080:8080
+#    networks:
+#      - reverse_proxy
+#
+#  server:
+#    container_name: server
+#    image: ...
+#    restart: unless-stopped
+#    ports:
+#      - 443:443
+#    volumes:
+#      - caddy_data:/data
+#      - caddy_config:/config
+#      - ./server/prod.Caddyfile:/etc/caddy/Caddyfile
+#    networks:
+#      - reverse_proxy
+#
+#volumes:
+#  caddy_data:
+#  caddy_config:
+#  pg_data:
+#
+#networks:
+#  reverse_proxy:
