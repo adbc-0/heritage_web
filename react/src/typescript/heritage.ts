@@ -14,6 +14,7 @@ export type Indi = {
     famc?: string;
     birth?: Event;
     death?: Event;
+    color?: string;
 };
 export type Fam = {
     id: string;
