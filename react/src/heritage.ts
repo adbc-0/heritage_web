@@ -1,6 +1,12 @@
 import { stratify, tree as createTreeLayout } from "d3-hierarchy";
+import { isNil } from "@/lib/utils.ts";
 
 type Identifier = string;
+
+const NodeType = {
+    PERSON_NODE: "PERSON_NODE",
+    EMPTY_NODE: "EMPTY_NODE",
+} as const;
 
 type EmptyNode = {
     id: Identifier;
@@ -50,8 +56,8 @@ type Family = {
 
 type Connection = {
     id: Identifier;
-    husb: string;
-    wife: string;
+    husb: string | null;
+    wife: string | null;
     children: string[];
 };
 
@@ -206,21 +212,22 @@ function createConnectionsMap(json: Heritage) {
     return map;
 }
 
+// allows to easily find people with multiple marriages
 function createPersonToConnectionsMap(json: Heritage) {
     const connections: Record<string, string[]> = {};
     for (const connection of json.relations) {
         if (connection.husb) {
-            const currentConnection = connections[connection.husb];
-            if (currentConnection) {
-                currentConnection.push(connection.id);
+            const existingConnection = connections[connection.husb];
+            if (existingConnection) {
+                existingConnection.push(connection.id);
             } else {
                 connections[connection.husb] = [connection.id];
             }
         }
         if (connection.wife) {
-            const currentConnection = connections[connection.wife];
-            if (currentConnection) {
-                currentConnection.push(connection.id);
+            const existingConnection = connections[connection.wife];
+            if (existingConnection) {
+                existingConnection.push(connection.id);
             } else {
                 connections[connection.wife] = [connection.id];
             }
@@ -229,7 +236,20 @@ function createPersonToConnectionsMap(json: Heritage) {
     return connections;
 }
 
-function findPerson(map: Map<string, Node>, personId: Identifier): Node | null {
+function createChildrenMap(json: Heritage) {
+    const set = new Set<Identifier>();
+    for (const connection of json.relations) {
+        for (const personId of connection.children) {
+            set.add(personId);
+        }
+    }
+    return set;
+}
+
+function findPerson(map: Map<string, Node>, personId: Identifier | null): Node | null {
+    if (isNil(personId)) {
+        return null;
+    }
     const person = map.get(personId);
     if (!person) {
         return null;
@@ -260,13 +280,31 @@ function findConnection(connectionsMap: Map<string, Connection>, connectionId: I
     return connection;
 }
 
+/** @description Avoid node duplication */
+function skipAddingPerson(childrenSet: Set<Identifier>, person: Node, spouse: Node | null) {
+    if (isNil(spouse)) {
+        return false;
+    }
+    if (person.type === NodeType.EMPTY_NODE) {
+        return false;
+    }
+    if (spouse.type === NodeType.EMPTY_NODE) {
+        return false;
+    }
+    if (!childrenSet.has(spouse.id)) {
+        return false;
+    }
+    return person.sex === "F" && spouse.sex === "M";
+}
+
 function parseDataForStratification(entryNode: Node, json: Heritage) {
     const nodes: D3Node[] = [];
     const stack: D3Node[] = [];
 
     // maps leading to higher memory usage but O(1) access complexity
-    const addedAsSpouse = new Set();
+    // const addedAsSpouse = new Set();
     const personMap = createPeopleMap(json);
+    const childrenSet = createChildrenMap(json);
     const connectionMap = createConnectionsMap(json);
     const personToFamilyMap = createPersonToConnectionsMap(json);
 
@@ -317,12 +355,6 @@ function parseDataForStratification(entryNode: Node, json: Heritage) {
             throw new Error("undefined stack variable");
         }
 
-        // Ignore is already added as spouse to avoid duplication
-        const personAlreadyAdded = addedAsSpouse.has(entry.person.id);
-        if (personAlreadyAdded) {
-            continue;
-        }
-
         nodes.push(entry);
 
         if (!entry.family) {
@@ -342,7 +374,12 @@ function parseDataForStratification(entryNode: Node, json: Heritage) {
                         throw new Error("connection not found");
                     }
                     const entryPersonSpouseId = getPersonSpouseId(connection, childId);
-                    addedAsSpouse.add(entryPersonSpouseId);
+                    // ToDo: Maybe I should do if else for relations with spouse instead of returning null
+                    const spouse = findPerson(personMap, entryPersonSpouseId);
+                    const skip = skipAddingPerson(childrenSet, person, spouse);
+                    if (skip) {
+                        continue;
+                    }
                     stack.push({
                         id: connection.id,
                         parentId: entry.id,
@@ -351,7 +388,7 @@ function parseDataForStratification(entryNode: Node, json: Heritage) {
                             id: connection.id,
                             children: connection.children,
                         },
-                        spouse: findPerson(personMap, entryPersonSpouseId),
+                        spouse,
                     });
                 }
             } else {
