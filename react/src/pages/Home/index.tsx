@@ -1,96 +1,63 @@
-import * as topola from "topola";
-import { ComponentRef, useCallback, useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router";
+import { useCallback, useMemo, useState } from "react";
+
 import { ChevronLeft, Settings } from "lucide-react";
 
-import { useHeritage } from "@/contexts/heritageContext";
-import { RouterPath } from "@/constants/routePaths";
-import { SVGSettings } from "./SVGSettings";
-import { transformHeritageDatasetForActiveBranches } from "@/utils/heritage";
+import { FamilyGraph } from "@/features/FamilyGraph/FamilyGraph";
 
+import { SVGSettings } from "./SVGSettings";
+
+// ToDo: Remove hardcoded values? Define branches roots in config?
 const defaultBranches = [
     {
         active: true,
         name: "Ippoldtowie",
-        rootIndiId: "I38",
+        rootIndiId: ["I38"],
     },
     {
         active: true,
         name: "Pizłowie",
-        rootIndiId: "I5",
+        rootIndiId: ["I5"],
     },
     {
         active: true,
         name: "Bieleccy",
-        rootIndiId: "I154",
+        rootIndiId: ["I154"],
     },
     {
         active: true,
         name: "Niziołowie",
-        rootIndiId: "I156",
+        rootIndiId: ["I156"],
     },
     {
         active: true,
         name: "Nowakowie",
-        rootIndiId: "I303",
+        rootIndiId: ["I303"],
     },
     {
         active: true,
         name: "Pinkoszowie",
-        rootIndiId: "I296",
+        rootIndiId: ["I296"],
     },
     {
         active: true,
         name: "Ozimkowie",
-        rootIndiId: "I212",
+        rootIndiId: ["I212", "I214"],
     },
 ];
 
+// ToDo: play with memoization
 export default function Home() {
-    const { heritage } = useHeritage();
-    const navigate = useNavigate();
-
-    const svgElement = useRef<ComponentRef<"svg">>(null);
     const [branches, setBranches] = useState(defaultBranches);
     const [settingsAreOpen, setSettingsAreOpen] = useState(false);
 
-    const renderedBranches = branches
-        .filter((branch) => branch.active)
-        .map((branch) => branch.name);
+    const inactiveBranches = useMemo(
+        () => branches.filter((branch) => !branch.active).flatMap((branch) => branch.rootIndiId),
+        [branches],
+    );
 
-    useEffect(() => {
-        if (!heritage) {
-            return;
-        }
-        if (settingsAreOpen) {
-            return;
-        }
-        const svgRef = svgElement.current;
-        const inactiveBranches = branches
-            .filter((branch) => !branch.active)
-            .map((branch) => branch.rootIndiId);
-        const heritageDatasetWithFilteredBranches = transformHeritageDatasetForActiveBranches(
-            heritage,
-            inactiveBranches,
-        );
-        topola
-            .createChart({
-                json: heritageDatasetWithFilteredBranches,
-                svgSelector: "#relative",
-                chartType: topola.HourglassChart,
-                renderer: topola.SimpleRenderer,
-                indiCallback(data) {
-                    void navigate(`${RouterPath.OSOBY}/${data.id}`);
-                },
-            })
-            .render();
-        return () => {
-            if (!svgRef) {
-                throw new Error("cannot cleanup svg element");
-            }
-            svgRef.replaceChildren();
-        };
-    }, [heritage, settingsAreOpen, branches, navigate]);
+    const renderedBranches = useMemo(() => {
+        return branches.filter((branch) => branch.active).map((branch) => branch.name);
+    }, [branches]);
 
     function openSVGSettingsView() {
         setSettingsAreOpen(true);
@@ -121,7 +88,7 @@ export default function Home() {
     return (
         <div className="h-full">
             <div className="bg-background h-full flex flex-col">
-                {/* ToolBar */}
+                {/* ToDo: Make ToolBar Component */}
                 {settingsAreOpen && (
                     <div className="flex border-b border-border p-2 justify-end">
                         <button
@@ -145,15 +112,7 @@ export default function Home() {
                     </div>
                 )}
                 {settingsAreOpen && <SVGSettings branches={branches} toggleBranch={toggleBranch} />}
-                {!settingsAreOpen && (
-                    <svg
-                        ref={svgElement}
-                        id="relative"
-                        className="cursor-move"
-                        height="100%"
-                        width="100%"
-                    />
-                )}
+                <FamilyGraph inactiveBranches={inactiveBranches} />
             </div>
         </div>
     );

@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 import { ArrowDown01, ArrowDown10, ArrowDownAZ, ArrowDownZa } from "lucide-react";
 
-import { isPersonInvisible, searchPerson, serachFamily } from "@/utils/heritage";
+import { isPersonInvisible, searchFamily, searchPerson } from "@/features/FamilyGraph/utils";
 import { RouterPath } from "@/constants/routePaths";
 import { useHeritage } from "@/contexts/heritageContext";
 import {
@@ -14,14 +14,15 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
-import { Heritage, Indi } from "@/typescript/heritage";
 
-type Person = Indi & {
+import type { HeritageRaw, FullPerson } from "@/types/heritage.types.ts";
+
+type Person = FullPerson & {
     dad: string | null;
     mom: string | null;
 };
 
-function searchParent(heritage: Heritage, personId: string) {
+function searchParent(heritage: HeritageRaw, personId: string) {
     const parent = searchPerson(heritage, personId);
     if (!parent) {
         throw new Error("parent not found");
@@ -29,11 +30,11 @@ function searchParent(heritage: Heritage, personId: string) {
     return parent;
 }
 
-function getPersonFullName(person: Indi) {
+function getPersonFullName(person: FullPerson) {
     return [person.firstName, person.lastName].join(" ");
 }
 
-function getParentName(heritage: Heritage, personId: string | undefined) {
+function getParentName(heritage: HeritageRaw, personId: string | null) {
     if (!personId) {
         return null;
     }
@@ -44,12 +45,12 @@ function getParentName(heritage: Heritage, personId: string | undefined) {
     return getPersonFullName(parent);
 }
 
-function mapParents(heritage: Heritage) {
-    return function (person: Indi) {
+function mapParents(heritage: HeritageRaw) {
+    return function (person: FullPerson) {
         if (!person.famc) {
             return { ...person, dad: null, mom: null };
         }
-        const parentsFamily = serachFamily(heritage, person.famc);
+        const parentsFamily = searchFamily(heritage, person.famc);
         if (!parentsFamily) {
             return { ...person, dad: null, mom: null };
         }
@@ -61,11 +62,11 @@ function mapParents(heritage: Heritage) {
     };
 }
 
-function basicPeopleTransformations(heritage: Heritage | null): Person[] {
+function basicPeopleTransformations(heritage: HeritageRaw | null): Person[] {
     if (!heritage) {
         return [];
     }
-    return heritage.indis.filter((person) => !isPersonInvisible(person)).map(mapParents(heritage));
+    return heritage.people.filter((person) => !isPersonInvisible(person)).map(mapParents(heritage));
 }
 
 function filterOutPeople(people: Person[], searchQuery: string): Person[] {

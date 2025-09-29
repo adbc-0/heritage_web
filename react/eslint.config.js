@@ -40,6 +40,7 @@ export default tseslint.config(
             "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
             "@typescript-eslint/consistent-type-definitions": "off",
             "@typescript-eslint/no-unnecessary-condition": "off",
+            "react/prop-types": "off",
             ...prettier.rules,
         },
     },

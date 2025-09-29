@@ -1,10 +1,11 @@
 import { createContext, useContext } from "react";
 
 import { LoadingState, LoadingStateValues } from "@/constants/heritage";
-import { Heritage } from "@/typescript/heritage";
+
+import type { HeritageRaw } from "@/types/heritage.types.ts";
 
 export type HeritageContextType = {
-    heritage: Heritage | null;
+    heritage: HeritageRaw | null;
     heritageStatus: LoadingStateValues;
     heritageError: boolean;
     fetchHeritage: () => Promise<Response>;

@@ -1,61 +1,77 @@
 import { useParams } from "react-router";
 
 import { useHeritage } from "@/contexts/heritageContext";
-import { isPersonInvisible, searchPerson, serachFamily } from "@/utils/heritage";
-import { Heritage, Indi } from "@/typescript/heritage";
-import { PersonTableRow } from "@/typescript/person";
+import { isPersonInvisible, searchFamily, searchPerson } from "@/features/FamilyGraph/utils";
 import { Section } from "./Section";
 import { SectionWithLinks } from "./SectionWithLinks";
+
+import type { PersonTableRow } from "@/pages/Person/types.ts";
+import type { HeritageRaw, FullPerson } from "@/types/heritage.types.ts";
 
 type Params = {
     id: string;
 };
 
-type BasicInfo = Indi & {
-    father?: Indi;
-    mother?: Indi;
-    siblings: Indi[];
+type ExtendedPerson = FullPerson & {
+    father?: FullPerson;
+    mother?: FullPerson;
+    siblings: FullPerson[];
 };
 
-function getBasicPersonData(heritage: Heritage, personId: string) {
+function getBasicPersonData(heritage: HeritageRaw, personId: string) {
     const person = searchPerson(heritage, personId);
     if (!person) {
         throw new Error("expected to find person");
     }
-    const basic: BasicInfo = {
+    if (person.type === "EMPTY_NODE") {
+        throw new Error("cannot display blank node");
+    }
+    const personWithExtraDetails: ExtendedPerson = {
         ...person,
         siblings: [],
     };
     if (!person.famc) {
-        return basic;
+        return personWithExtraDetails;
     }
-    const parents = serachFamily(heritage, person.famc);
+    const parents = searchFamily(heritage, person.famc);
     if (!parents) {
-        return basic;
+        return personWithExtraDetails;
     }
     if (parents.husb) {
-        basic.father = searchPerson(heritage, parents.husb);
+        const father = searchPerson(heritage, parents.husb);
+        if (father) {
+            if (father.type === "PERSON_NODE") {
+                personWithExtraDetails.father = father;
+            }
+        }
     }
     if (parents.wife) {
-        basic.mother = searchPerson(heritage, parents.wife);
+        const mother = searchPerson(heritage, parents.wife);
+        if (mother) {
+            if (mother.type === "PERSON_NODE") {
+                personWithExtraDetails.mother = mother;
+            }
+        }
     }
     parents.children
-        ?.filter((sibling) => sibling !== personId)
+        .filter((sibling) => sibling !== personId)
         .forEach((siblingId) => {
             const sibling = searchPerson(heritage, siblingId);
             if (!sibling) {
                 throw new Error("expected to find sibling");
             }
-            basic.siblings.push(sibling);
+            if (sibling.type !== "EMPTY_NODE") {
+                personWithExtraDetails.siblings.push(sibling);
+            }
         });
-    return basic;
+    return personWithExtraDetails;
 }
 
-function getFullName({ firstName, lastName }: Indi) {
+function getFullName({ firstName, lastName }: FullPerson) {
     return [firstName, lastName].join(" ");
 }
 
-function createTable(person: BasicInfo) {
+function createTable(person: ExtendedPerson) {
     const basicInfoTable: PersonTableRow[] = [];
     const fatherTable: PersonTableRow[] = [];
     const motherTable: PersonTableRow[] = [];

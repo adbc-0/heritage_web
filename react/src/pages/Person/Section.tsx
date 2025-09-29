@@ -1,6 +1,6 @@
 import { Fragment } from "react/jsx-runtime";
 
-import { PersonTableRow } from "@/typescript/person";
+import type { PersonTableRow } from "@/pages/Person/types.ts";
 
 type SectionProps = {
     title: string;

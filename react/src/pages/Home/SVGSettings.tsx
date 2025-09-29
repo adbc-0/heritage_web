@@ -11,7 +11,7 @@ const OPTIONS_DISPLAYED_ON_SELECT = 2;
 type Branch = {
     active: boolean;
     name: string;
-    rootIndiId: string;
+    rootIndiId: string[];
 };
 
 type SVGSettingsProps = {
@@ -35,7 +35,7 @@ export function SVGSettings({ branches, toggleBranch }: SVGSettingsProps) {
         toggleBranch(branchName);
     }
 
-    const drodownKeyListener = useCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
+    const dropdownKeyListener = useCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === "Enter") {
             setDropdownOpen(true);
         }
@@ -73,7 +73,7 @@ export function SVGSettings({ branches, toggleBranch }: SVGSettingsProps) {
                                     aria-expanded={dropdownOpen}
                                     aria-haspopup="listbox"
                                     tabIndex={0}
-                                    onKeyUp={drodownKeyListener}
+                                    onKeyUp={dropdownKeyListener}
                                 >
                                     <div className="flex justify-center flex-wrap gap-1">
                                         {renderedBranches

@@ -3,8 +3,8 @@ import { Params, useParams } from "react-router";
 
 import { ENV } from "@/constants/env";
 import { useHeritage } from "@/contexts/heritageContext";
-import { Images, ImagesThumbnails, ImageInspection, Thumbnail } from "@/components/ui/images";
-import { File } from "@/typescript/person";
+import { ImageInspection, Images, ImagesThumbnails, Thumbnail } from "@/components/ui/images";
+import type { File } from "@/pages/Person/types.ts";
 
 type UserData = {
     files: string[];

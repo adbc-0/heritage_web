@@ -2,7 +2,7 @@ import { ReactElement, useCallback, useMemo, useState } from "react";
 
 import { AuthErrorType, AuthErrorTypeValues, AuthStatus, AuthStatusValues } from "@/constants/auth";
 import { AuthContext, AuthContextType } from "@/contexts/authContext";
-import { ApiError } from "@/typescript/api";
+import type { ApiError } from "@/types/api.types.ts";
 import { ENV } from "@/constants/env";
 
 type ReactChildren = {

@@ -25,7 +25,7 @@ export default function Person() {
             void navigate("/404", { replace: true });
             return;
         }
-        const person = heritage.indis.find((person) => person.id === id);
+        const person = heritage.people.find((person) => person.id === id);
         if (!person) {
             void navigate("/404", { replace: true });
             return;

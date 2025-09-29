@@ -14,7 +14,7 @@ import { CircleArrowLeft, CircleArrowRight, CircleX, ImageDown } from "lucide-re
 
 import { SWIPE_TRESHOLD } from "@/constants/global";
 import { stripFileExtension } from "@/lib/utils";
-import { File } from "@/typescript/person";
+import type { File } from "@/pages/Person/types.ts";
 
 type ReactChildren = {
     children: ReactElement | ReactElement[];
@@ -258,6 +258,7 @@ function Image({ moveToNextImage, moveToPrevImage }: ImageProps) {
 
     // switch photos on arrow press
     useEffect(() => {
+        // use abort controller? https://www.youtube.com/shorts/Z09xJq5iA0c
         window.addEventListener("keydown", switchPhotosOnKeyDown);
         return () => {
             window.removeEventListener("keydown", switchPhotosOnKeyDown);

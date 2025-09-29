@@ -7,7 +7,8 @@ import { useAuth } from "@/contexts/authContext";
 import { HeritageContext, HeritageContextType } from "@/contexts/heritageContext";
 import { LoadingPage } from "@/pages/LoadingPage";
 import { GlobalError } from "@/pages/GlobalError/GlobalError";
-import { Heritage } from "@/typescript/heritage";
+
+import type { HeritageRaw } from "@/types/heritage.types.ts";
 
 type ReactChildren = {
     children: ReactElement | ReactElement[];
@@ -17,7 +18,7 @@ const API_HERITAGE = `${ENV.API_URL}/heritage`;
 
 export function HeritageProvider({ children }: ReactChildren) {
     const { authorize, unauthorize } = useAuth();
-    const [heritage, setHeritage] = useState<Heritage | null>(null);
+    const [heritage, setHeritage] = useState<HeritageRaw | null>(null);
     const [heritageError, setHeritageError] = useState(false);
     const [heritageStatus, setHeritageStatus] = useState<LoadingStateValues>(LoadingState.IDLE);
 
@@ -27,7 +28,7 @@ export function HeritageProvider({ children }: ReactChildren) {
             credentials: "include",
         });
         if (networkResponse.status === http.OK_STATUS_CODE) {
-            const rawHeritageJson = (await networkResponse.json()) as Heritage;
+            const rawHeritageJson = (await networkResponse.json()) as HeritageRaw;
             setHeritage(rawHeritageJson);
             setHeritageStatus(LoadingState.DONE);
             return networkResponse;

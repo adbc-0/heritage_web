@@ -56,6 +56,15 @@
         src: url("./assets/fonts/Inter-Italic.woff2") format("woff2");
     }
 
+    /* ToDo: Look for woff2 version */
+    @font-face {
+        font-family: Josefin;
+        font-style: normal;
+        font-weight: 100 900;
+        font-display: swap;
+        src: url("./assets/fonts/JosefinSans-VariableFont_wght.ttf") format("truetype");
+    }
+
     :root {
         font-family: "InterVariable", sans-serif;
         font-optical-sizing: auto;

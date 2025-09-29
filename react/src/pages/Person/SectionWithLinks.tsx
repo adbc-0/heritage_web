@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 
-import { PersonTableRow } from "@/typescript/person";
+import type { PersonTableRow } from "@/pages/Person/types.ts";
 import { RouterPath } from "@/constants/routePaths";
 import { SquareArrowOutUpRight } from "lucide-react";
 
