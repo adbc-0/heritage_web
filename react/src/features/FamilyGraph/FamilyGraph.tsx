@@ -215,13 +215,13 @@ function PersonOrFamily({ node }: { node: HierarchyPointNode<SvgNodeDetails> }) 
             throw new Error("no person");
         }
         return (
-            <g transform={`translate(${node.x.toString()},${node.y.toString()})`}>
+            <g transform={`translate(${(node.x + 70).toString()},${node.y.toString()})`}>
                 <Link to={`${RouterPath.OSOBY}/${person.id}`}>
                     <rect
                         fill={person.color}
                         strokeWidth={1}
                         stroke="#797979"
-                        width={NODE_WIDTH}
+                        width={NODE_WIDTH / 2}
                         height={NODE_HEIGHT}
                     />
                     <text
@@ -230,7 +230,7 @@ function PersonOrFamily({ node }: { node: HierarchyPointNode<SvgNodeDetails> }) 
                         fontFamily="Josefin"
                         fontWeight={400}
                         fill="#000"
-                        transform={`translate(${(NODE_WIDTH / 2).toString()}, ${(NODE_HEIGHT / 4).toString()})`}
+                        transform={`translate(${(NODE_WIDTH / 4).toString()}, ${(NODE_HEIGHT / 4).toString()})`}
                     >
                         <tspan fontWeight="bold">{person.firstName}</tspan>
                         <tspan x="0" y="25" fontWeight="bold">
