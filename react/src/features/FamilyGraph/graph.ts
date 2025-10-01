@@ -632,7 +632,7 @@ export class Graph {
                 NODE_WIDTH * 2 + HORIZONTAL_SPACE_BETWEEN_NODES,
                 NODE_HEIGHT + VERTICAL_SPACE_BETWEEN_NODES,
             ])
-            .separation(() => 1);
+            .separation(() => 0.48);
         const descendants = createTree(treeDataset).descendants();
 
         const descendantHashMap = new Map<PersonIdentifier, HierarchyPointNode<SvgNodeDetails>>();
