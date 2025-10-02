@@ -33,6 +33,8 @@ Copy files from local dir to remote server. Use -r to copy recurseively.
 scp -r ~/Downloads user@host:/root/app/heritage/api/public
 ```
 
+Adding ghcr token when it expires can be found in [github docs](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry)
+
 ### Usefull Docker commands
 
 Estimate disk space that docker takes
