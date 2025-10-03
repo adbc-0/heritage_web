@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 import { ArrowDown01, ArrowDown10, ArrowDownAZ, ArrowDownZa } from "lucide-react";
 
-import { isPersonInvisible, searchFamily, searchPerson } from "@/features/FamilyGraph/utils";
+import { isPersonInvisible, searchFamily, searchPerson } from "@/features/graph/utils";
 import { RouterPath } from "@/constants/routePaths";
 import { useHeritage } from "@/contexts/heritageContext";
 import {

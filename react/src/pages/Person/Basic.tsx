@@ -1,7 +1,7 @@
 import { useParams } from "react-router";
 
 import { useHeritage } from "@/contexts/heritageContext";
-import { isPersonInvisible, searchFamily, searchPerson } from "@/features/FamilyGraph/utils";
+import { isPersonInvisible, searchFamily, searchPerson } from "@/features/graph/utils";
 import { Section } from "./Section";
 import { SectionWithLinks } from "./SectionWithLinks";
 

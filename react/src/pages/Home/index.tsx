@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from "react";
 
 import { ChevronLeft, Settings } from "lucide-react";
 
-import { FamilyGraph } from "@/features/FamilyGraph/FamilyGraph";
+import { FamilyGraph } from "@/features/graph/FamilyGraph";
 
 import { SVGSettings } from "./SVGSettings";
 
