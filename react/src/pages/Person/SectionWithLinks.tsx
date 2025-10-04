@@ -1,16 +1,17 @@
 import { Link } from "react-router";
-
-import type { PersonTableRow } from "@/pages/Person/types.ts";
-import { RouterPath } from "@/constants/routePaths";
 import { SquareArrowOutUpRight } from "lucide-react";
+
+import { RouterPath } from "@/constants/routePaths";
+
+import type { FullPerson } from "@/types/heritage.types";
 
 type SectionProps = {
     title: string;
-    rows: PersonTableRow[];
+    people: FullPerson[];
 };
 
-export function SectionWithLinks({ rows, title }: SectionProps) {
-    if (rows.length === 0) {
+export function SectionWithLinks({ people, title }: SectionProps) {
+    if (people.length === 0) {
         return;
     }
     return (
@@ -18,13 +19,13 @@ export function SectionWithLinks({ rows, title }: SectionProps) {
             <h2 className="text-center font-semibold my-3">{title}</h2>
             <div className="max-w-fit mx-auto">
                 <div className="mx-1 flex flex-col rounded-md">
-                    {rows.map(({ id, name, value }) => (
+                    {people.map((person) => (
                         <Link
                             className="flex gap-2 bg-background border-t border-x last:border-b first:rounded-t-md last:rounded-b-md border-border px-5 py-2 hover:bg-background-darker"
-                            key={`${id}-${name}-${String(value)}`}
-                            to={`${RouterPath.OSOBY}/${id}`}
+                            key={person.id}
+                            to={`${RouterPath.OSOBY}/${person.id}`}
                         >
-                            {value}
+                            {person.firstName} {person.lastName}
                             <SquareArrowOutUpRight />
                         </Link>
                     ))}

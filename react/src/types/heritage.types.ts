@@ -14,7 +14,7 @@ type RawPersonBase = {
     famc: string;
 };
 
-type RawConnection = {
+export type RawConnection = {
     id: PersonIdentifier;
     husb: string | null;
     wife: string | null;
