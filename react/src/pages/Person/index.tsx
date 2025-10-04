@@ -30,6 +30,10 @@ export default function Person() {
             void navigate("/404", { replace: true });
             return;
         }
+        if (person.type === "EMPTY_NODE") {
+            void navigate("/404", { replace: true });
+            return;
+        }
         setPersonLoaded(true);
     }, [heritage, id, navigate]);
 
