@@ -125,7 +125,7 @@ export function Basic() {
             <Section person={person} />
             <SectionWithLinks title="Rodzice" people={parents} />
             <SectionWithLinks title="Rodzeństwo" people={siblings} />
-            <SectionWithLinks title="Relacje" people={partners} />
+            <SectionWithLinks title="Małżeństwo/Partnerstwo" people={partners} />
             <SectionWithLinks title="Dzieci" people={children} />
         </section>
     );
