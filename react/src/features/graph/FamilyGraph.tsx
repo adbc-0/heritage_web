@@ -18,11 +18,10 @@ type FamilyGraphComponent = {
     inactiveBranches?: string[];
 };
 
-function getInitialTransitionPosition(svgWidth = 0) {
-    // Alternatively set value by finding root node and finding it's x coordinate
-    // ToDo: Issue. It centers on person. Does not work for marriage properly.
-    return svgWidth / 2 - NODE_WIDTH / 2;
-}
+type StartingPosition = {
+    x: number;
+    y: number;
+};
 
 function getParentAnchor() {
     return { x: NODE_WIDTH / 2, y: 0 };
@@ -317,41 +316,83 @@ function PersonOrFamily({ node }: { node: HierarchyPointNode<SvgNodeDetails> }) 
     }
 }
 
+function centerHorizontally(pos: StartingPosition, clientWidth: number) {
+    return {
+        x: pos.x + clientWidth / 2 - NODE_WIDTH / 2,
+        y: pos.y,
+    };
+}
+
+function centerVertically(pos: StartingPosition, clientHeight: number) {
+    return {
+        x: pos.x,
+        y: pos.y + clientHeight / 2 - NODE_HEIGHT / 2,
+    };
+}
+
+/**
+ * @description
+ * Get the median value for X and Y
+ */
+function calculateCenterPos(people: HierarchyPointNode<SvgNodeDetails>[]) {
+    // The more you go the left the more negative the value
+    let left = Infinity;
+    let right = -Infinity;
+    // The more you go the bottom the higher the value
+    let top = Infinity;
+    let bottom = -Infinity;
+
+    for (const person of people) {
+        if (person.y < top) {
+            top = person.y;
+        }
+        if (person.y > bottom) {
+            bottom = person.y;
+        }
+        if (person.x > right) {
+            right = person.x;
+        }
+        if (person.x < left) {
+            left = person.x;
+        }
+    }
+
+    const meanY = (bottom + top) / 2;
+    const meanX = (left + right) / 2;
+
+    return { x: -meanX, y: -meanY } as const;
+}
+
+type CalculateInitialPositionOptions = {
+    root: string | undefined;
+    clientWidth: number;
+    clientHeight: number;
+};
+function calculateInitialPos(
+    heritage: HierarchyPointNode<SvgNodeDetails>[],
+    options: CalculateInitialPositionOptions,
+) {
+    const focusMode = isNil(options.root) ? "centre" : "on_person";
+    if (focusMode === "centre") {
+        let pos = calculateCenterPos(heritage);
+        pos = centerHorizontally(pos, options.clientWidth);
+        pos = centerVertically(pos, options.clientHeight);
+        return pos;
+    } else if (focusMode === "on_person") {
+        let pos = { x: 0, y: 0 };
+        pos = centerHorizontally(pos, options.clientWidth);
+        pos = centerVertically(pos, options.clientHeight);
+        return pos;
+    } else {
+        throw new Error("unknown focus mode");
+    }
+}
+
 // ToDo: Try drawing parents with line between them
+
 export function FamilyGraph({ rootPerson, inactiveBranches = [] }: FamilyGraphComponent) {
     const { heritage } = useHeritage();
     const svgElement = useRef<ComponentRef<"svg">>(null);
-
-    // ToDo: Use LayoutEffect to avoid layout shift and render when it's ready
-    useEffect(() => {
-        const treeSVG = select(svgElement.current);
-        const treeZoom = zoom()
-            .scaleExtent([0.05, 2])
-            .on("zoom", (event: SVGSVGElement) => {
-                // @ts-expect-error Internal d3 types conflict
-                select("svg g").attr("transform", event.transform);
-                // setTransformSVG(event.transform);
-                // svgElement.current.children[0].style.transform = event.transform;
-            });
-        // @ts-expect-error Internal d3 types conflict
-        treeSVG.call(treeZoom);
-
-        // setup initial zoom
-        function setInitialPositon() {
-            return zoomIdentity.translate(
-                getInitialTransitionPosition(svgElement.current?.clientWidth),
-                20,
-            );
-        }
-        // @ts-expect-error Internal d3 types conflict
-        // eslint-disable-next-line
-        treeSVG.call(treeZoom.transform, setInitialPositon);
-
-        return () => {
-            // ToDo: Remove event listener
-            treeSVG.on("zoom", null);
-        };
-    }, []);
 
     const tree = useMemo(() => {
         if (!heritage) {
@@ -360,6 +401,51 @@ export function FamilyGraph({ rootPerson, inactiveBranches = [] }: FamilyGraphCo
         const graph = new Graph(heritage, { excludedPeople: inactiveBranches, rootPerson });
         return graph.toD3();
     }, [heritage, inactiveBranches, rootPerson]);
+
+    // ToDo: Use LayoutEffect to avoid layout shift and render when it's ready
+    useEffect(() => {
+        const treeSVG = select(svgElement.current);
+
+        const clientWidth = svgElement.current?.clientWidth;
+        if (isNil(clientWidth)) {
+            throw new Error("missing client width");
+        }
+
+        const clientHeight = svgElement.current?.clientHeight;
+        if (isNil(clientHeight)) {
+            throw new Error("missing client width");
+        }
+
+        const treeZoom = zoom()
+            .scaleExtent([0.05, 2])
+            .on("zoom", (event: SVGSVGElement) => {
+                // @ts-expect-error Internal d3 types conflict
+                select("svg g").attr("transform", event.transform);
+                // setTransformSVG(event.transform);
+                // svgElement.current.children[0].style.transform = event.transform;
+            });
+
+        // @ts-expect-error Internal d3 types conflict
+        treeSVG.call(treeZoom);
+
+        const visibleDescendants = tree.descendants.filter((descendant) => !descendant.data.empty);
+        const startingPos = calculateInitialPos(visibleDescendants, {
+            root: rootPerson,
+            clientWidth,
+            clientHeight,
+        });
+
+        function setInitialPositon() {
+            return zoomIdentity.translate(startingPos.x, startingPos.y);
+        }
+        // @ts-expect-error Internal d3 types conflict
+        // eslint-disable-next-line
+        treeSVG.call(treeZoom.transform, setInitialPositon);
+
+        return () => {
+            treeSVG.on("zoom", treeZoom);
+        };
+    }, [rootPerson, tree]);
 
     return (
         <svg ref={svgElement} width="100%" height="100%" className="cursor-move">
