@@ -47,7 +47,6 @@ services:
         networks:
             - reverse_proxy
         stdin_open: true # prevent container running dev from exiting
-        tty: true # prevent container running dev from exiting
 
 volumes:
     caddy_data:
