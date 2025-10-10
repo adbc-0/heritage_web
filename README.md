@@ -57,6 +57,14 @@ echo <personal_access_token> | docker login ghcr.io -u <github-login> --password
 
 ## Web App
 
+### Useful commands
+
+Upgrade pnpm version
+
+```
+corepack use pnpm@latest
+```
+
 ### Logo
 
 SVG generated using inkscape.
