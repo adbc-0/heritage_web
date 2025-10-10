@@ -125,7 +125,7 @@ class Family {
     treatedAsRemarriage = false;
 
     *[Symbol.iterator](): Iterator<Family | Person> {
-        const visitedNodes = new Set<PersonIdentifier>();
+        const visitedNodes = new Set<PersonIdentifier>(); // I presume to avoid duplication
         const stack = new Stack<Family | Person>();
 
         stack.push(this);
@@ -462,36 +462,27 @@ export class Graph {
                 } else if (removedPerson.families.size === 1) {
                     // ToDo: Rewrite to work as in line 477
                     for (const removedPersonFamily of removedPerson.families.values()) {
-                        // remove connection for targeted person
+                        /**
+                         * @SPEC 4.1
+                         * */
+                        const stack = new Stack<Family>();
+
+                        // detach excluded family from their parents
                         for (const removedPersonParent of removedPersonFamily.parents.values()) {
                             removedPersonFamily.delete(filteredOutPerson, removedPersonParent.id);
                         }
 
-                        const childrenBlacklist = new Set();
-                        for (const descendant of removedPersonFamily) {
-                            for (const child of descendant.children.values()) {
-                                childrenBlacklist.add(child.id);
-                            }
-                        }
+                        stack.push(removedPersonFamily);
 
-                        /**
-                         * SPEC 4.1
-                         * */
-                        // remove connection for direct children
-                        for (const descendant of removedPersonFamily) {
-                            if (descendant instanceof Family) {
-                                if (descendant.parents.size === 2) {
-                                    const blacklistedMember = descendant.members
-                                        .values()
-                                        .find((member) => childrenBlacklist.has(member.id));
-                                    if (!blacklistedMember) {
-                                        throw new Error("no blacklisted member");
+                        while (!stack.isEmpty()) {
+                            const element = stack.pop();
+                            for (const child of element.children.values()) {
+                                for (const childFamily of child.families.values()) {
+                                    if (childFamily.parents.size > 1) {
+                                        childFamily.delete(child.id, element.id);
+                                    } else {
+                                        stack.push(childFamily);
                                     }
-                                    const blacklistedParent = blacklistedMember.parent;
-                                    if (!blacklistedParent) {
-                                        throw new Error("no blacklisted parent");
-                                    }
-                                    descendant.delete(blacklistedMember.id, blacklistedParent.id);
                                 }
                             }
                         }
@@ -502,7 +493,8 @@ export class Graph {
             }
         }
 
-        // dedupe nodes
+        // dedupe nodes and handle extra parent
+        // self note: deduping and handling extra parents should be separate process
         for (const node of this.root) {
             // one person cannot be connected to two different families
             if (node instanceof Family) {
@@ -517,6 +509,7 @@ export class Graph {
                         if (!members[0] || !members[1]) {
                             throw new Error("member does not exist");
                         }
+
                         const sameSexRelationship = members[0].sex === members[1].sex;
                         if (sameSexRelationship) {
                             const [randomParent] = node.parents.values();
@@ -561,17 +554,20 @@ export class Graph {
         //         // remarriedConnections.push({ from: o, to: m });
         //     }
         // }
-        const peopleWithMultupleMarriages = new Set<Person>();
+
+        // handle remarriages
+        const peopleWithMultipleMarriages = new Set<Person>();
         for (const node of this.root) {
             if (node instanceof Family) {
                 for (const member of node.members.values()) {
                     if (member.families.size > 1) {
-                        peopleWithMultupleMarriages.add(member);
+                        peopleWithMultipleMarriages.add(member);
                     }
                 }
             }
         }
-        for (const personWithMultipleMarriages of peopleWithMultupleMarriages.values()) {
+
+        for (const personWithMultipleMarriages of peopleWithMultipleMarriages.values()) {
             const [originalMarriage, ...rest] = personWithMultipleMarriages.families.values();
             if (!originalMarriage) {
                 throw new Error("no original marraige");
