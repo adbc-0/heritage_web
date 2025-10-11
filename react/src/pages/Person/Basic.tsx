@@ -81,7 +81,9 @@ function collectPersonDetails(heritage: HeritageRaw, invesigatedPerson: FullPers
     const familyOfParents = searchFamily(heritage, invesigatedPerson.famc);
 
     const parents = getParents(heritage, familyOfParents);
-    const siblings = getChildren(heritage, familyOfParents);
+    const siblings = getChildren(heritage, familyOfParents).filter(
+        (child) => child.id !== invesigatedPerson.id,
+    );
     const familiesOfPerson = invesigatedPerson.fams
         .map((familyId) => searchFamily(heritage, familyId))
         .filter((family) => !isNil(family));
