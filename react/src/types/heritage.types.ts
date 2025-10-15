@@ -31,7 +31,7 @@ export type FullPerson = RawPersonBase & {
     firstName: string;
     lastName: string;
     color: string;
-    nickName?: string;
+    nickName: string;
     birth?: PersonEvent;
     death?: PersonEvent;
 };
