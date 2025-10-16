@@ -3,10 +3,8 @@ import {
     createContext,
     ReactElement,
     TouchEvent,
-    useCallback,
     useContext,
     useEffect,
-    useMemo,
     useRef,
     useState,
 } from "react";
@@ -53,39 +51,36 @@ export function Images({ children }: ReactChildren) {
     const [imageIsInspected, setImageIsInspected] = useState<boolean>(false);
     const [inspectedImage, setInspectedImage] = useState<File | null>(null);
 
-    const openInspection = useCallback((file: File) => {
+    const openInspection = (file: File) => {
         if (!dialogRef.current) {
             throw new Error("dialog ref was not set properly");
         }
         dialogRef.current.showModal();
         setImageIsInspected(true);
         setInspectedImage(file);
-    }, []);
+    };
 
-    const closeInspection = useCallback(() => {
+    const closeInspection = () => {
         if (!dialogRef.current) {
             throw new Error("dialog ref was not set properly");
         }
         dialogRef.current.close();
         setInspectedImage(null);
         setImageIsInspected(false);
-    }, []);
+    };
 
-    const setImage = useCallback((image: File) => {
+    const setImage = (image: File) => {
         setInspectedImage(image);
-    }, []);
+    };
 
-    const provider: DialogContextType = useMemo(
-        () => ({
-            dialogRef,
-            imageIsInspected,
-            inspectedImage,
-            openInspection,
-            closeInspection,
-            setImage,
-        }),
-        [imageIsInspected, inspectedImage, closeInspection, openInspection, setImage],
-    );
+    const provider: DialogContextType = {
+        dialogRef,
+        imageIsInspected,
+        inspectedImage,
+        openInspection,
+        closeInspection,
+        setImage,
+    };
 
     return <DialogContext.Provider value={provider}>{children}</DialogContext.Provider>;
 }
@@ -132,7 +127,7 @@ type ImageInspectionProps = {
 export function ImageInspection({ allFiles }: ImageInspectionProps) {
     const { dialogRef, inspectedImage, setImage } = useDialogContext();
 
-    const moveToNextImage = useCallback(() => {
+    const moveToNextImage = () => {
         if (!inspectedImage) {
             throw new Error("image must be inspected to find prev");
         }
@@ -162,9 +157,9 @@ export function ImageInspection({ allFiles }: ImageInspectionProps) {
         }
 
         setImage(nextImage);
-    }, [allFiles, inspectedImage, setImage]);
+    };
 
-    const moveToPrevImage = useCallback(() => {
+    const moveToPrevImage = () => {
         if (!inspectedImage) {
             throw new Error("image must be inspected to find prev");
         }
@@ -193,7 +188,7 @@ export function ImageInspection({ allFiles }: ImageInspectionProps) {
         }
 
         setImage(prevImage);
-    }, [allFiles, inspectedImage, setImage]);
+    };
 
     return (
         <dialog
@@ -244,17 +239,14 @@ function Image({ moveToNextImage, moveToPrevImage }: ImageProps) {
         }
     }
 
-    const switchPhotosOnKeyDown = useCallback(
-        (event: globalThis.KeyboardEvent) => {
-            if (event.key === "ArrowLeft") {
-                moveToPrevImage();
-            }
-            if (event.key === "ArrowRight") {
-                moveToNextImage();
-            }
-        },
-        [moveToNextImage, moveToPrevImage],
-    );
+    const switchPhotosOnKeyDown = (event: globalThis.KeyboardEvent) => {
+        if (event.key === "ArrowLeft") {
+            moveToPrevImage();
+        }
+        if (event.key === "ArrowRight") {
+            moveToNextImage();
+        }
+    };
 
     // switch photos on arrow press
     useEffect(() => {

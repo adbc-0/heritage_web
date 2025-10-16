@@ -1,4 +1,4 @@
-import { ReactElement, useCallback, useMemo, useState } from "react";
+import { ReactElement, useState } from "react";
 
 import { AuthErrorType, AuthErrorTypeValues, AuthStatus, AuthStatusValues } from "@/constants/auth";
 import { AuthContext, AuthContextType } from "@/contexts/authContext";
@@ -17,60 +17,54 @@ export function AuthProvider({ children }: ReactChildren) {
     const [authError, setAuthError] = useState<AuthErrorTypeValues | null>(null);
     const [authStatus, setAuthStatus] = useState<AuthStatusValues>(AuthStatus.UNKNOWN);
 
-    const authorize = useCallback(() => {
+    const authorize = () => {
         setAuthStatus(AuthStatus.AUTHORIZED);
-    }, []);
+    };
 
-    const unauthorize = useCallback(() => {
+    const unauthorize = () => {
         setAuthStatus(AuthStatus.UNAUTHORIZED);
-    }, []);
+    };
 
-    const setAuthCookieAndAuthorize = useCallback(
-        async (basicAuthString: string) => {
-            setAuthInProgress(true);
-            const response = await fetch(API_AUTH, {
-                method: "POST",
-                headers: {
-                    Authorization: `Basic ${basicAuthString}`,
-                },
-                credentials: "include",
-            });
-            if (response.status === 401) {
-                setAuthInProgress(false);
-                const error = (await response.json()) as ApiError;
-                if (error.message === WRONG_PASSWORD_ERROR_MESSAGE) {
-                    setAuthError(AuthErrorType.WRONG_PASSWORD);
-                    return response;
-                }
-                setAuthError(AuthErrorType.UNKNOWN);
-                unauthorize();
-                return response;
-            }
-            if (!response.ok) {
-                setAuthInProgress(false);
-                setAuthError(AuthErrorType.UNKNOWN);
-                unauthorize();
-                return response;
-            }
+    const setAuthCookieAndAuthorize = async (basicAuthString: string) => {
+        setAuthInProgress(true);
+        const response = await fetch(API_AUTH, {
+            method: "POST",
+            headers: {
+                Authorization: `Basic ${basicAuthString}`,
+            },
+            credentials: "include",
+        });
+        if (response.status === 401) {
             setAuthInProgress(false);
-            setAuthError(null);
-            authorize();
+            const error = (await response.json()) as ApiError;
+            if (error.message === WRONG_PASSWORD_ERROR_MESSAGE) {
+                setAuthError(AuthErrorType.WRONG_PASSWORD);
+                return response;
+            }
+            setAuthError(AuthErrorType.UNKNOWN);
+            unauthorize();
             return response;
-        },
-        [authorize, unauthorize],
-    );
+        }
+        if (!response.ok) {
+            setAuthInProgress(false);
+            setAuthError(AuthErrorType.UNKNOWN);
+            unauthorize();
+            return response;
+        }
+        setAuthInProgress(false);
+        setAuthError(null);
+        authorize();
+        return response;
+    };
 
-    const authValue: AuthContextType = useMemo(
-        () => ({
-            authInProgress,
-            authError,
-            authStatus,
-            authorize,
-            setAuthCookieAndAuthorize,
-            unauthorize,
-        }),
-        [authorize, authError, authInProgress, authStatus, setAuthCookieAndAuthorize, unauthorize],
-    );
+    const authValue: AuthContextType = {
+        authInProgress,
+        authError,
+        authStatus,
+        authorize,
+        setAuthCookieAndAuthorize,
+        unauthorize,
+    };
 
     return <AuthContext value={authValue}>{children}</AuthContext>;
 }

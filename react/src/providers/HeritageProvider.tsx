@@ -1,4 +1,4 @@
-import { ReactElement, useCallback, useEffect, useMemo, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 
 import { ENV } from "@/constants/env";
 import { http } from "@/constants/httpStatusCodes";
@@ -22,7 +22,7 @@ export function HeritageProvider({ children }: ReactChildren) {
     const [heritageError, setHeritageError] = useState(false);
     const [heritageStatus, setHeritageStatus] = useState<LoadingStateValues>(LoadingState.IDLE);
 
-    const fetchHeritage = useCallback(async () => {
+    const fetchHeritage = async () => {
         setHeritageStatus(LoadingState.LOADING);
         const networkResponse = await fetch(API_HERITAGE, {
             credentials: "include",
@@ -40,7 +40,7 @@ export function HeritageProvider({ children }: ReactChildren) {
         setHeritageStatus(LoadingState.DONE);
         setHeritageError(true);
         return networkResponse;
-    }, []);
+    };
 
     useEffect(() => {
         async function initHeritage() {
@@ -55,12 +55,15 @@ export function HeritageProvider({ children }: ReactChildren) {
         void initHeritage();
     }, [authorize, fetchHeritage, unauthorize]);
 
-    const heritageContextValue: HeritageContextType = useMemo(
-        () => ({ heritage, heritageError, heritageStatus, fetchHeritage }),
-        [heritage, heritageError, heritageStatus, fetchHeritage],
-    );
+    const heritageContextValue: HeritageContextType = {
+        heritage,
+        heritageError,
+        heritageStatus,
+        fetchHeritage,
+    };
 
     if (heritageError) {
+        // ToDo: Error boundary
         return <GlobalError />;
     }
     if (heritageStatus === LoadingState.IDLE) {

@@ -16,7 +16,14 @@ export default defineConfig({
     define: {
         "import.meta.env.VITE_API_URL": JSON.stringify(process.env.VITE_API_URL),
     },
-    plugins: [react(), tailwindcss()],
+    plugins: [
+        react({
+            babel: {
+                plugins: ["babel-plugin-react-compiler"],
+            },
+        }),
+        tailwindcss(),
+    ],
     resolve: {
         alias: {
             "@": path.resolve(__dirname, "./src"),

@@ -1,4 +1,4 @@
-import { type ComponentRef, useEffect, useMemo, useRef } from "react";
+import { type ComponentRef, useEffect, useRef } from "react";
 import { Link } from "react-router";
 import { zoom, zoomIdentity } from "d3-zoom";
 import { select } from "d3-selection";
@@ -394,13 +394,11 @@ export function FamilyGraph({ rootPerson, inactiveBranches = [] }: FamilyGraphCo
     const { heritage } = useHeritage();
     const svgElement = useRef<ComponentRef<"svg">>(null);
 
-    const tree = useMemo(() => {
-        if (!heritage) {
-            throw new Error("Expected heritage data");
-        }
-        const graph = new Graph(heritage, { excludedPeople: inactiveBranches, rootPerson });
-        return graph.toD3();
-    }, [heritage, inactiveBranches, rootPerson]);
+    if (!heritage) {
+        throw new Error("Expected heritage data");
+    }
+
+    const tree = new Graph(heritage, { excludedPeople: inactiveBranches, rootPerson }).toD3();
 
     // ToDo: Use LayoutEffect to avoid layout shift and render when it's ready
     useEffect(() => {

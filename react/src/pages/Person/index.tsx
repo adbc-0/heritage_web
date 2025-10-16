@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Params, useNavigate, useParams } from "react-router";
 
 import { useHeritage } from "@/contexts/heritageContext";
@@ -8,23 +8,22 @@ import { Tree } from "./Tree";
 import { Photos } from "./Photos";
 import { Documents } from "./Documents";
 import { Notes } from "./Notes";
+import { isNil } from "@/lib/utils";
 
 export default function Person() {
     const navigate = useNavigate();
     const { id } = useParams<Params>();
     const { heritage } = useHeritage();
 
-    const [personLoaded, setPersonLoaded] = useState(false);
-
     useEffect(() => {
         if (!id) {
-            void navigate("/404", { replace: true });
-            return;
+            throw new Error("missing person route param");
         }
+        
         if (!heritage) {
-            void navigate("/404", { replace: true });
-            return;
+            throw new Error("missing heritage data");
         }
+
         const person = heritage.people.find((person) => person.id === id);
         if (!person) {
             void navigate("/404", { replace: true });
@@ -34,10 +33,18 @@ export default function Person() {
             void navigate("/404", { replace: true });
             return;
         }
-        setPersonLoaded(true);
     }, [heritage, id, navigate]);
 
-    if (!personLoaded) {
+    if (!id) {
+        throw new Error("missing person route param");
+    }
+
+    if (!heritage) {
+        throw new Error("missing heritage data");
+    }
+
+    const person = heritage.people.find((person) => person.id === id);
+    if (isNil(person)) {
         return null;
     }
 
