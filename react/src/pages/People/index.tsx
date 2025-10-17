@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router";
 import { ArrowDown01, ArrowDown10, ArrowDownAZ, ArrowDownZa } from "lucide-react";
 
@@ -241,11 +241,10 @@ export default function People() {
     const [sortByCriterion, setSortByCriterion] = useState<SortByType>(SortBy.FIRST_NAME);
     const [sortDirection, setSortDirection] = useState<DirectionType>(Direction.ASC);
 
-    const people = useMemo(() => {
-        return filterOutPeople(basicPeopleTransformations(heritage), filterPeopleQuery).toSorted(
-            sortBy(sortByCriterion, sortDirection),
-        );
-    }, [filterPeopleQuery, heritage, sortByCriterion, sortDirection]);
+    const people = filterOutPeople(
+        basicPeopleTransformations(heritage),
+        filterPeopleQuery,
+    ).toSorted(sortBy(sortByCriterion, sortDirection));
 
     function changeSortingCriterion(criterion: SortByType) {
         if (criterion === sortByCriterion) {

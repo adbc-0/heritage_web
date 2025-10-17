@@ -1,4 +1,4 @@
-import React, { useCallback, useId, useState } from "react";
+import React, { useId, useState } from "react";
 import { ChevronDown, CircleX } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -35,20 +35,18 @@ export function SVGSettings({ branches, toggleBranch }: SVGSettingsProps) {
         toggleBranch(branchName);
     }
 
-    const dropdownKeyListener = useCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
+    const dropdownKeyListener = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === "Enter") {
             setDropdownOpen(true);
         }
-    }, []);
+    };
 
-    const dropdownOptionKeyListener = useCallback(
+    const dropdownOptionKeyListener =
         (branchName: string) => (event: React.KeyboardEvent<HTMLInputElement>) => {
             if (event.key === "Enter") {
                 toggleBranch(branchName);
             }
-        },
-        [toggleBranch],
-    );
+        };
 
     return (
         <div className="grow bg-background-darker">

@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useState } from "react";
 
 import { ChevronLeft, Settings } from "lucide-react";
 
@@ -50,14 +50,13 @@ export default function Home() {
     const [branches, setBranches] = useState(defaultBranches);
     const [settingsAreOpen, setSettingsAreOpen] = useState(false);
 
-    const inactiveBranches = useMemo(
-        () => branches.filter((branch) => !branch.active).flatMap((branch) => branch.rootIndiId),
-        [branches],
-    );
+    const inactiveBranches = branches
+        .filter((branch) => !branch.active)
+        .flatMap((branch) => branch.rootIndiId);
 
-    const renderedBranches = useMemo(() => {
-        return branches.filter((branch) => branch.active).map((branch) => branch.name);
-    }, [branches]);
+    const renderedBranches = branches
+        .filter((branch) => branch.active)
+        .map((branch) => branch.name);
 
     function openSVGSettingsView() {
         setSettingsAreOpen(true);
@@ -67,23 +66,20 @@ export default function Home() {
         setSettingsAreOpen(false);
     }
 
-    const toggleBranch = useCallback(
-        (branchName: string) => {
-            const copy = structuredClone(branches);
-            const branch = copy.find(({ name }) => name === branchName);
-            if (!branch) {
-                throw new Error("Branch was not found");
-            }
-            const userIsAttemptingToRemoveLastActiveBranch =
-                branch.active && renderedBranches.length === 1;
-            if (userIsAttemptingToRemoveLastActiveBranch) {
-                return;
-            }
-            branch.active = !branch.active;
-            setBranches(copy);
-        },
-        [branches, renderedBranches.length],
-    );
+    const toggleBranch = (branchName: string) => {
+        const copy = structuredClone(branches);
+        const branch = copy.find(({ name }) => name === branchName);
+        if (!branch) {
+            throw new Error("Branch was not found");
+        }
+        const userIsAttemptingToRemoveLastActiveBranch =
+            branch.active && renderedBranches.length === 1;
+        if (userIsAttemptingToRemoveLastActiveBranch) {
+            return;
+        }
+        branch.active = !branch.active;
+        setBranches(copy);
+    };
 
     return (
         <div className="h-full">
