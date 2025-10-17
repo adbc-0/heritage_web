@@ -75,7 +75,10 @@ function filterOutPeople(people: Person[], searchQuery: string): Person[] {
     }
     const queryRegex = new RegExp(searchQuery);
     return people.filter((person) => {
-        const fullName = [person.firstName, person.lastName].join(" ").toLowerCase();
+        const fullName = [person.firstName, person.nickName, person.lastName]
+            .filter(Boolean)
+            .join(" ")
+            .toLowerCase();
         const searchResult = fullName.match(queryRegex);
         return Boolean(searchResult);
     });
