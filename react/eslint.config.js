@@ -1,4 +1,5 @@
 import js from "@eslint/js";
+import { defineConfig } from 'eslint/config';
 import globals from "globals";
 import react from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
@@ -7,10 +8,10 @@ import jsxA11y from "eslint-plugin-jsx-a11y";
 import tseslint from "typescript-eslint";
 import prettier from "eslint-config-prettier";
 
-export default tseslint.config(
+export default defineConfig(
     { ignores: ["dist"] },
     {
-        settings: { react: { version: "19.0.0" } },
+        settings: { react: { version: "19.2.0" } },
         extends: [
             js.configs.recommended,
             ...tseslint.configs.strictTypeChecked,
