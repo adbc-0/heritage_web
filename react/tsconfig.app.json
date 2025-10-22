@@ -1,9 +1,7 @@
 {
     "compilerOptions": {
-        "baseUrl": ".",
         "paths": {
-            "@/*": ["./src/*"],
-            "@/views/*": ["./src/components/views/*"]
+            "@/*": ["./src/*"]
         },
 
         "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
@@ -11,10 +9,11 @@
         "useDefineForClassFields": true,
         "lib": ["ESNext.Array", "ESNext", "DOM", "DOM.Iterable"],
         "module": "ESNext",
+        "types": ["vite/client"],
         "skipLibCheck": true,
 
         /* Bundler mode */
-        "moduleResolution": "Bundler",
+        "moduleResolution": "bundler",
         "allowImportingTsExtensions": true,
         "isolatedModules": true,
         "moduleDetection": "force",
