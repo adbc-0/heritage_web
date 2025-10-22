@@ -5,8 +5,8 @@ import { ENV } from "@/constants/env";
 import { useHeritage } from "@/contexts/heritageContext";
 
 type Note = {
-    id: string;
-    note: string;
+    name: string;
+    content: string;
 };
 
 type NotesJsonResponse = {
@@ -42,9 +42,11 @@ export function Notes() {
     if (!id) {
         throw new Error("expected person id");
     }
+
     if (!heritage) {
         return null;
     }
+
     if (!notes.length) {
         return (
             <div>
@@ -52,11 +54,15 @@ export function Notes() {
             </div>
         );
     }
+    
     return (
-        <div>
-            <ul>
-                {notes.map(({ id, note }) => (
-                    <li key={id}>{note}</li>
+        <div className="p-2 mt-2">
+            <ul className="grid gap-2 grid-cols-[repeat(auto-fit,minmax(150px,400px))] justify-center">
+                {notes.map(({ name, content }) => (
+                    <li key={name} className="p-4 bg-white rounded-lg">
+                        <h3 className="text-xl text-center mb-2">{name}</h3>
+                        <div dangerouslySetInnerHTML={{ __html: content }}></div>
+                    </li>
                 ))}
             </ul>
         </div>
