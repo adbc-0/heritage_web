@@ -573,6 +573,10 @@ export class Graph {
                 throw new Error("no original marraige");
             }
             for (const marriage of rest) {
+                /**
+                 * @SPEC 5.0
+                 * marking additional marriages as remarriages 
+                 * */
                 marriage.treatedAsRemarriage = true;
                 this.remarriageMap.set(originalMarriage.id, marriage.id);
             }
