@@ -4,13 +4,16 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io/fs"
 	"net/http"
 	"os"
+	"path/filepath"
+	"strings"
 )
 
 type environment struct {
 	// mode     string
-	password           string
+	password string
 	// dbConnectionString string
 	// cors     string
 }
@@ -44,7 +47,7 @@ var cookieValidityTime = 1 * 86400 // validity in days
 
 var env = environment{
 	// mode:     setEnv("MODE", "DEV"),
-	password:           setEnvVarWithFallback("PASSWORD", "DEV"),
+	password: setEnvVarWithFallback("PASSWORD", "DEV"),
 	// dbConnectionString: setEnvVar("DATABASE_URL"),
 	// cors:     setEnv("CORS", "http://localhost:5173"),
 }
@@ -203,32 +206,63 @@ func getPersonDocuments(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+type Note struct {
+	Name    string `json:"name"`
+	Content string `json:"content"`
+}
+
 func getPersonNotes(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]interface{}{
-		"notes": []string{},
+	userId := r.PathValue("id")
+	if userId == "" {
+		http.Error(w, "Path parameter is required", http.StatusBadRequest)
+		return
+	}
+
+	notesDir := "public/" + userId + "/notes"
+
+	var notes []Note
+
+	err := filepath.WalkDir(notesDir, func(path string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		if d.IsDir() {
+			return nil
+		}
+
+		if filepath.Ext(d.Name()) == ".html" {
+			content, err := os.ReadFile(path)
+			if err != nil {
+				return err
+			}
+
+			noteFilename := d.Name()
+
+			noteNameWithoutExtension := strings.TrimSuffix(noteFilename, filepath.Ext(noteFilename))
+
+			notes = append(notes, Note{
+				Name:    noteNameWithoutExtension,
+				Content: string(content),
+			})
+		}
+
+		return nil
 	})
 
-	// 	userId := r.PathValue("id")
-	// 	if userId == "" {
-	// 		http.Error(w, "Path parameter is required", http.StatusBadRequest)
-	// 		return
-	// 	}
+	if err != nil {
+		http.Error(w, "Error reading files from directory", http.StatusInternalServerError)
+		return
+	}
 
-	// 	rows, err := conn.Query(context.Background(), "SELECT id, note FROM notes WHERE person_indi_id=$1", userId)
-	// 	if err != nil {
-	// 		fmt.Fprintf(os.Stderr, "Query failed: %v\n", err)
-	// 		os.Exit(1)
-	// 	}
-	// 	defer rows.Close()
-
-	// 	notes, err := pgx.CollectRows(rows, pgx.RowToStructByName[note])
-	// 	if err != nil {
-	// 		fmt.Fprintf(os.Stderr, "Failed collecting rows: %v\n", err)
-	// 		os.Exit(1)
-	// 	}
-	// }
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+	err = json.NewEncoder(w).Encode(map[string]interface{}{
+		"notes": notes,
+	})
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Error building the response, %v", err), http.StatusInternalServerError)
+		return
+	}
 }
 
 func main() {
