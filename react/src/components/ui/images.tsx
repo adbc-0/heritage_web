@@ -239,23 +239,22 @@ function Image({ moveToNextImage, moveToPrevImage }: ImageProps) {
         }
     }
 
-    const switchPhotosOnKeyDown = (event: globalThis.KeyboardEvent) => {
-        if (event.key === "ArrowLeft") {
-            moveToPrevImage();
-        }
-        if (event.key === "ArrowRight") {
-            moveToNextImage();
-        }
-    };
-
     // switch photos on arrow press
     useEffect(() => {
+        const switchPhotosOnKeyDown = (event: globalThis.KeyboardEvent) => {
+            if (event.key === "ArrowLeft") {
+                moveToPrevImage();
+            }
+            if (event.key === "ArrowRight") {
+                moveToNextImage();
+            }
+        };
         // use abort controller? https://www.youtube.com/shorts/Z09xJq5iA0c
         window.addEventListener("keydown", switchPhotosOnKeyDown);
         return () => {
             window.removeEventListener("keydown", switchPhotosOnKeyDown);
         };
-    }, [switchPhotosOnKeyDown]);
+    }, [moveToNextImage, moveToPrevImage]);
 
     if (!imageIsInspected) {
         return null;
