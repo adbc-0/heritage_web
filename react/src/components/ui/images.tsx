@@ -10,7 +10,7 @@ import {
 } from "react";
 import { CircleArrowLeft, CircleArrowRight, CircleX, ImageDown } from "lucide-react";
 
-import { SWIPE_TRESHOLD } from "@/constants/global";
+import { SWIPE_TRESHOLD } from "@/constants/config";
 import { stripFileExtension } from "@/lib/utils";
 import type { File } from "@/pages/Person/types.ts";
 
