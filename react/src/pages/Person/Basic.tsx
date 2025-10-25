@@ -2,7 +2,7 @@ import { useParams } from "react-router";
 
 import { isNil } from "@/lib/utils";
 import { useHeritage } from "@/features/heritage/heritageContext";
-import { searchFamily, searchPerson } from "@/features/graph/utils";
+import { searchFamily, searchPerson } from "@/features/heritageGraph/utils";
 import { Section } from "./Section";
 import { SectionWithLinks } from "./SectionWithLinks";
 

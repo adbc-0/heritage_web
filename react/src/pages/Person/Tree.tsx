@@ -2,10 +2,11 @@ import { type Params, useParams } from "react-router";
 
 import { isNil } from "@/lib/utils";
 import { useHeritage } from "@/features/heritage/heritageContext";
-import { isPersonInvisible, searchFamily, searchPerson } from "@/features/graph/utils";
-import { FamilyGraph } from "@/features/graph/FamilyGraph";
+import { isPersonInvisible, searchFamily, searchPerson } from "@/features/heritageGraph/utils";
+import { ErrorFallback, HeritageGraph } from "@/features/heritageGraph/HeritageGraph";
 
 import { HeritageRaw } from "@/types/heritage.types";
+import { ErrorBoundary } from "react-error-boundary";
 
 function addParentWhenExists(heritage: HeritageRaw, parentId: string | null) {
     if (!parentId) {
@@ -57,7 +58,9 @@ export function Tree() {
 
     return (
         <div className="bg-background border-t border-border h-full">
-            <FamilyGraph rootPerson={rootPerson} />
+            <ErrorBoundary FallbackComponent={ErrorFallback}>
+                <HeritageGraph rootPerson={rootPerson} />
+            </ErrorBoundary>
         </div>
     );
 }

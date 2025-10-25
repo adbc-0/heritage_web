@@ -1,4 +1,5 @@
 import { type ComponentRef, useEffect, useRef } from "react";
+import { OctagonAlertIcon } from "lucide-react";
 import { Link } from "react-router";
 import { zoom, zoomIdentity } from "d3-zoom";
 import { select } from "d3-selection";
@@ -9,7 +10,7 @@ import { isNil } from "@/lib/utils.ts";
 import { useHeritage } from "@/features/heritage/heritageContext";
 
 import { NODE_HEIGHT, NODE_WIDTH, VERTICAL_SPACE_BETWEEN_NODES } from "./constants";
-import { Graph, type SvgNodeDetails } from "./graph";
+import { Graph, type HeritageSVGNode } from "./graph";
 
 import type { PersonEvent } from "@/types/heritage.types";
 
@@ -28,8 +29,8 @@ function getParentAnchor() {
 }
 
 function getPersonAnchor(
-    person: HierarchyPointNode<SvgNodeDetails>,
-    parent: HierarchyPointNode<SvgNodeDetails>,
+    person: HierarchyPointNode<HeritageSVGNode>,
+    parent: HierarchyPointNode<HeritageSVGNode>,
 ) {
     if (person.data.members.length === 1) {
         return { x: NODE_WIDTH / 2, y: 0 };
@@ -57,8 +58,8 @@ function getPersonAnchor(
 }
 
 function drawExtraParentLine(
-    child: HierarchyPointNode<SvgNodeDetails>,
-    parent: HierarchyPointNode<SvgNodeDetails>,
+    child: HierarchyPointNode<HeritageSVGNode>,
+    parent: HierarchyPointNode<HeritageSVGNode>,
 ) {
     const personAnchor = getPersonAnchor(child, parent);
     const parentAnchor = getParentAnchor();
@@ -83,8 +84,8 @@ function drawExtraParentLine(
 }
 
 function drawLine(
-    child: HierarchyPointNode<SvgNodeDetails>,
-    parent: HierarchyPointNode<SvgNodeDetails>,
+    child: HierarchyPointNode<HeritageSVGNode>,
+    parent: HierarchyPointNode<HeritageSVGNode>,
 ) {
     const personAnchor = getPersonAnchor(child, parent);
     const parentAnchor = getParentAnchor();
@@ -109,8 +110,8 @@ function drawLine(
 }
 
 function connectionKey(connection: {
-    from: HierarchyPointNode<SvgNodeDetails>;
-    to: HierarchyPointNode<SvgNodeDetails>;
+    from: HierarchyPointNode<HeritageSVGNode>;
+    to: HierarchyPointNode<HeritageSVGNode>;
 }) {
     if (isNil(connection.from.id)) {
         throw new Error("missing source id");
@@ -122,8 +123,8 @@ function connectionKey(connection: {
 }
 
 function ChildToExtraParentLink(connection: {
-    from: HierarchyPointNode<SvgNodeDetails>;
-    to: HierarchyPointNode<SvgNodeDetails>;
+    from: HierarchyPointNode<HeritageSVGNode>;
+    to: HierarchyPointNode<HeritageSVGNode>;
 }) {
     return (
         <path
@@ -138,8 +139,8 @@ function ChildToExtraParentLink(connection: {
 }
 
 function drawRemarriageLine(
-    from: HierarchyPointNode<SvgNodeDetails>,
-    to: HierarchyPointNode<SvgNodeDetails>,
+    from: HierarchyPointNode<HeritageSVGNode>,
+    to: HierarchyPointNode<HeritageSVGNode>,
 ) {
     return (
         "M " +
@@ -154,8 +155,8 @@ function drawRemarriageLine(
 }
 
 function RemarriageLink(connection: {
-    from: HierarchyPointNode<SvgNodeDetails>;
-    to: HierarchyPointNode<SvgNodeDetails>;
+    from: HierarchyPointNode<HeritageSVGNode>;
+    to: HierarchyPointNode<HeritageSVGNode>;
 }) {
     return (
         <path
@@ -169,7 +170,7 @@ function RemarriageLink(connection: {
     );
 }
 
-function ChildToParentLink({ node }: { node: HierarchyPointNode<SvgNodeDetails> }) {
+function ChildToParentLink({ node }: { node: HierarchyPointNode<HeritageSVGNode> }) {
     if (!node.parent) {
         return null;
     }
@@ -204,7 +205,7 @@ function birthAndDeath(birthEvent: PersonEvent | null, deathEvent: PersonEvent |
     return `${eventToString(birthEvent)} - ${eventToString(deathEvent)}`;
 }
 
-function PersonOrFamily({ node }: { node: HierarchyPointNode<SvgNodeDetails> }) {
+function PersonOrFamily({ node }: { node: HierarchyPointNode<HeritageSVGNode> }) {
     if (node.data.empty) {
         return null;
     }
@@ -334,7 +335,7 @@ function centerVertically(pos: StartingPosition, clientHeight: number) {
  * @description
  * Get the median value for X and Y
  */
-function calculateCenterPos(people: HierarchyPointNode<SvgNodeDetails>[]) {
+function calculateCenterPos(people: HierarchyPointNode<HeritageSVGNode>[]) {
     // The more you go the left the more negative the value
     let left = Infinity;
     let right = -Infinity;
@@ -369,7 +370,7 @@ type CalculateInitialPositionOptions = {
     clientHeight: number;
 };
 function calculateInitialPos(
-    heritage: HierarchyPointNode<SvgNodeDetails>[],
+    heritage: HierarchyPointNode<HeritageSVGNode>[],
     options: CalculateInitialPositionOptions,
 ) {
     const focusMode = isNil(options.root) ? "centre" : "on_person";
@@ -390,7 +391,7 @@ function calculateInitialPos(
 
 // ToDo: Try drawing parents with line between them
 
-export function FamilyGraph({ rootPerson, inactiveBranches = [] }: FamilyGraphComponent) {
+export function HeritageGraph({ rootPerson, inactiveBranches = [] }: FamilyGraphComponent) {
     const { heritage } = useHeritage();
     const svgElement = useRef<ComponentRef<"svg">>(null);
 
@@ -470,5 +471,14 @@ export function FamilyGraph({ rootPerson, inactiveBranches = [] }: FamilyGraphCo
                 ))}
             </g>
         </svg>
+    );
+}
+
+export function ErrorFallback() {
+    return (
+        <div className="h-full grid content-center justify-center text-xl gap-4">
+            <OctagonAlertIcon className="mx-auto" size={40} />
+            <p>Nieobsłużony błąd uniemożliwił wyświetlenie drzewa</p>
+        </div>
     );
 }

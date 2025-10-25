@@ -10,13 +10,13 @@ import {
 
 import type { HeritageRaw, PersonEvent, PersonIdentifier } from "@/types/heritage.types.ts";
 
-type RequiredByD3 = {
+/** Wrote my own definition since I could not find one exported by library */
+type D3Node = {
     id: PersonIdentifier;
     parentId: PersonIdentifier | null;
 };
 
-// split between family and person?
-export type SvgNodeDetails = RequiredByD3 & {
+export type HeritageSVGNode = D3Node & {
     members: Person[];
     empty: boolean;
     treatedAsRemarriage: boolean;
@@ -615,7 +615,7 @@ export class Graph {
             };
         }
 
-        const svgList: SvgNodeDetails[] = this.toList().map((node) => {
+        const svgList: HeritageSVGNode[] = this.toList().map((node) => {
             if (node instanceof Family) {
                 return createSVGNodeFromFamily(node);
             } else if (node instanceof Person) {
@@ -625,9 +625,9 @@ export class Graph {
             }
         });
 
-        const stratifyOperator = stratify<SvgNodeDetails>();
+        const stratifyOperator = stratify<HeritageSVGNode>();
         const treeDataset = stratifyOperator(svgList);
-        const createTree = createTreeLayout<SvgNodeDetails>()
+        const createTree = createTreeLayout<HeritageSVGNode>()
             .nodeSize([
                 NODE_WIDTH * 2 + HORIZONTAL_SPACE_BETWEEN_NODES,
                 NODE_HEIGHT + VERTICAL_SPACE_BETWEEN_NODES,
@@ -635,7 +635,7 @@ export class Graph {
             .separation(() => 0.48);
         const descendants = createTree(treeDataset).descendants();
 
-        const descendantHashMap = new Map<PersonIdentifier, HierarchyPointNode<SvgNodeDetails>>();
+        const descendantHashMap = new Map<PersonIdentifier, HierarchyPointNode<HeritageSVGNode>>();
         for (const descendant of descendants) {
             if (!descendant.id) {
                 throw new Error("descendant without id");
@@ -644,8 +644,8 @@ export class Graph {
         }
 
         const extraParents: {
-            from: HierarchyPointNode<SvgNodeDetails>;
-            to: HierarchyPointNode<SvgNodeDetails>;
+            from: HierarchyPointNode<HeritageSVGNode>;
+            to: HierarchyPointNode<HeritageSVGNode>;
         }[] = [];
         for (const [childId, extraParentId] of this.extraParentMap.entries()) {
             const child = descendantHashMap.get(childId);
@@ -660,8 +660,8 @@ export class Graph {
         }
 
         const remarriages: {
-            from: HierarchyPointNode<SvgNodeDetails>;
-            to: HierarchyPointNode<SvgNodeDetails>;
+            from: HierarchyPointNode<HeritageSVGNode>;
+            to: HierarchyPointNode<HeritageSVGNode>;
         }[] = [];
         for (const [originalMarriageId, remarriageId] of this.remarriageMap.entries()) {
             const originalMarriage = descendantHashMap.get(originalMarriageId);
@@ -683,122 +683,6 @@ export class Graph {
     }
 }
 
-// function convertToD3List(list: (Family | Person)[]) {
-//     return list.map((element) => ({
-//         parentId: element.parentFamily?.id ?? null,
-//         id: element.id,
-//     }));
-// }
-
-// class PersonMap {
-//     #personMap = new Map<Identifier, Person>();
-//
-//     [Symbol.iterator]() {
-//         return this.#personMap[Symbol.iterator]();
-//     }
-//
-//     add(person: Person) {
-//         this.#personMap.set(person.id, person);
-//     }
-//
-//     get(id: Identifier): Person | null {
-//         return this.#personMap.get(id) ?? null;
-//     }
-// }
-
-// class FamilyMap {
-//     #familyMap = new Map<Identifier, Family>();
-//
-//     [Symbol.iterator]() {
-//         return this.#familyMap[Symbol.iterator]();
-//     }
-//
-//     add(family: Family) {
-//         this.#familyMap.set(family.id, family);
-//     }
-//
-//     get(id: Identifier): Family | null {
-//         return this.#familyMap.get(id) ?? null;
-//     }
-// }
-
-// class TreeDataset {
-//     dataset: HeritageRaw;
-//
-//     personMap: Map<string, HeritagePerson>;
-//     childrenSet: Set<string>;
-//     connectionMap: Map<string, Connection>;
-//     personToFamilyMap: Record<string, string[]>;
-//
-//     constructor(dataset: HeritageRaw) {
-//         this.dataset = dataset;
-//         this.personMap = createPeopleMap(dataset);
-//         this.childrenSet = createChildrenMap(dataset);
-//         this.connectionMap = createConnectionsMap(dataset);
-//         this.personToFamilyMap = createPersonToConnectionsMap(dataset);
-//     }
-//
-//     getPersonReq(personId: string) {
-//         const person = this.personMap.get(personId);
-//         if (!person) {
-//             throw new Error("person does not exist");
-//         }
-//         return person;
-//     }
-//
-//     getFamilyReq(familyId: string) {
-//         const family = this.connectionMap.get(familyId);
-//         if (!family) {
-//             throw new Error("family does not exist");
-//         }
-//         return family;
-//     }
-//
-//     getPersonFamilyListReq(personId: string) {
-//         const families = this.personToFamilyMap[personId];
-//         if (!families) {
-//             throw new Error("family does not exist");
-//         }
-//         return families;
-//     }
-//
-//     getPersonSpouse(family: Connection, personId: string) {
-//         const spouseId = family.husb === personId ? family.wife : family.husb;
-//         if (isNil(spouseId)) {
-//             return null;
-//         }
-//         return this.getPersonReq(spouseId);
-//     }
-//
-//     getPersonChildren(familyId: string) {
-//         const family = this.getFamilyReq(familyId);
-//         const children = [];
-//         for (const childId of family.children) {
-//             children.push(this.getPersonReq(childId));
-//         }
-//         return children;
-//     }
-//
-//     getPersonFamilyList(personId: string) {
-//         const families = this.personToFamilyMap[personId];
-//         if (!families) {
-//             return [];
-//         }
-//         return families;
-//     }
-//
-//     getRootNode() {
-//         const person = this.dataset.people.find((person) => !person.famc);
-//         if (!person) {
-//             throw new Error("person does not exist");
-//         }
-//         return person;
-//     }
-// }
-
-// // --- Usage Example ---
-//
-// // Create a tree
 // const root = new TreeNode("A");
 // const b = new TreeNode("B");
 // const c = new TreeNode("C");
@@ -806,14 +690,11 @@ export class Graph {
 // const e = new TreeNode("E");
 // const f = new TreeNode("F");
 // const g = new TreeNode("G");
-//
 // root.addChild(b);
 // root.addChild(c);
 // root.addChild(d);
-//
 // b.addChild(e);
 // b.addChild(f);
-//
 // d.addChild(g);
 //
 // console.log("--- Depth-First Search (DFS) Traversal ---");
@@ -827,11 +708,6 @@ export class Graph {
 //     console.log(node.value);
 // }
 // // Expected BFS output: A, B, C, D, E, F, G
-
-// Basic file has indis and families. Iterate over people to create tree.
-//
-
-// { id: '2', parent: '1', family: '2' }, { id: '1', parent: null, family: '1' }
 
 // export class TreeBuilder {
 //     #rootNode: Identifier | null;

@@ -1,8 +1,9 @@
 import { useState } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 
 import { ChevronLeft, Settings } from "lucide-react";
 
-import { FamilyGraph } from "@/features/graph/FamilyGraph";
+import { HeritageGraph, ErrorFallback } from "@/features/heritageGraph/HeritageGraph";
 
 import { SVGSettings } from "./SVGSettings";
 
@@ -108,7 +109,9 @@ export default function Home() {
                     </div>
                 )}
                 {settingsAreOpen && <SVGSettings branches={branches} toggleBranch={toggleBranch} />}
-                <FamilyGraph inactiveBranches={inactiveBranches} />
+                <ErrorBoundary FallbackComponent={ErrorFallback}>
+                    <HeritageGraph inactiveBranches={inactiveBranches} />
+                </ErrorBoundary>
             </div>
         </div>
     );
