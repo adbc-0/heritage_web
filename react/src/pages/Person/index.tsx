@@ -19,7 +19,7 @@ export default function Person() {
         if (!id) {
             throw new Error("missing person route param");
         }
-        
+
         if (!heritage) {
             throw new Error("missing heritage data");
         }

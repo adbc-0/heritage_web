@@ -54,7 +54,7 @@ export function Notes() {
             </div>
         );
     }
-    
+
     return (
         <div className="p-2 mt-2">
             <ul className="grid gap-2 grid-cols-[repeat(auto-fit,minmax(150px,400px))] justify-center">

@@ -1,7 +1,12 @@
 import { ReactElement, useState } from "react";
 
 import { ENV } from "@/constants/env";
-import { AuthErrorType, AuthErrorTypeValues, AuthStatus, AuthStatusValues } from "@/features/auth/constants";
+import {
+    AuthErrorType,
+    AuthErrorTypeValues,
+    AuthStatus,
+    AuthStatusValues,
+} from "@/features/auth/constants";
 import { AuthContext, AuthContextType } from "@/features/auth/authContext";
 
 import type { ApiError } from "@/types/api.types.ts";

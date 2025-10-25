@@ -575,7 +575,7 @@ export class Graph {
             for (const marriage of rest) {
                 /**
                  * @SPEC 5.0
-                 * marking additional marriages as remarriages 
+                 * marking additional marriages as remarriages
                  * */
                 marriage.treatedAsRemarriage = true;
                 this.remarriageMap.set(originalMarriage.id, marriage.id);

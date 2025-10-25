@@ -8,7 +8,7 @@ export type DeviceTypeContextType = {
 };
 
 export const DeviceTypeContext = createContext<DeviceTypeContextType>({
-    deviceType: initialDeviceType
+    deviceType: initialDeviceType,
 });
 
 export function useDeviceDetect() {
