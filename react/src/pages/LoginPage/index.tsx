@@ -4,12 +4,12 @@ import { useNavigate } from "react-router";
 
 import { http } from "@/constants/httpStatusCodes";
 import { RouterPath } from "@/constants/routePaths";
-import { useHeritage } from "@/contexts/heritageContext";
+import { useHeritage } from "@/features/heritage/heritageContext";
+import { useAuth } from "@/features/auth/authContext";
+import { AuthErrorType, AuthStatus } from "@/features/auth/constants";
 import { Button } from "@/components/ui/button";
-import { AuthErrorType, AuthStatus } from "@/constants/auth";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useAuth } from "@/contexts/authContext";
 import { GlobalError } from "../GlobalError/GlobalError";
 
 type LoginFormInputs = {

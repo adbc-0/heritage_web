@@ -1,14 +1,14 @@
 import { createContext, useContext } from "react";
 
-import { hasTouchSupport } from "@/lib/utils";
-import { DeviceType, DeviceTypeValues } from "@/constants/deviceType";
+import type { DeviceTypeValues } from "@/features/deviceMode/constants";
+import { initialDeviceType } from "@/features/deviceMode/utils";
 
 export type DeviceTypeContextType = {
     deviceType: DeviceTypeValues;
 };
 
 export const DeviceTypeContext = createContext<DeviceTypeContextType>({
-    deviceType: hasTouchSupport() ? DeviceType.MOBILE : DeviceType.DESKTOP,
+    deviceType: initialDeviceType
 });
 
 export function useDeviceDetect() {

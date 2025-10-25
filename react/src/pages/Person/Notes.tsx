@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Params, useParams } from "react-router";
 
 import { ENV } from "@/constants/env";
-import { useHeritage } from "@/contexts/heritageContext";
+import { useHeritage } from "@/features/heritage/heritageContext";
 
 type Note = {
     name: string;

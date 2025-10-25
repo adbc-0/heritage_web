@@ -12,7 +12,3 @@ export function isNil(value: unknown): value is null | undefined {
 export function stripFileExtension(filename: string) {
     return filename.split(".").at(0);
 }
-
-export function hasTouchSupport() {
-    return "ontouchstart" in window || navigator.maxTouchPoints > 0;
-}

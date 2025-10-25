@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
 
-import { LoadingState, LoadingStateValues } from "@/constants/heritage";
+import { LoadingState, LoadingStateValues } from "@/features/heritage/constants";
 
 import type { HeritageRaw } from "@/types/heritage.types.ts";
 

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Params, useNavigate, useParams } from "react-router";
 
-import { useHeritage } from "@/contexts/heritageContext";
+import { useHeritage } from "@/features/heritage/heritageContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Basic } from "./Basic";
 import { Tree } from "./Tree";

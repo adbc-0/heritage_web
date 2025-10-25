@@ -4,7 +4,7 @@ import { ArrowDown01, ArrowDown10, ArrowDownAZ, ArrowDownZa } from "lucide-react
 
 import { isPersonInvisible, searchFamily, searchPerson } from "@/features/graph/utils";
 import { RouterPath } from "@/constants/routePaths";
-import { useHeritage } from "@/contexts/heritageContext";
+import { useHeritage } from "@/features/heritage/heritageContext"
 import {
     Table,
     TableBody,

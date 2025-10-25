@@ -6,7 +6,7 @@ import { type HierarchyPointNode } from "d3-hierarchy";
 
 import { RouterPath } from "@/constants/routePaths.ts";
 import { isNil } from "@/lib/utils.ts";
-import { useHeritage } from "@/contexts/heritageContext";
+import { useHeritage } from "@/features/heritage/heritageContext";
 
 import { NODE_HEIGHT, NODE_WIDTH, VERTICAL_SPACE_BETWEEN_NODES } from "./constants";
 import { Graph, type SvgNodeDetails } from "./graph";

@@ -2,16 +2,16 @@ import { lazy, Suspense } from "react";
 import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
 
-import { DeviceModeProvider } from "./providers/DeviceModeProvider";
-import { HeritageProvider } from "./providers/HeritageProvider";
+import { DeviceModeProvider } from "./features/deviceMode/DeviceModeProvider";
+import { HeritageProvider } from "./features/heritage/HeritageProvider";
+import { AuthProvider } from "./features/auth/AuthProvider";
 import { Layout } from "./components/views/Layout";
 import { RouterPath } from "./constants/routePaths";
 import { NoMatch } from "./pages/NoMatch";
-import { AuthProvider } from "./providers/AuthProvider";
 import { LoadingPage } from "./pages/LoadingPage";
 import { GlobalError } from "./pages/GlobalError/GlobalError";
 import { LoginPage } from "./pages/LoginPage";
-import { ProtectedRoute } from "./components/ProtectedRoute";
+import { ProtectedRoute } from "./features/auth/ProtectedRoute";
 
 const LazyHome = lazy(() => import("./pages/Home"));
 const LazyPeople = lazy(() => import("./pages/People"));
@@ -21,6 +21,7 @@ const LazyRodo = lazy(() => import("./pages/Rodo"));
 const LazySupport = lazy(() => import("./pages/SupportMe"));
 const LazyAboutMe = lazy(() => import("./pages/AboutMe"));
 
+// consider using tanstack router or using native lazy loading from react router
 const router = createBrowserRouter([
     {
         path: RouterPath.ROOT,

@@ -1,7 +1,7 @@
 import { Outlet } from "react-router";
 
-import { useDeviceDetect } from "@/contexts/deviceMode";
-import { DeviceType } from "@/constants/deviceType";
+import { useDeviceDetect } from "@/features/deviceMode/deviceModeContext";
+import { DeviceType } from "@/features/deviceMode/constants";
 import { DesktopTopbar } from "./DesktopTopbar";
 import { DesktopFooter } from "./DesktopFooter";
 import { MobileTopbar } from "./MobileTopbar";

@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
 
-import { AuthErrorTypeValues, AuthStatus, AuthStatusValues } from "@/constants/auth";
+import { AuthErrorTypeValues, AuthStatus, AuthStatusValues } from "@/features/auth/constants";
 
 export type AuthContextType = {
     authInProgress: boolean;

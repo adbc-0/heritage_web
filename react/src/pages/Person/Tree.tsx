@@ -1,7 +1,7 @@
 import { type Params, useParams } from "react-router";
 
 import { isNil } from "@/lib/utils";
-import { useHeritage } from "@/contexts/heritageContext";
+import { useHeritage } from "@/features/heritage/heritageContext";
 import { isPersonInvisible, searchFamily, searchPerson } from "@/features/graph/utils";
 import { FamilyGraph } from "@/features/graph/FamilyGraph";
 

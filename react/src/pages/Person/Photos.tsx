@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Params, useParams } from "react-router";
 
 import { ENV } from "@/constants/env";
-import { useHeritage } from "@/contexts/heritageContext";
+import { useHeritage } from "@/features/heritage/heritageContext";
 import { ImageInspection, Images, ImagesThumbnails, Thumbnail } from "@/components/ui/images";
 import type { File } from "@/pages/Person/types.ts";
 

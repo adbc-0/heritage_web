@@ -1,9 +1,10 @@
 import { ReactElement, useState } from "react";
 
-import { AuthErrorType, AuthErrorTypeValues, AuthStatus, AuthStatusValues } from "@/constants/auth";
-import { AuthContext, AuthContextType } from "@/contexts/authContext";
-import type { ApiError } from "@/types/api.types.ts";
 import { ENV } from "@/constants/env";
+import { AuthErrorType, AuthErrorTypeValues, AuthStatus, AuthStatusValues } from "@/features/auth/constants";
+import { AuthContext, AuthContextType } from "@/features/auth/authContext";
+
+import type { ApiError } from "@/types/api.types.ts";
 
 type ReactChildren = {
     children: ReactElement | ReactElement[];

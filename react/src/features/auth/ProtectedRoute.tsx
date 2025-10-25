@@ -1,9 +1,9 @@
 import { ReactElement, useEffect } from "react";
 import { useNavigate } from "react-router";
 
-import { AuthStatus } from "@/constants/auth";
 import { RouterPath } from "@/constants/routePaths";
-import { useAuth } from "@/contexts/authContext";
+import { useAuth } from "@/features/auth/authContext";
+import { AuthStatus } from "@/features/auth/constants";
 import { LoadingPage } from "@/pages/LoadingPage";
 
 type ReactChildren = {
