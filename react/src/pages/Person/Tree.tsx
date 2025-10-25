@@ -1,4 +1,5 @@
 import { type Params, useParams } from "react-router";
+import { ErrorBoundary } from "react-error-boundary";
 
 import { isNil } from "@/lib/utils";
 import { useHeritage } from "@/features/heritage/heritageContext";
@@ -6,7 +7,6 @@ import { isPersonInvisible, searchFamily, searchPerson } from "@/features/herita
 import { ErrorFallback, HeritageGraph } from "@/features/heritageGraph/HeritageGraph";
 
 import { HeritageRaw } from "@/types/heritage.types";
-import { ErrorBoundary } from "react-error-boundary";
 
 function addParentWhenExists(heritage: HeritageRaw, parentId: string | null) {
     if (!parentId) {
