@@ -1,14 +1,16 @@
+// ToDo: Add # to internal only methods and properties
 import { type HierarchyPointNode, stratify, tree as createTreeLayout } from "d3-hierarchy";
 
 import { isNil } from "@/lib/utils.ts";
+import { Stack } from "@/features/heritage/stack.ts";
 import {
     HORIZONTAL_SPACE_BETWEEN_NODES,
     NODE_HEIGHT,
     NODE_WIDTH,
     VERTICAL_SPACE_BETWEEN_NODES,
-} from "./constants";
+} from "@/features/heritageGraph/constants.ts";
 
-import type { HeritageRaw, PersonEvent, PersonIdentifier } from "@/types/heritage.types.ts";
+import type { HeritageRaw, PersonEvent, PersonIdentifier, RawConnection } from "@/types/heritage.types.ts";
 
 /** Wrote my own definition since I could not find one exported by library */
 type D3Node = {
@@ -33,38 +35,50 @@ export type HeritageSVGNode = D3Node & {
     treatedAsRemarriage: boolean;
 };
 
-type PersonConstructor = {
+export const PersonType = {
+    EMPTY_NODE: "EMPTY_NODE",
+    PERSON_NODE: "PERSON_NODE",
+} as const;
+export type PersonTypeType = (typeof PersonType)[keyof typeof PersonType];
+
+export const Sex = {
+    M: "M",
+    F: "F",
+} as const;
+export type SexType = (typeof Sex)[keyof typeof Sex];
+
+// consider making two different classes depending on type
+interface PersonDetails {
     id: PersonIdentifier;
-    type: "EMPTY_NODE" | "PERSON_NODE";
-    sex?: "F" | "M";
+    type: PersonTypeType;
     firstName?: string;
     lastName?: string;
     nickName?: string;
-    birthDate?: PersonEvent;
-    deathDate?: PersonEvent;
+    sex?: SexType;
+    birthDate?: PersonEvent | null;
+    deathDate?: PersonEvent | null;
     color?: string;
-};
+}
 
-// ToDo: Create special error class for tree generation
+const WHITE = "#FFF;";
+
+class GraphError extends Error {}
 
 class Person {
-    readonly isFamily = false;
-    id: PersonIdentifier;
-    type: "EMPTY_NODE" | "PERSON_NODE";
+    readonly id: PersonIdentifier;
+    readonly type: PersonTypeType;
+
     parent: Family | null = null;
     families = new Map<PersonIdentifier, Family>();
     children = new Map<PersonIdentifier, Person>();
-    // later make nullable
-    sex: "F" | "M" = "M";
-    // later make nullable
-    firstName = "";
-    // later make nullable
-    lastName = "";
-    // later make nullable
-    nickName = "";
-    birthDate: PersonEvent | null = null;
-    deathDate: PersonEvent | null = null;
-    color = "#FFF";
+
+    readonly sex: SexType;
+    readonly firstName;
+    readonly lastName;
+    readonly nickName;
+    readonly birthDate: PersonEvent | null;
+    readonly deathDate: PersonEvent | null;
+    readonly color;
 
     *[Symbol.iterator](): Iterator<Person> {
         yield this;
@@ -73,44 +87,30 @@ class Person {
     constructor({
         id,
         type,
-        lastName,
-        firstName,
-        sex,
-        nickName,
-        birthDate,
-        deathDate,
-        color,
-    }: PersonConstructor) {
+        lastName = "",
+        firstName = "",
+        sex = Sex.M,
+        nickName = "",
+        birthDate = null,
+        deathDate = null,
+        color = WHITE,
+    }: PersonDetails) {
         this.id = id;
         this.type = type;
-        if (sex) {
-            this.sex = sex;
-        }
-        if (firstName) {
-            this.firstName = firstName;
-        }
-        if (lastName) {
-            this.lastName = lastName;
-        }
-        if (nickName) {
-            this.nickName = nickName;
-        }
-        if (birthDate) {
-            this.birthDate = birthDate;
-        }
-        if (deathDate) {
-            this.deathDate = deathDate;
-        }
-        if (color) {
-            this.color = color;
-        }
+        this.sex = sex;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.nickName = nickName;
+        this.birthDate = birthDate;
+        this.deathDate = deathDate;
+        this.color = color;
     }
 
-    addFamily(family: Family) {
+    attachFamily(family: Family) {
         this.families.set(family.id, family);
     }
 
-    connectTo(family: Family) {
+    attachParentFamily(family: Family) {
         this.parent = family;
     }
 
@@ -118,9 +118,9 @@ class Person {
         this.children.set(child.id, child);
     }
 
-    delete() {
+    detachParentFamily() {
         if (isNil(this.parent)) {
-            throw new Error("Cannot remove root node. Person does not have parent.");
+            throw new GraphError("Cannot remove root node. Person does not have parent.");
         }
         this.parent.children.delete(this.id);
         this.parent = null;
@@ -128,22 +128,31 @@ class Person {
 }
 
 class Family {
-    readonly isFamily = true;
-    id: PersonIdentifier;
-    parents: Map<PersonIdentifier, Family>;
-    members: Map<PersonIdentifier, Person>;
-    children: Map<PersonIdentifier, Person>;
-    treatedAsRemarriage = false;
+    readonly id: PersonIdentifier;
 
+    parents = new Map<PersonIdentifier, Family>();
+    members = new Map<PersonIdentifier, Person>();
+    children = new Map<PersonIdentifier, Person>();
+    remarriageStatus = false;
+
+    /**
+     * @description Depth-First Search (DFS) Traversal
+     * Allows to list over family with for of loops
+     * Expected DFS output: A, B, E, F, C, D, G
+     */
     *[Symbol.iterator](): Iterator<Family | Person> {
-        const visitedNodes = new Set<PersonIdentifier>(); // I presume to avoid duplication
+        /**
+         * Avoid visiting the same node multiple times through
+         * Two different people can have the same family
+         */
+        const visitedNodes = new Set<PersonIdentifier>();
         const stack = new Stack<Family | Person>();
 
         stack.push(this);
 
         while (!stack.isEmpty()) {
-            const element = stack.pop();
-            for (const child of element.children.values()) {
+            const node = stack.pop();
+            for (const child of node.children.values()) {
                 if (child.families.size) {
                     for (const childFamily of child.families.values()) {
                         if (!visitedNodes.has(childFamily.id)) {
@@ -155,18 +164,15 @@ class Family {
                     stack.push(child);
                 }
             }
-            yield element;
+            yield node;
         }
     }
 
     constructor(id: PersonIdentifier) {
         this.id = id;
-        this.parents = new Map();
-        this.members = new Map();
-        this.children = new Map();
     }
 
-    connectTo(family: Family) {
+    attachParentFamily(family: Family) {
         this.parents.set(family.id, family);
     }
 
@@ -178,61 +184,48 @@ class Family {
         this.children.set(child.id, child);
     }
 
-    deleteParent(parentId: PersonIdentifier) {
-        // ToDo: also delete parent from person. Here parent is removed only from family
-        const parent = this.parents.get(parentId);
-        if (!parent) {
-            throw new Error("not a parent of person");
+    /**
+     @description Detach parent family
+     Parent is still attached directly to family member (person).
+     */
+    softDetachParentFamily(parentId: PersonIdentifier) {
+        const ancestor = this.parents.get(parentId);
+        if (!ancestor) {
+            throw new GraphError("no parent with given parent id");
         }
-        parent.children.delete(this.id);
+        ancestor.children.delete(this.id);
         this.parents.delete(parentId);
     }
 
-    /** @description Remove person and their relationship with parents */
-    delete(removedMember: PersonIdentifier, removedParent: PersonIdentifier) {
-        const ancestors = this.parents.get(removedParent);
-        if (!ancestors) {
-            throw new Error("no parent");
+    /**
+     * @description Detach parent family
+     * Parent is detached from child also on Person level.
+     */
+    detachParentFamily(removedMember: PersonIdentifier, removedParent: PersonIdentifier) {
+        const ancestor = this.parents.get(removedParent);
+        if (!ancestor) {
+            throw new GraphError("no parent with given parent id");
         }
-        ancestors.children.delete(removedMember);
-        ancestors.members.values().forEach((parent) => parent.children.delete(removedMember));
+        ancestor.children.delete(removedMember);
+        ancestor.members.values().forEach((parent) => parent.children.delete(removedMember));
         this.parents.delete(removedParent);
 
         const member = this.members.get(removedMember);
         if (!member) {
-            throw new Error("no member");
+            throw new GraphError("no family member with given person id");
         }
         member.parent = null;
     }
 }
 
-// make new lib file for this class
-class Stack<T> {
-    #items: T[] = [];
-
-    pop() {
-        const item = this.#items.pop();
-        if (isNil(item)) {
-            throw new Error("empty stack exception");
-        }
-        return item;
-    }
-
-    push(items: T) {
-        this.#items.push(items);
-    }
-
-    isEmpty() {
-        return this.#items.length === 0;
-    }
-}
-
-type FamilyGraphOptions = {
+interface GraphOptions {
     rootPerson?: PersonIdentifier | null;
     excludedPeople?: PersonIdentifier[];
-};
+}
 
-// Directed Acyclic Graph (DAG) represents family
+/**
+ * @description Directed Acyclic Graph storing family data.
+ */
 export class Graph {
     root: Family | Person;
     dataset: HeritageRaw;
@@ -240,27 +233,74 @@ export class Graph {
     people = new Map<PersonIdentifier, Person>();
     families = new Map<PersonIdentifier, Family>();
 
-    extraParentMap = new Map<PersonIdentifier, PersonIdentifier>();
+    // all cases where person has two parents from different houses
+    multiHouseMap = new Map<PersonIdentifier, PersonIdentifier>();
+    // all remarriages could be listed as second node and later merged. More in line with real structure.
     remarriageMap = new Map<PersonIdentifier, PersonIdentifier>();
 
-    // ToDo: Collect info regarding interconnected nodes and remarriages
-    // Ways to do that:
-    //   Collect at the end
-    // interconnected: { family: Family; parentFamily: Family }[] = [];
-    // remarriages: { person: Person; family: Family }[] = [];
+    #addPerson(newPerson: Person) {
+        this.people.set(newPerson.id, newPerson);
+    }
 
-    constructor(dataset: HeritageRaw, options: FamilyGraphOptions = {}) {
-        this.dataset = dataset;
+    #addFamily(newFamily: Family) {
+        this.families.set(newFamily.id, newFamily);
+    }
 
-        // steps:
-        // createPeople()
-        // createFamilies()
-        // addSpouses()
-        // addChildren()
+    #addMembers(newFamily: Family, relation: RawConnection) {
+        if (relation.husb) {
+            const member = this.people.get(relation.husb);
+            if (!member) {
+                throw new GraphError("person does not exist");
+            }
+            newFamily.addMember(member);
+            member.attachFamily(newFamily);
+        }
+        if (relation.wife) {
+            const member = this.people.get(relation.wife);
+            if (!member) {
+                throw new GraphError("person does not exist");
+            }
+            newFamily.addMember(member);
+            member.attachFamily(newFamily);
+        }
+    }
 
-        // create people
+    #addChildToParents(child: Person, relation: RawConnection) {
+        if (relation.husb) {
+            const member = this.people.get(relation.husb);
+            if (!member) {
+                throw new GraphError("person does not exist");
+            }
+            member.addChild(child);
+        }
+        if (relation.wife) {
+            const member = this.people.get(relation.wife);
+            if (!member) {
+                throw new GraphError("person does not exist");
+            }
+            member.addChild(child);
+        }
+    }
+
+    #addChildren(newFamily: Family, relation: RawConnection) {
+        /**
+         * @SPEC 3.0
+         * add children using document order
+         * */
+        for (const childId of relation.children) {
+            const child = this.people.get(childId);
+            if (!child) {
+                throw new GraphError("person does not exist");
+            }
+            this.#addChildToParents(child, relation);
+            child.attachParentFamily(newFamily);
+            newFamily.addChild(child);
+        }
+    }
+
+    #createPeople() {
         for (const person of this.dataset.people) {
-            if (person.type === "PERSON_NODE") {
+            if (person.type === PersonType.PERSON_NODE) {
                 const newPerson = new Person({
                     id: person.id,
                     sex: person.sex,
@@ -272,240 +312,166 @@ export class Graph {
                     deathDate: person.death,
                     color: person.color,
                 });
-                this.people.set(newPerson.id, newPerson);
-            } else if (person.type === "EMPTY_NODE") {
-                const newPerson = new Person({
-                    id: person.id,
-                    type: person.type,
-                    sex: "M",
-                    firstName: "",
-                    lastName: "",
-                    nickName: "",
-                });
-                this.people.set(newPerson.id, newPerson);
+                this.#addPerson(newPerson);
+            } else if (person.type === PersonType.EMPTY_NODE) {
+                const newEmptyPerson = new Person({ id: person.id, type: person.type });
+                this.#addPerson(newEmptyPerson);
             } else {
-                throw new Error("type unhandled");
+                throw new GraphError("person type not supported");
             }
         }
+    }
 
-        // create families
-        for (const family of this.dataset.relations) {
-            const newFamily = new Family(family.id);
-            // add person to family
-            if (family.husb) {
-                const member = this.people.get(family.husb);
-                if (!member) {
-                    throw new Error("person does not exist");
-                }
-                newFamily.addMember(member);
-                member.addFamily(newFamily);
-            }
-            // add person to family
-            if (family.wife) {
-                const member = this.people.get(family.wife);
-                if (!member) {
-                    throw new Error("person does not exist");
-                }
-                newFamily.addMember(member);
-                member.addFamily(newFamily);
-            }
-            /**
-             * @SPEC 3.0
-             * add children using document order
-             * */
-            for (const childId of family.children) {
-                const child = this.people.get(childId);
-                if (!child) {
-                    throw new Error("person does not exist");
-                }
-                // add child to father if father exists
-                if (family.husb) {
-                    const member = this.people.get(family.husb);
-                    if (!member) {
-                        throw new Error("person does not exist");
-                    }
-                    member.addChild(child);
-                }
-                // add child to mother if mother exists
-                if (family.wife) {
-                    const member = this.people.get(family.wife);
-                    if (!member) {
-                        throw new Error("person does not exist");
-                    }
-                    member.addChild(child);
-                }
-                // connection part
-                // add parent family to child
-                child.connectTo(newFamily);
-                // add child to family
-                newFamily.addChild(child);
-            }
-            this.families.set(newFamily.id, newFamily);
+    #createFamilies() {
+        for (const relation of this.dataset.relations) {
+            const newFamily = new Family(relation.id);
+            this.#addMembers(newFamily, relation);
+            this.#addChildren(newFamily, relation);
+            this.#addFamily(newFamily);
         }
+    }
 
-        // create hierarchy
+    #findNodeWithoutParent() {
+        const person = this.people.values().find((personNode) => isNil(personNode.parent));
+        if (!person) {
+            throw new GraphError("person without a parent does not exist");
+        }
+        return person;
+    }
+
+    /**
+     * @SPEC 1.0
+     * person without parent is the root node
+     * @SPEC 1.1
+     * root node can be changed
+     * */
+    #getRootNode(rootPersonId?: string | null) {
+        if (rootPersonId == null) {
+            const root = this.#findNodeWithoutParent();
+            if (root.families.size === 0) {
+                return root;
+            }
+            if (root.families.size === 1) {
+                const [rootFamily] = root.families.values();
+                if (!rootFamily) {
+                    throw new GraphError("index out of bounds");
+                }
+                return rootFamily;
+            }
+            // ToDo: Create and append new node at the top
+            throw new GraphError("multi-parent root not implemented");
+        }
+        const root = this.people.get(rootPersonId);
+        if (!root) {
+            throw new GraphError("could not find person with given id");
+        }
+        if (root.families.size === 0) {
+            return root;
+        }
+        if (root.families.size === 1) {
+            const [rootFamily] = root.families.values();
+            if (!rootFamily) {
+                throw new GraphError("index out of bounds");
+            }
+            return rootFamily;
+        }
+        // ToDo: Create and append new node at the top
+        throw new GraphError("multi-parent root not implemented");
+    }
+
+    #setHierarchy() {
         for (const family of this.families.values()) {
-            const membersCount = family.members.size;
-            if (membersCount <= 0) {
-                throw new Error("family without members");
-            } else if (membersCount === 1) {
-                for (const member of family.members.values()) {
-                    // if member does not have parent family then it's a root node
-                    if (member.parent) {
-                        // this info is not used anywhere
-                        family.connectTo(member.parent);
-                    }
-                    // member.addFamily(family);
+            for (const member of family.members.values()) {
+                if (member.parent) {
+                    family.attachParentFamily(member.parent);
                 }
-            } else if (membersCount === 2) {
-                // ToDo: Takes second member from family. Write logic depending on sex.
-                for (const member of family.members.values()) {
-                    // if member does not have parent family then it's a root node
-                    // alternatively add both and pick one when listing
-                    if (member.parent) {
-                        family.connectTo(member.parent);
-                    }
-                    // member.addFamily(family);
-                }
-            } else if (membersCount > 2) {
-                throw new Error("polyamorous relationships not supported");
+            }
+        }
+    }
+
+    #removeLinkToNonDescendants() {
+        // remove parent connection from new root
+        if (this.root instanceof Person) {
+            const rootPerson = this.root;
+            rootPerson.parent = null;
+            return;
+        }
+
+        // remove parent connection from new root
+        const rootFamily = this.root;
+        for (const member of rootFamily.members.values()) {
+            for (const parent of rootFamily.parents.values()) {
+                rootFamily.detachParentFamily(member.id, parent.id);
             }
         }
 
-        // user should be able to both set root person and filter out people
-        if (options.rootPerson) {
-            /**
-             * @SPEC 1.1
-             * root node can be changed
-             * */
-            const person = this.people.get(options.rootPerson);
-            if (!person) {
-                throw new Error("no person with given id");
+        const descendants = new Map<PersonIdentifier, Family>();
+        for (const node of this.root) {
+            if (node instanceof Family) {
+                descendants.set(node.id, node);
             }
-            if (person.families.size === 0) {
-                person.parent = null;
-                this.root = person;
-            } else if (person.families.size === 1) {
-                const family = person.families.values().next().value;
-                if (!family) {
-                    throw new Error("not implemented");
-                }
+        }
 
-                for (const parent of family.parents.values()) {
-                    family.delete(person.id, parent.id);
-                }
-
-                this.root = family;
-
-                const carriedOverFamilies = new Map();
-                for (const node of this.root) {
-                    if (node instanceof Family) {
-                        carriedOverFamilies.set(node.id, node);
+        // remove second parent coming from "external" part of the tree
+        for (const node of this.root) {
+            if (node instanceof Family) {
+                if (node.parents.size > 1) {
+                    for (const parent of node.parents.values()) {
+                        if (!descendants.has(parent.id)) {
+                            node.parents.delete(parent.id);
+                        }
                     }
                 }
+            }
+        }
+    }
 
-                for (const node of this.root) {
-                    if (node instanceof Family) {
-                        if (node.parents.size > 1) {
-                            for (const parent of node.parents.values()) {
-                                if (!carriedOverFamilies.has(parent.id)) {
-                                    node.parents.delete(parent.id);
+    #disconnectExcludedNodes(excluded: string[]) {
+        for (const filteredOutPerson of excluded) {
+            const removedPerson = this.people.get(filteredOutPerson);
+            if (!removedPerson) {
+                throw new GraphError("no person with given id");
+            }
+            if (removedPerson.families.size === 0) {
+                removedPerson.detachParentFamily();
+            } else if (removedPerson.families.size === 1) {
+                // ToDo: Rewrite to work as in line 477
+                for (const removedPersonFamily of removedPerson.families.values()) {
+                    /**
+                     * @SPEC 4.1
+                     * */
+                    const stack = new Stack<Family>();
+
+                    // detach excluded family from their parents
+                    for (const removedPersonParent of removedPersonFamily.parents.values()) {
+                        removedPersonFamily.detachParentFamily(filteredOutPerson, removedPersonParent.id);
+                    }
+
+                    stack.push(removedPersonFamily);
+
+                    // going through all removed person descendants and removing multi parent connections
+                    while (!stack.isEmpty()) {
+                        const element = stack.pop();
+                        for (const child of element.children.values()) {
+                            for (const childFamily of child.families.values()) {
+                                if (childFamily.parents.size > 1) {
+                                    childFamily.detachParentFamily(child.id, element.id);
+                                } else {
+                                    stack.push(childFamily);
                                 }
                             }
                         }
                     }
                 }
-                // add extra deduplication?
-
-                // // deduping everything
-                // for (const node of this.root) {
-                //     if (node instanceof Family) {
-                //         for (const child of node.children.values()) {
-                //             for (const childFamily of child.families.values()) {
-                //                 if (childFamily.parents.size === 2) {
-                //                     const removableParents = childFamily.parents
-                //                         .values()
-                //                         .filter((parent) => parent.id !== node.id);
-                //                     for (const removableParent of removableParents) {
-                //                         // remove also references from parents?
-                //                         childFamily.parents.delete(removableParent.id);
-                //                     }
-                //                 }
-                //             }
-                //         }
-                //     }
-                // }
             } else {
-                throw new Error("not implemented");
-            }
-        } else {
-            /**
-             * @SPEC 1.0
-             * person without parent is the root node
-             * */
-            // what if there are multiple nodes without parent. Should they be validated?
-            // what if there is only person and no family?
-            const person = this.people.values().find((personNode) => isNil(personNode.parent));
-            if (!person) {
-                throw new Error("no person with given id");
-            }
-            if (person.families.size === 0) {
-                this.root = person;
-            } else if (person.families.size === 1) {
-                const family = person.families.values().next().value;
-                if (!family) {
-                    throw new Error("not implemented");
-                }
-                this.root = family;
-            } else {
-                throw new Error("not implemented");
+                throw new GraphError("polygamous relationships not supported");
             }
         }
+    }
 
-        if (options.excludedPeople) {
-            for (const filteredOutPerson of options.excludedPeople) {
-                const removedPerson = this.people.get(filteredOutPerson);
-                if (!removedPerson) {
-                    throw new Error("no person with given id");
-                }
-                if (removedPerson.families.size === 0) {
-                    removedPerson.delete();
-                } else if (removedPerson.families.size === 1) {
-                    // ToDo: Rewrite to work as in line 477
-                    for (const removedPersonFamily of removedPerson.families.values()) {
-                        /**
-                         * @SPEC 4.1
-                         * */
-                        const stack = new Stack<Family>();
-
-                        // detach excluded family from their parents
-                        for (const removedPersonParent of removedPersonFamily.parents.values()) {
-                            removedPersonFamily.delete(filteredOutPerson, removedPersonParent.id);
-                        }
-
-                        stack.push(removedPersonFamily);
-
-                        while (!stack.isEmpty()) {
-                            const element = stack.pop();
-                            for (const child of element.children.values()) {
-                                for (const childFamily of child.families.values()) {
-                                    if (childFamily.parents.size > 1) {
-                                        childFamily.delete(child.id, element.id);
-                                    } else {
-                                        stack.push(childFamily);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    throw new Error("polygamous relationships not supported");
-                }
-            }
-        }
-
+    #handleDeduplication() {
         // dedupe nodes and handle extra parent
-        // self note: deduping and handling extra parents should be separate process
+        // self note: deduping and handling extra parents should be a separate process
         for (const node of this.root) {
             // one person cannot be connected to two different families
             if (node instanceof Family) {
@@ -518,54 +484,38 @@ export class Graph {
                     if (node.members.size === 2) {
                         const members = Array.from(node.members.values());
                         if (!members[0] || !members[1]) {
-                            throw new Error("member does not exist");
+                            throw new GraphError("member does not exist");
                         }
 
                         const sameSexRelationship = members[0].sex === members[1].sex;
                         if (sameSexRelationship) {
                             const [randomParent] = node.parents.values();
                             if (!randomParent) {
-                                throw new Error("Parent does not exist");
+                                throw new GraphError("Parent does not exist");
                             }
-                            this.extraParentMap.set(node.id, randomParent.id);
-                            node.deleteParent(randomParent.id);
+                            this.multiHouseMap.set(node.id, randomParent.id);
+                            node.softDetachParentFamily(randomParent.id);
                         } else {
                             const parents = Array.from(node.members.values());
                             const woman = parents.find((member) => member.sex === "F");
                             if (!woman) {
-                                throw new Error("Cannot find woman in marriage");
+                                throw new GraphError("Cannot find woman in marriage");
                             }
                             if (!woman.parent) {
-                                throw new Error("Woman parent is root node");
+                                throw new GraphError("Woman parent is root node");
                             }
-                            this.extraParentMap.set(node.id, woman.parent.id);
-                            node.deleteParent(woman.parent.id);
+                            this.multiHouseMap.set(node.id, woman.parent.id);
+                            node.softDetachParentFamily(woman.parent.id);
                         }
                     } else {
-                        throw new Error("Family with non-standard size");
+                        throw new GraphError("Family with non-standard size");
                     }
                 }
             }
         }
+    }
 
-        // // collect the information before deduplication
-        // const peopleWithMultipleMarriages = Array.from(
-        //     this.people.values().filter((person) => person.families.size > 1),
-        // );
-        // for (const personWithMultipleMarriages of peopleWithMultipleMarriages) {
-        //     const [originalMarriage, ...rest] = personWithMultipleMarriages.families.values();
-        //     if (!originalMarriage) {
-        //         throw new Error("no original marraige");
-        //     }
-        //     // const o = descendantHashMap.get(originalMarriage.id);
-        //     for (const marriage of rest) {
-        //         marriage.treatedAsRemarriage = true;
-        //         this.remarriageMap.set(originalMarriage.id, marriage.id);
-        //         // const m = descendantHashMap.get(marriage.id);
-        //         // remarriedConnections.push({ from: o, to: m });
-        //     }
-        // }
-
+    #collectRemarriages() {
         // handle remarriages
         const peopleWithMultipleMarriages = new Set<Person>();
         for (const node of this.root) {
@@ -581,35 +531,54 @@ export class Graph {
         for (const personWithMultipleMarriages of peopleWithMultipleMarriages.values()) {
             const [originalMarriage, ...rest] = personWithMultipleMarriages.families.values();
             if (!originalMarriage) {
-                throw new Error("no original marraige");
+                throw new GraphError("no original marriage");
             }
             for (const marriage of rest) {
                 /**
                  * @SPEC 5.0
                  * marking additional marriages as remarriages
                  * */
-                marriage.treatedAsRemarriage = true;
+                marriage.remarriageStatus = true;
                 this.remarriageMap.set(originalMarriage.id, marriage.id);
             }
         }
     }
 
+    constructor(dataset: HeritageRaw, options: GraphOptions = {}) {
+        this.dataset = dataset;
+
+        this.#createPeople();
+        this.#createFamilies();
+
+        this.#setHierarchy();
+
+        this.root = this.#getRootNode(options.rootPerson);
+        if (options.rootPerson) {
+            this.#removeLinkToNonDescendants();
+        }
+
+        if (options.excludedPeople) {
+            this.#disconnectExcludedNodes(options.excludedPeople);
+        }
+
+        this.#handleDeduplication();
+
+        this.#collectRemarriages();
+    }
+
     toList() {
-        // does spreading affect performance?
         return [...this.root];
     }
 
     toD3() {
         function createSVGNodeFromFamily(node: Family) {
-            const membersAreEmptyNodes = node.members
-                .values()
-                .every((member) => member.type === "EMPTY_NODE");
+            const membersAreEmptyNodes = node.members.values().every((member) => member.type === "EMPTY_NODE");
             return {
                 id: node.id,
                 // ToDo: takes first available parent. They should be already deduplicated. Deduplication makes sure children are assigned to proper parent
                 parentId: node.parents.values().next().value?.id ?? null,
                 members: Array.from(node.members.values()),
-                treatedAsRemarriage: node.treatedAsRemarriage,
+                treatedAsRemarriage: node.remarriageStatus,
                 // parentFamily: node.parents.values().next().value ?? null,
                 empty: membersAreEmptyNodes,
             };
@@ -632,24 +601,21 @@ export class Graph {
             } else if (node instanceof Person) {
                 return createSVGNodeFromPerson(node);
             } else {
-                throw new Error("unexpected type");
+                throw new GraphError("unexpected type");
             }
         });
 
         const stratifyOperator = stratify<HeritageSVGNode>();
         const treeDataset = stratifyOperator(svgList);
         const createTree = createTreeLayout<HeritageSVGNode>()
-            .nodeSize([
-                NODE_WIDTH * 2 + HORIZONTAL_SPACE_BETWEEN_NODES,
-                NODE_HEIGHT + VERTICAL_SPACE_BETWEEN_NODES,
-            ])
+            .nodeSize([NODE_WIDTH * 2 + HORIZONTAL_SPACE_BETWEEN_NODES, NODE_HEIGHT + VERTICAL_SPACE_BETWEEN_NODES])
             .separation(() => 0.48);
         const descendants = createTree(treeDataset).descendants();
 
         const descendantHashMap = new Map<PersonIdentifier, HierarchyPointNode<HeritageSVGNode>>();
         for (const descendant of descendants) {
             if (!descendant.id) {
-                throw new Error("descendant without id");
+                throw new GraphError("descendant without id");
             }
             descendantHashMap.set(descendant.id, descendant);
         }
@@ -658,14 +624,14 @@ export class Graph {
             from: HierarchyPointNode<HeritageSVGNode>;
             to: HierarchyPointNode<HeritageSVGNode>;
         }[] = [];
-        for (const [childId, extraParentId] of this.extraParentMap.entries()) {
+        for (const [childId, extraParentId] of this.multiHouseMap.entries()) {
             const child = descendantHashMap.get(childId);
             const extraParent = descendantHashMap.get(extraParentId);
             if (!child) {
-                throw new Error("child not found");
+                throw new GraphError("child not found");
             }
             if (!extraParent) {
-                throw new Error("parent not found");
+                throw new GraphError("parent not found");
             }
             extraParents.push({ from: child, to: extraParent });
         }
@@ -678,10 +644,10 @@ export class Graph {
             const originalMarriage = descendantHashMap.get(originalMarriageId);
             const remarriage = descendantHashMap.get(remarriageId);
             if (!originalMarriage) {
-                throw new Error("originalMarriage not found");
+                throw new GraphError("originalMarriage not found");
             }
             if (!remarriage) {
-                throw new Error("remarriage not found");
+                throw new GraphError("remarriage not found");
             }
             remarriages.push({ from: originalMarriage, to: remarriage });
         }
@@ -693,57 +659,3 @@ export class Graph {
         };
     }
 }
-
-// const root = new TreeNode("A");
-// const b = new TreeNode("B");
-// const c = new TreeNode("C");
-// const d = new TreeNode("D");
-// const e = new TreeNode("E");
-// const f = new TreeNode("F");
-// const g = new TreeNode("G");
-// root.addChild(b);
-// root.addChild(c);
-// root.addChild(d);
-// b.addChild(e);
-// b.addChild(f);
-// d.addChild(g);
-//
-// console.log("--- Depth-First Search (DFS) Traversal ---");
-// for (const node of root) {
-//     console.log(node.value);
-// }
-// // Expected DFS output: A, B, E, F, C, D, G
-//
-// console.log("\n--- Breadth-First Search (BFS) Traversal ---");
-// for (const node of root.bfsIterator()) {
-//     console.log(node.value);
-// }
-// // Expected BFS output: A, B, C, D, E, F, G
-
-// export class TreeBuilder {
-//     #rootNode: Identifier | null;
-//     #filteredNodes: Identifier[];
-//
-//     constructor() {
-//         this.#rootNode = null;
-//         this.#filteredNodes = [];
-//     }
-//
-//     filterOut(filteredOut: Identifier[]) {
-//         this.#filteredNodes = filteredOut;
-//         return this;
-//     }
-//
-//     subtree(newRootNode: Identifier) {
-//         this.#rootNode = newRootNode;
-//         return this;
-//     }
-//
-//     get rootNode() {
-//         return this.#rootNode;
-//     }
-//
-//     get filteredNodes() {
-//         return this.#filteredNodes;
-//     }
-// }

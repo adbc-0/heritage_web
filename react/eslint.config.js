@@ -44,6 +44,7 @@ export default defineConfig([
             ...reactHooks.configs.recommended.rules,
             ...jsxA11y.configs.recommended.rules,
             "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
+            "@typescript-eslint/no-unsafe-declaration-merging": "error",
             "@typescript-eslint/consistent-type-definitions": "off",
             "@typescript-eslint/no-unnecessary-condition": "off",
             "react/prop-types": "off",
