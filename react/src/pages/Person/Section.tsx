@@ -27,7 +27,7 @@ export function Section({ person }: SectionProps) {
                 <div className="grid grid-cols-[1fr_1fr] max-w-fit mx-1 bg-border gap-px border border-border rounded-md *:bg-background *:px-5 *:py-2 [&>*:nth-child(even)]:text-end [&>*:nth-child(1)]:rounded-tl-md [&>*:nth-child(2)]:rounded-tr-md [&>*:nth-last-child(1)]:rounded-br-md [&>*:nth-last-child(2)]:rounded-bl-md">
                     <SectionRow k="Imię" v={firstName} />
                     <SectionRow k="Nazwisko" v={lastName} />
-                    <SectionRow k="Przezwisko" v={nickName} />
+                    <SectionRow k="Przydomek/imię używane" v={nickName} />
                     <SectionRow k="Rok urodzenia" v={birth?.date.year.toString()} />
                     <SectionRow k="Rok śmierci" v={death?.date.year.toString()} />
                 </div>

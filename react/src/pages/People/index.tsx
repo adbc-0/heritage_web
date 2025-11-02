@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 
-import type { HeritageRaw, FullPerson } from "@/types/heritage.types.ts";
+import type { FullPerson, HeritageRaw } from "@/types/heritage.types.ts";
 
 type Person = FullPerson & {
     dad: string | null;
@@ -115,6 +115,12 @@ function sortByTextAsc(accessor: "firstName" | "lastName" | "dad" | "mom" | "nic
         if (isNil(bValue)) {
             return -1;
         }
+        if (aValue === "") {
+            return 1;
+        }
+        if (bValue === "") {
+            return -1;
+        }
         return aValue.localeCompare(bValue);
     };
 }
@@ -126,6 +132,12 @@ function sortByTextDesc(accessor: "firstName" | "lastName" | "dad" | "mom" | "ni
             return 1;
         }
         if (isNil(bValue)) {
+            return -1;
+        }
+        if (aValue === "") {
+            return 1;
+        }
+        if (bValue === "") {
             return -1;
         }
         return bValue.localeCompare(aValue);
@@ -294,7 +306,7 @@ export default function People() {
                                         changeSortingCriterion(SortBy.NICK_NAME);
                                     }}
                                 >
-                                    Przezwisko
+                                    Przydomek/imię używane
                                     {renderSortingIcon(SortBy.NICK_NAME)(
                                         sortByCriterion,
                                         sortDirection,
