@@ -1,1 +1,1 @@
-export const SWIPE_TRESHOLD = 75;
+export const SWIPE_THRESHOLD = 75;

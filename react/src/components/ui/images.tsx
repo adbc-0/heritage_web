@@ -10,7 +10,7 @@ import {
 } from "react";
 import { CircleArrowLeft, CircleArrowRight, CircleX, ImageDown } from "lucide-react";
 
-import { SWIPE_TRESHOLD } from "@/constants/config";
+import { SWIPE_THRESHOLD } from "@/constants/config";
 import { stripFileExtension } from "@/lib/utils";
 import type { File } from "@/pages/Person/types.ts";
 
@@ -226,13 +226,13 @@ function Image({ moveToNextImage, moveToPrevImage }: ImageProps) {
         const startX = touchStartCoordinateRef.current;
         const endX = touchEndCoordinateRef.current;
 
-        const swipedToTheRight = startX - endX > SWIPE_TRESHOLD;
+        const swipedToTheRight = startX - endX > SWIPE_THRESHOLD;
         if (swipedToTheRight) {
             moveToNextImage();
             return;
         }
 
-        const swipedToTheLeft = startX - endX < -SWIPE_TRESHOLD;
+        const swipedToTheLeft = startX - endX < -SWIPE_THRESHOLD;
         if (swipedToTheLeft) {
             moveToPrevImage();
             return;
