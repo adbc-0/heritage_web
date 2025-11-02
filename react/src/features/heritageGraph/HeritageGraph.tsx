@@ -10,7 +10,7 @@ import { isNil } from "@/lib/utils.ts";
 import { useHeritage } from "@/features/heritage/heritageContext";
 
 import { NODE_HEIGHT, NODE_WIDTH, VERTICAL_SPACE_BETWEEN_NODES } from "./constants";
-import { Graph, type HeritageSVGNode } from "./graph";
+import { Graph, type HeritageSVGNode, type SVGPersonDetails } from "./graph";
 
 import type { PersonEvent } from "@/types/heritage.types";
 
@@ -205,6 +205,14 @@ function birthAndDeath(birthEvent: PersonEvent | null, deathEvent: PersonEvent |
     return `${eventToString(birthEvent)} - ${eventToString(deathEvent)}`;
 }
 
+function getPersonName(person: SVGPersonDetails) {
+    let name = person.firstName;
+    if (person.nickName) {
+        name += ` "${person.nickName}"`;
+    }
+    return name;
+}
+
 function PersonOrFamily({ node }: { node: HierarchyPointNode<HeritageSVGNode> }) {
     if (node.data.empty) {
         return null;
@@ -232,7 +240,7 @@ function PersonOrFamily({ node }: { node: HierarchyPointNode<HeritageSVGNode> })
                         fill="#000"
                         transform={`translate(${(NODE_WIDTH / 4).toString()}, ${(NODE_HEIGHT / 4).toString()})`}
                     >
-                        <tspan fontWeight="bold">{person.firstName}</tspan>
+                        <tspan fontWeight="bold">{getPersonName(person)}</tspan>
                         <tspan x="0" y="25" fontWeight="bold">
                             {person.lastName}
                         </tspan>
@@ -274,7 +282,7 @@ function PersonOrFamily({ node }: { node: HierarchyPointNode<HeritageSVGNode> })
                         fill="#000"
                         transform={`translate(${(NODE_WIDTH / 4).toString()}, ${(NODE_HEIGHT / 4).toString()})`}
                     >
-                        <tspan fontWeight="bold">{secondPartner.firstName}</tspan>
+                        <tspan fontWeight="bold">{getPersonName(secondPartner)}</tspan>
                         <tspan x="0" y="25" fontWeight="bold">
                             {secondPartner.lastName}
                         </tspan>
@@ -301,7 +309,7 @@ function PersonOrFamily({ node }: { node: HierarchyPointNode<HeritageSVGNode> })
                         fill="#000"
                         transform={`translate(${(NODE_WIDTH * (3 / 4)).toString()}, ${(NODE_HEIGHT / 4).toString()})`}
                     >
-                        <tspan fontWeight="bold">{firstPartner.firstName}</tspan>
+                        <tspan fontWeight="bold">{getPersonName(firstPartner)}</tspan>
                         <tspan x="0" y="25" fontWeight="bold">
                             {firstPartner.lastName}
                         </tspan>

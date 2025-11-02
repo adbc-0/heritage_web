@@ -16,8 +16,19 @@ type D3Node = {
     parentId: PersonIdentifier | null;
 };
 
+export type SVGPersonDetails = {
+    id: PersonIdentifier;
+    firstName: string;
+    lastName: string;
+    color: string;
+    nickName: string;
+    birthDate: PersonEvent | null;
+    deathDate: PersonEvent | null;
+    parent: Family | null;
+};
+
 export type HeritageSVGNode = D3Node & {
-    members: Person[];
+    members: SVGPersonDetails[];
     empty: boolean;
     treatedAsRemarriage: boolean;
 };
