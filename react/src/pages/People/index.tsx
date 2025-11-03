@@ -306,7 +306,7 @@ export default function People() {
                                         changeSortingCriterion(SortBy.NICK_NAME);
                                     }}
                                 >
-                                    Przydomek/imię używane
+                                    Przydomek
                                     {renderSortingIcon(SortBy.NICK_NAME)(
                                         sortByCriterion,
                                         sortDirection,
