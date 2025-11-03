@@ -220,10 +220,25 @@ func getPersonNotes(w http.ResponseWriter, r *http.Request) {
 
 	notesDir := "public/" + userId + "/notes"
 
+	info, err := os.Stat(notesDir)
+
+	if os.IsNotExist(err) {
+		http.Error(w, "No such file or directory", http.StatusNotFound)
+		return
+	} else if err != nil {
+		http.Error(w, "Unknown error while reading file system", http.StatusInternalServerError)
+		return
+	}
+
+	if !info.IsDir() {
+		http.Error(w, "No such file or directory", http.StatusNotFound)
+	}
+
 	var notes []Note
 
-	err := filepath.WalkDir(notesDir, func(path string, d fs.DirEntry, err error) error {
+	err = filepath.WalkDir(notesDir, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
+			fmt.Println("first error", err)
 			return err
 		}
 		if d.IsDir() {
@@ -233,6 +248,7 @@ func getPersonNotes(w http.ResponseWriter, r *http.Request) {
 		if filepath.Ext(d.Name()) == ".html" {
 			content, err := os.ReadFile(path)
 			if err != nil {
+				fmt.Println("second error", err)
 				return err
 			}
 
