@@ -1,13 +1,13 @@
 import { Fragment } from "react/jsx-runtime";
 
-import type { FullPerson } from "@/types/heritage.types";
+import type { FullPerson, PersonEvent } from "@/types/heritage.types";
 
 type SectionProps = {
     person: FullPerson;
 };
 
-function SectionRow({ k, v }: { k: string; v?: string }) {
-    if (!v) {
+function SectionRow({ k, v }: { k: string; v?: string | null }) {
+    if (v == null || v === "") {
         return null;
     }
     return (
@@ -16,6 +16,20 @@ function SectionRow({ k, v }: { k: string; v?: string }) {
             <p>{v}</p>
         </Fragment>
     );
+}
+
+function displayDate(event?: PersonEvent) {
+    if (!event) {
+        return null;
+    }
+    const { day, year, month } = event.date;
+    if (event.date.day) {
+        return `${day.toString()}.${month.toString()}.${year.toString()}`;
+    }
+    if (event.date.year) {
+        return year.toString();
+    }
+    return null;
 }
 
 export function Section({ person }: SectionProps) {
@@ -28,8 +42,8 @@ export function Section({ person }: SectionProps) {
                     <SectionRow k="Imię" v={firstName} />
                     <SectionRow k="Nazwisko" v={lastName} />
                     <SectionRow k="Przydomek/imię używane" v={nickName} />
-                    <SectionRow k="Rok urodzenia" v={birth?.date.year.toString()} />
-                    <SectionRow k="Rok śmierci" v={death?.date.year.toString()} />
+                    <SectionRow k="Rok urodzenia" v={displayDate(birth)} />
+                    <SectionRow k="Rok śmierci" v={displayDate(death)} />
                 </div>
             </div>
         </>
