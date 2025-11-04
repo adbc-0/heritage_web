@@ -234,8 +234,8 @@ func getPersonNotes(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "No such file or directory", http.StatusNotFound)
 	}
 
-	var notes []Note
-
+	notes := []Note{}
+	
 	err = filepath.WalkDir(notesDir, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			fmt.Println("first error", err)
