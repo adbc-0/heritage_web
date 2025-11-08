@@ -3,7 +3,7 @@ import { ErrorBoundary } from "react-error-boundary";
 
 import { ChevronLeft, Settings } from "lucide-react";
 
-import { HeritageGraph, ErrorFallback } from "@/features/heritageGraph/HeritageGraph";
+import { ErrorFallback, HeritageGraph } from "@/features/heritageGraph/HeritageGraph";
 
 import { SVGSettings } from "./SVGSettings";
 
@@ -48,6 +48,9 @@ const defaultBranches = [
 
 // ToDo: play with memoization
 export default function Home() {
+    // const location = useLocation();
+    // console.log(location);
+
     const [branches, setBranches] = useState(defaultBranches);
     const [settingsAreOpen, setSettingsAreOpen] = useState(false);
 

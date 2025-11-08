@@ -59,7 +59,7 @@ export function Tree() {
     return (
         <div className="bg-background border-t border-border h-full">
             <ErrorBoundary FallbackComponent={ErrorFallback}>
-                <HeritageGraph rootPerson={rootPerson} />
+                <HeritageGraph rootPerson={rootPerson} highlightedPerson={personId} />
             </ErrorBoundary>
         </div>
     );

@@ -17,6 +17,7 @@ import type { PersonEvent } from "@/types/heritage.types";
 type FamilyGraphComponent = {
     rootPerson?: string;
     inactiveBranches?: string[];
+    highlightedPerson?: string;
 };
 
 type StartingPosition = {
@@ -373,33 +374,48 @@ function calculateCenterPos(people: HierarchyPointNode<HeritageSVGNode>[]) {
 }
 
 type CalculateInitialPositionOptions = {
-    root: string | undefined;
+    personInCenter: string | undefined;
     clientWidth: number;
     clientHeight: number;
 };
+
+/**
+ * Use only visible descendants when centering tree so invisible ones do not break centering
+ * Initially every root node starts at position { x:0, y:0 }
+ * */
 function calculateInitialPos(
     heritage: HierarchyPointNode<HeritageSVGNode>[],
     options: CalculateInitialPositionOptions,
 ) {
-    const focusMode = isNil(options.root) ? "centre" : "on_person";
-    if (focusMode === "centre") {
+    const centeringMode = options.personInCenter == null ? "centre" : "on_person";
+    if (centeringMode === "centre") {
         let pos = calculateCenterPos(heritage);
         pos = centerHorizontally(pos, options.clientWidth);
         pos = centerVertically(pos, options.clientHeight);
         return pos;
-    } else if (focusMode === "on_person") {
-        let pos = { x: 0, y: 0 };
+    }
+    if (centeringMode === "on_person") {
+        const person = heritage.find((person) =>
+            person.data.members.some((member) => member.id === options.personInCenter),
+        );
+        if (!person) {
+            throw new Error("cannot find person in heritage object");
+        }
+        let pos = { x: -person.x, y: -person.y };
         pos = centerHorizontally(pos, options.clientWidth);
         pos = centerVertically(pos, options.clientHeight);
         return pos;
-    } else {
-        throw new Error("unknown focus mode");
     }
+    throw new Error("unknown focus mode");
 }
 
 // ToDo: Try drawing parents with line between them
 
-export function HeritageGraph({ rootPerson, inactiveBranches = [] }: FamilyGraphComponent) {
+export function HeritageGraph({
+    rootPerson,
+    highlightedPerson,
+    inactiveBranches = [],
+}: FamilyGraphComponent) {
     const { heritage } = useHeritage();
     const svgElement = useRef<ComponentRef<"svg">>(null);
 
@@ -437,7 +453,7 @@ export function HeritageGraph({ rootPerson, inactiveBranches = [] }: FamilyGraph
 
         const visibleDescendants = tree.descendants.filter((descendant) => !descendant.data.empty);
         const startingPos = calculateInitialPos(visibleDescendants, {
-            root: rootPerson,
+            personInCenter: highlightedPerson,
             clientWidth,
             clientHeight,
         });
@@ -452,7 +468,7 @@ export function HeritageGraph({ rootPerson, inactiveBranches = [] }: FamilyGraph
         return () => {
             treeSVG.on("zoom", treeZoom);
         };
-    }, [rootPerson, tree]);
+    }, [highlightedPerson, rootPerson, tree]);
 
     return (
         <svg ref={svgElement} width="100%" height="100%" className="cursor-move">
