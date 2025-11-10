@@ -29,10 +29,7 @@ function getParentAnchor() {
     return { x: NODE_WIDTH / 2, y: 0 };
 }
 
-function getPersonAnchor(
-    person: HierarchyPointNode<HeritageSVGNode>,
-    parent: HierarchyPointNode<HeritageSVGNode>,
-) {
+function getPersonAnchor(person: HierarchyPointNode<HeritageSVGNode>, parent: HierarchyPointNode<HeritageSVGNode>) {
     if (person.data.members.length === 1) {
         return { x: NODE_WIDTH / 2, y: 0 };
     } else if (person.data.members.length === 2) {
@@ -58,10 +55,7 @@ function getPersonAnchor(
     }
 }
 
-function drawExtraParentLine(
-    child: HierarchyPointNode<HeritageSVGNode>,
-    parent: HierarchyPointNode<HeritageSVGNode>,
-) {
+function drawExtraParentLine(child: HierarchyPointNode<HeritageSVGNode>, parent: HierarchyPointNode<HeritageSVGNode>) {
     const personAnchor = getPersonAnchor(child, parent);
     const parentAnchor = getParentAnchor();
     return (
@@ -84,10 +78,7 @@ function drawExtraParentLine(
     );
 }
 
-function drawLine(
-    child: HierarchyPointNode<HeritageSVGNode>,
-    parent: HierarchyPointNode<HeritageSVGNode>,
-) {
+function drawLine(child: HierarchyPointNode<HeritageSVGNode>, parent: HierarchyPointNode<HeritageSVGNode>) {
     const personAnchor = getPersonAnchor(child, parent);
     const parentAnchor = getParentAnchor();
     return (
@@ -139,10 +130,7 @@ function ChildToExtraParentLink(connection: {
     );
 }
 
-function drawRemarriageLine(
-    from: HierarchyPointNode<HeritageSVGNode>,
-    to: HierarchyPointNode<HeritageSVGNode>,
-) {
+function drawRemarriageLine(from: HierarchyPointNode<HeritageSVGNode>, to: HierarchyPointNode<HeritageSVGNode>) {
     return (
         "M " +
         from.x.toString() +
@@ -214,6 +202,8 @@ function getPersonName(person: SVGPersonDetails) {
     return name;
 }
 
+const centeringShift = 90;
+
 function PersonOrFamily({ node }: { node: HierarchyPointNode<HeritageSVGNode> }) {
     if (node.data.empty) {
         return null;
@@ -224,7 +214,7 @@ function PersonOrFamily({ node }: { node: HierarchyPointNode<HeritageSVGNode> })
             throw new Error("no person");
         }
         return (
-            <g transform={`translate(${(node.x + 70).toString()},${node.y.toString()})`}>
+            <g transform={`translate(${(node.x + centeringShift).toString()},${node.y.toString()})`}>
                 <Link to={`${RouterPath.OSOBY}/${person.id}`}>
                     <rect
                         fill={person.color}
@@ -411,11 +401,7 @@ function calculateInitialPos(
 
 // ToDo: Try drawing parents with line between them
 
-export function HeritageGraph({
-    rootPerson,
-    highlightedPerson,
-    inactiveBranches = [],
-}: FamilyGraphComponent) {
+export function HeritageGraph({ rootPerson, highlightedPerson, inactiveBranches = [] }: FamilyGraphComponent) {
     const { heritage } = useHeritage();
     const svgElement = useRef<ComponentRef<"svg">>(null);
 
@@ -477,18 +463,10 @@ export function HeritageGraph({
                     <ChildToParentLink key={node.data.id} node={node} />
                 ))}
                 {tree.extraParents.map((connection) => (
-                    <ChildToExtraParentLink
-                        key={connectionKey(connection)}
-                        from={connection.from}
-                        to={connection.to}
-                    />
+                    <ChildToExtraParentLink key={connectionKey(connection)} from={connection.from} to={connection.to} />
                 ))}
                 {tree.remarriages.map((connection) => (
-                    <RemarriageLink
-                        key={connectionKey(connection)}
-                        from={connection.from}
-                        to={connection.to}
-                    />
+                    <RemarriageLink key={connectionKey(connection)} from={connection.from} to={connection.to} />
                 ))}
                 {tree.descendants.map((node) => (
                     <PersonOrFamily key={node.data.id} node={node} />
