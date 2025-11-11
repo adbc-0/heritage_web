@@ -2,8 +2,8 @@ import { ReactElement, useEffect, useState } from "react";
 
 import { ENV } from "@/constants/env";
 import { http } from "@/constants/httpStatusCodes";
-import { LoadingState, LoadingStateValues } from "@/features/heritage/constants";
-import { HeritageContext, HeritageContextType } from "@/features/heritage/heritageContext";
+import { LoadingState, LoadingStateValues } from "@/features/heritageData/constants";
+import { HeritageContext, HeritageContextType } from "@/features/heritageData/heritageContext";
 import { useAuth } from "@/features/auth/authContext";
 import { LoadingPage } from "@/pages/LoadingPage";
 import { GlobalError } from "@/pages/GlobalError/GlobalError";

@@ -2,11 +2,12 @@
 import { type HierarchyPointNode, stratify, tree as createTreeLayout } from "d3-hierarchy";
 
 import { isNil } from "@/lib/utils.ts";
-import { Stack } from "@/features/heritage/stack.ts";
+import { Stack } from "@/features/heritageData/stack.ts";
 import {
-    HORIZONTAL_SPACE_BETWEEN_NODES,
     NODE_HEIGHT,
     NODE_WIDTH,
+    SPACING_BASE_SIZE,
+    SPACING_ELEMENT_SIZE_FACTOR,
     VERTICAL_SPACE_BETWEEN_NODES,
 } from "@/features/heritageGraph/constants.ts";
 
@@ -27,12 +28,15 @@ export type SVGPersonDetails = {
     birthDate: PersonEvent | null;
     deathDate: PersonEvent | null;
     parent: Family | null;
+    width: number;
 };
 
 export type HeritageSVGNode = D3Node & {
     members: SVGPersonDetails[];
+    // is of type "empty node"
     empty: boolean;
     treatedAsRemarriage: boolean;
+    width: number;
 };
 
 export const PersonType = {
@@ -79,6 +83,7 @@ class Person {
     readonly birthDate: PersonEvent | null;
     readonly deathDate: PersonEvent | null;
     readonly color;
+    readonly width;
 
     *[Symbol.iterator](): Iterator<Person> {
         yield this;
@@ -104,6 +109,31 @@ class Person {
         this.birthDate = birthDate;
         this.deathDate = deathDate;
         this.color = color;
+        this.width = this.#getWidth();
+    }
+
+    #getDateWidth(event: PersonEvent | null) {
+        if (event == null) {
+            return 0;
+        }
+        return event.date.year.toString().length;
+    }
+
+    #getDatesWidth() {
+        const rawLength = this.#getDateWidth(this.birthDate) + this.#getDateWidth(this.deathDate);
+        if (rawLength === 0) {
+            return rawLength;
+        }
+        // reserve 3 characters for " - " between dates
+        // example: 01.01.2000 - 01.01-2020
+        return rawLength + 3;
+    }
+
+    #getWidth() {
+        const names = this.firstName.length + this.nickName.length;
+        const lastName = this.lastName.length;
+        const dates = this.#getDatesWidth();
+        return Math.max(names, lastName, dates);
     }
 
     attachFamily(family: Family) {
@@ -133,7 +163,9 @@ class Family {
     parents = new Map<PersonIdentifier, Family>();
     members = new Map<PersonIdentifier, Person>();
     children = new Map<PersonIdentifier, Person>();
+
     remarriageStatus = false;
+    width = 0;
 
     /**
      * @description Depth-First Search (DFS) Traversal
@@ -178,6 +210,7 @@ class Family {
 
     addMember(member: Person) {
         this.members.set(member.id, member);
+        this.width += member.width;
     }
 
     addChild(child: Person) {
@@ -581,6 +614,8 @@ export class Graph {
                 treatedAsRemarriage: node.remarriageStatus,
                 // parentFamily: node.parents.values().next().value ?? null,
                 empty: membersAreEmptyNodes,
+                // ToDo: move width calculation here
+                width: node.width,
             };
         }
 
@@ -592,6 +627,7 @@ export class Graph {
                 treatedAsRemarriage: false,
                 // parentFamily: node.parent,
                 empty: node.type === "EMPTY_NODE",
+                width: node.width,
             };
         }
 
@@ -607,9 +643,12 @@ export class Graph {
 
         const stratifyOperator = stratify<HeritageSVGNode>();
         const treeDataset = stratifyOperator(svgList);
+
         const createTree = createTreeLayout<HeritageSVGNode>()
-            .nodeSize([NODE_WIDTH * 2 + HORIZONTAL_SPACE_BETWEEN_NODES, NODE_HEIGHT + VERTICAL_SPACE_BETWEEN_NODES])
-            .separation(() => 0.48);
+            .nodeSize([NODE_WIDTH, NODE_HEIGHT + VERTICAL_SPACE_BETWEEN_NODES])
+            .separation((a, b) => {
+                return (a.data.width + b.data.width) / SPACING_ELEMENT_SIZE_FACTOR + SPACING_BASE_SIZE;
+            });
         const descendants = createTree(treeDataset).descendants();
 
         const descendantHashMap = new Map<PersonIdentifier, HierarchyPointNode<HeritageSVGNode>>();

@@ -7,9 +7,9 @@ import { type HierarchyPointNode } from "d3-hierarchy";
 
 import { RouterPath } from "@/constants/routePaths.ts";
 import { isNil } from "@/lib/utils.ts";
-import { useHeritage } from "@/features/heritage/heritageContext";
+import { useHeritage } from "@/features/heritageData/heritageContext";
 
-import { NODE_HEIGHT, NODE_WIDTH, VERTICAL_SPACE_BETWEEN_NODES } from "./constants";
+import { NODE_BASE_WIDTH, NODE_HEIGHT, NODE_SIZE_FACTOR, VERTICAL_SPACE_BETWEEN_NODES } from "./constants";
 import { Graph, type HeritageSVGNode, type SVGPersonDetails } from "./graph";
 
 import type { PersonEvent } from "@/types/heritage.types";
@@ -25,13 +25,24 @@ type StartingPosition = {
     y: number;
 };
 
-function getParentAnchor() {
-    return { x: NODE_WIDTH / 2, y: 0 };
+function getParentAnchor(parent: HierarchyPointNode<HeritageSVGNode>) {
+    if (parent.data.members.length === 1) {
+        return { x: 0, y: 0 };
+    } else if (parent.data.members.length === 2) {
+        const [, personOnLeft] = Array.from(parent.data.members.values()).toSorted();
+        if (isNil(personOnLeft)) {
+            throw new Error("partner not found");
+        }
+        const nodeCenter = parent.data.width / 2;
+        return { x: (personOnLeft.width - nodeCenter) * NODE_SIZE_FACTOR, y: 0 };
+    } else {
+        throw new Error("polygamy not handled");
+    }
 }
 
 function getPersonAnchor(person: HierarchyPointNode<HeritageSVGNode>, parent: HierarchyPointNode<HeritageSVGNode>) {
     if (person.data.members.length === 1) {
-        return { x: NODE_WIDTH / 2, y: 0 };
+        return { x: 0, y: 0 };
     } else if (person.data.members.length === 2) {
         const [secondPartner, firstPartner] = Array.from(person.data.members.values()).toSorted();
         if (isNil(firstPartner)) {
@@ -44,10 +55,14 @@ function getPersonAnchor(person: HierarchyPointNode<HeritageSVGNode>, parent: Hi
             throw new Error("partner parent not found");
         }
         if (firstPartner.parent?.id === parent.id) {
-            return { x: NODE_WIDTH * 0.25, y: 0 };
+            const personCenter = firstPartner.width / 2;
+            const nodeCenter = person.data.width / 2;
+            return { x: (personCenter - nodeCenter) * NODE_SIZE_FACTOR - NODE_BASE_WIDTH / 2, y: 0 };
         }
         if (secondPartner.parent?.id === parent.id) {
-            return { x: NODE_WIDTH * 0.75, y: 0 };
+            const personCenter = firstPartner.width + secondPartner.width / 2;
+            const nodeCenter = person.data.width / 2;
+            return { x: (personCenter - nodeCenter) * NODE_SIZE_FACTOR + NODE_BASE_WIDTH / 2, y: 0 };
         }
         throw new Error("parent id does not match child id");
     } else {
@@ -57,7 +72,7 @@ function getPersonAnchor(person: HierarchyPointNode<HeritageSVGNode>, parent: Hi
 
 function drawExtraParentLine(child: HierarchyPointNode<HeritageSVGNode>, parent: HierarchyPointNode<HeritageSVGNode>) {
     const personAnchor = getPersonAnchor(child, parent);
-    const parentAnchor = getParentAnchor();
+    const parentAnchor = getParentAnchor(parent);
     return (
         "M " +
         (parent.x + parentAnchor.x).toString() +
@@ -78,9 +93,10 @@ function drawExtraParentLine(child: HierarchyPointNode<HeritageSVGNode>, parent:
     );
 }
 
+/** @description Draw line from center of the parent to the center of the child. Even if child is in family. */
 function drawLine(child: HierarchyPointNode<HeritageSVGNode>, parent: HierarchyPointNode<HeritageSVGNode>) {
     const personAnchor = getPersonAnchor(child, parent);
-    const parentAnchor = getParentAnchor();
+    const parentAnchor = getParentAnchor(parent);
     return (
         "M " +
         (parent.x + parentAnchor.x).toString() +
@@ -202,9 +218,7 @@ function getPersonName(person: SVGPersonDetails) {
     return name;
 }
 
-const centeringShift = 90;
-
-function PersonOrFamily({ node }: { node: HierarchyPointNode<HeritageSVGNode> }) {
+function Node({ node }: { node: HierarchyPointNode<HeritageSVGNode> }) {
     if (node.data.empty) {
         return null;
     }
@@ -213,14 +227,16 @@ function PersonOrFamily({ node }: { node: HierarchyPointNode<HeritageSVGNode> })
         if (!person) {
             throw new Error("no person");
         }
+        const personWidth = person.width * NODE_SIZE_FACTOR + NODE_BASE_WIDTH;
+        const centerNode = node.x - personWidth / 2;
         return (
-            <g transform={`translate(${(node.x + centeringShift).toString()},${node.y.toString()})`}>
+            <g transform={`translate(${centerNode.toString()},${node.y.toString()})`}>
                 <Link to={`${RouterPath.OSOBY}/${person.id}`}>
                     <rect
                         fill={person.color}
                         strokeWidth={1}
                         stroke="#797979"
-                        width={NODE_WIDTH / 2}
+                        width={personWidth}
                         height={NODE_HEIGHT}
                     />
                     <text
@@ -229,7 +245,7 @@ function PersonOrFamily({ node }: { node: HierarchyPointNode<HeritageSVGNode> })
                         fontFamily="Josefin"
                         fontWeight={400}
                         fill="#000"
-                        transform={`translate(${(NODE_WIDTH / 4).toString()}, ${(NODE_HEIGHT / 4).toString()})`}
+                        transform={`translate(${(personWidth / 2).toString()}, ${(NODE_HEIGHT / 4).toString()})`}
                     >
                         <tspan fontWeight="bold">{getPersonName(person)}</tspan>
                         <tspan x="0" y="25" fontWeight="bold">
@@ -254,14 +270,17 @@ function PersonOrFamily({ node }: { node: HierarchyPointNode<HeritageSVGNode> })
         if (!secondPartner) {
             throw new Error("no person");
         }
+        const secondPartnerWidth = secondPartner.width * NODE_SIZE_FACTOR + NODE_BASE_WIDTH;
+        const firstPartnerWidth = firstPartner.width * NODE_SIZE_FACTOR + NODE_BASE_WIDTH;
+        const totalWidth = firstPartnerWidth + secondPartnerWidth;
         return (
-            <g transform={`translate(${node.x.toString()},${node.y.toString()})`}>
+            <g transform={`translate(${(node.x - totalWidth / 2).toString()},${node.y.toString()})`}>
                 <Link to={`${RouterPath.OSOBY}/${secondPartner.id}`}>
                     <rect
                         fill={secondPartner.color}
                         strokeWidth={1}
                         stroke="#797979"
-                        width={NODE_WIDTH / 2}
+                        width={secondPartnerWidth}
                         height={NODE_HEIGHT}
                         shapeRendering="optimizeSpeed"
                     />
@@ -271,7 +290,7 @@ function PersonOrFamily({ node }: { node: HierarchyPointNode<HeritageSVGNode> })
                         fontFamily={"Josefin"}
                         fontWeight={400}
                         fill="#000"
-                        transform={`translate(${(NODE_WIDTH / 4).toString()}, ${(NODE_HEIGHT / 4).toString()})`}
+                        transform={`translate(${(secondPartnerWidth / 2).toString()}, ${(NODE_HEIGHT / 4).toString()})`}
                     >
                         <tspan fontWeight="bold">{getPersonName(secondPartner)}</tspan>
                         <tspan x="0" y="25" fontWeight="bold">
@@ -287,10 +306,10 @@ function PersonOrFamily({ node }: { node: HierarchyPointNode<HeritageSVGNode> })
                         fill={firstPartner.color}
                         strokeWidth={1}
                         stroke="#797979"
-                        width={NODE_WIDTH / 2}
+                        width={firstPartnerWidth}
                         height={NODE_HEIGHT}
                         shapeRendering="optimizeSpeed"
-                        transform={`translate(${(NODE_WIDTH / 2).toString()}, ${(0).toString()})`}
+                        transform={`translate(${secondPartnerWidth.toString()}, ${(0).toString()})`}
                     />
                     <text
                         fontSize={18}
@@ -298,7 +317,7 @@ function PersonOrFamily({ node }: { node: HierarchyPointNode<HeritageSVGNode> })
                         fontFamily="Josefin"
                         fontWeight={400}
                         fill="#000"
-                        transform={`translate(${(NODE_WIDTH * (3 / 4)).toString()}, ${(NODE_HEIGHT / 4).toString()})`}
+                        transform={`translate(${(secondPartnerWidth + firstPartnerWidth / 2).toString()}, ${(NODE_HEIGHT / 4).toString()})`}
                     >
                         <tspan fontWeight="bold">{getPersonName(firstPartner)}</tspan>
                         <tspan x="0" y="25" fontWeight="bold">
@@ -318,7 +337,7 @@ function PersonOrFamily({ node }: { node: HierarchyPointNode<HeritageSVGNode> })
 
 function centerHorizontally(pos: StartingPosition, clientWidth: number) {
     return {
-        x: pos.x + clientWidth / 2 - NODE_WIDTH / 2,
+        x: pos.x + clientWidth / 2,
         y: pos.y,
     };
 }
@@ -326,7 +345,7 @@ function centerHorizontally(pos: StartingPosition, clientWidth: number) {
 function centerVertically(pos: StartingPosition, clientHeight: number) {
     return {
         x: pos.x,
-        y: pos.y + clientHeight / 2 - NODE_HEIGHT / 2,
+        y: pos.y + clientHeight / 2 - NODE_HEIGHT,
     };
 }
 
@@ -469,7 +488,7 @@ export function HeritageGraph({ rootPerson, highlightedPerson, inactiveBranches 
                     <RemarriageLink key={connectionKey(connection)} from={connection.from} to={connection.to} />
                 ))}
                 {tree.descendants.map((node) => (
-                    <PersonOrFamily key={node.data.id} node={node} />
+                    <Node key={node.data.id} node={node} />
                 ))}
             </g>
         </svg>

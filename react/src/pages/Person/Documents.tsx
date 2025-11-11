@@ -3,7 +3,7 @@ import { Params, useParams } from "react-router";
 
 import { ENV } from "@/constants/env";
 import { stripFileExtension } from "@/lib/utils";
-import { useHeritage } from "@/features/heritage/heritageContext";
+import { useHeritage } from "@/features/heritageData/heritageContext";
 
 type UserData = {
     files: string[];

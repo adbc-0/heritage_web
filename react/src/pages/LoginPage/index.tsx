@@ -4,7 +4,7 @@ import { useNavigate } from "react-router";
 
 import { http } from "@/constants/httpStatusCodes";
 import { RouterPath } from "@/constants/routePaths";
-import { useHeritage } from "@/features/heritage/heritageContext";
+import { useHeritage } from "@/features/heritageData/heritageContext";
 import { useAuth } from "@/features/auth/authContext";
 import { AuthErrorType, AuthStatus } from "@/features/auth/constants";
 import { Button } from "@/components/ui/button";
@@ -45,8 +45,8 @@ export function LoginPage() {
 
         const response = await fetchHeritage();
         if (!response.ok) {
-            // ToDo: set heritage error?
-            throw new Error("Could not get heritage data");
+            // ToDo: set heritageData error?
+            throw new Error("Could not get heritageData data");
         }
     }
 
@@ -67,9 +67,7 @@ export function LoginPage() {
                     <LockKeyhole size={60} />
                     <div className="text-center">
                         <h1 className="text-xl font-bold tracking-tight">Wymagane hasło</h1>
-                        <p className="text-sm text-muted-foreground">
-                            Dostęp do zawartości jest chroniony hasłem
-                        </p>
+                        <p className="text-sm text-muted-foreground">Dostęp do zawartości jest chroniony hasłem</p>
                     </div>
                     {authError === AuthErrorType.WRONG_PASSWORD && (
                         <div className="w-full bg-red-50 py-2 px-4 rounded-md">
