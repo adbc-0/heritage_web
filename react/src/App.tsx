@@ -3,7 +3,7 @@ import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
 
 import { DeviceModeProvider } from "./features/deviceMode/DeviceModeProvider";
-import { HeritageProvider } from "./features/heritage/HeritageProvider";
+import { HeritageProvider } from "@/features/heritageData/HeritageProvider";
 import { AuthProvider } from "./features/auth/AuthProvider";
 import { Layout } from "./components/views/Layout";
 import { RouterPath } from "./constants/routePaths";

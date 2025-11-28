@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Params, useNavigate, useParams } from "react-router";
 
-import { useHeritage } from "@/features/heritage/heritageContext";
+import { useHeritage } from "@/features/heritageData/heritageContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Basic } from "./Basic";
 import { Tree } from "./Tree";
@@ -21,7 +21,7 @@ export default function Person() {
         }
 
         if (!heritage) {
-            throw new Error("missing heritage data");
+            throw new Error("missing heritageData data");
         }
 
         const person = heritage.people.find((person) => person.id === id);
@@ -40,7 +40,7 @@ export default function Person() {
     }
 
     if (!heritage) {
-        throw new Error("missing heritage data");
+        throw new Error("missing heritageData data");
     }
 
     const person = heritage.people.find((person) => person.id === id);
@@ -52,16 +52,10 @@ export default function Person() {
         <Tabs defaultValue="basic" className="flex flex-col h-full sm:pt-3">
             <div className="flex overflow-x-auto sm:justify-center">
                 <TabsList className="bg-background grow rounded-none sm:grow-0 sm:rounded-lg">
-                    <TabsTrigger
-                        className="grow cursor-pointer data-[state=active]:bg-background-darker"
-                        value="basic"
-                    >
+                    <TabsTrigger className="grow cursor-pointer data-[state=active]:bg-background-darker" value="basic">
                         Informacje
                     </TabsTrigger>
-                    <TabsTrigger
-                        className="grow cursor-pointer data-[state=active]:bg-background-darker"
-                        value="tree"
-                    >
+                    <TabsTrigger className="grow cursor-pointer data-[state=active]:bg-background-darker" value="tree">
                         Drzewo
                     </TabsTrigger>
                     <TabsTrigger
@@ -76,10 +70,7 @@ export default function Person() {
                     >
                         Dokumenty
                     </TabsTrigger>
-                    <TabsTrigger
-                        className="grow cursor-pointer data-[state=active]:bg-background-darker"
-                        value="notes"
-                    >
+                    <TabsTrigger className="grow cursor-pointer data-[state=active]:bg-background-darker" value="notes">
                         Notatki
                     </TabsTrigger>
                 </TabsList>

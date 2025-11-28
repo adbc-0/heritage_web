@@ -2,7 +2,7 @@ import { type Params, useParams } from "react-router";
 import { ErrorBoundary } from "react-error-boundary";
 
 import { isNil } from "@/lib/utils";
-import { useHeritage } from "@/features/heritage/heritageContext";
+import { useHeritage } from "@/features/heritageData/heritageContext";
 import { isPersonInvisible, searchFamily, searchPerson } from "@/features/heritageGraph/utils";
 import { ErrorFallback, HeritageGraph } from "@/features/heritageGraph/HeritageGraph";
 
@@ -47,7 +47,7 @@ export function Tree() {
     const { heritage } = useHeritage();
 
     if (!heritage) {
-        throw new Error("missing heritage");
+        throw new Error("missing heritageData");
     }
     if (!personId) {
         throw new Error("missing person parameter");

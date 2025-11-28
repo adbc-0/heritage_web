@@ -4,15 +4,8 @@ import { ArrowDown01, ArrowDown10, ArrowDownAZ, ArrowDownZa } from "lucide-react
 
 import { isPersonInvisible, searchFamily, searchPerson } from "@/features/heritageGraph/utils";
 import { RouterPath } from "@/constants/routePaths";
-import { useHeritage } from "@/features/heritage/heritageContext";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table";
+import { useHeritage } from "@/features/heritageData/heritageContext";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 
 import type { FullPerson, HeritageRaw } from "@/types/heritage.types.ts";
@@ -75,10 +68,7 @@ function filterOutPeople(people: Person[], searchQuery: string): Person[] {
     }
     const queryRegex = new RegExp(searchQuery);
     return people.filter((person) => {
-        const fullName = [person.firstName, person.nickName, person.lastName]
-            .filter(Boolean)
-            .join(" ")
-            .toLowerCase();
+        const fullName = [person.firstName, person.nickName, person.lastName].filter(Boolean).join(" ").toLowerCase();
         const searchResult = fullName.match(queryRegex);
         return Boolean(searchResult);
     });
@@ -253,16 +243,13 @@ export default function People() {
     const [sortByCriterion, setSortByCriterion] = useState<SortByType>(SortBy.FIRST_NAME);
     const [sortDirection, setSortDirection] = useState<DirectionType>(Direction.ASC);
 
-    const people = filterOutPeople(
-        basicPeopleTransformations(heritage),
-        filterPeopleQuery,
-    ).toSorted(sortBy(sortByCriterion, sortDirection));
+    const people = filterOutPeople(basicPeopleTransformations(heritage), filterPeopleQuery).toSorted(
+        sortBy(sortByCriterion, sortDirection),
+    );
 
     function changeSortingCriterion(criterion: SortByType) {
         if (criterion === sortByCriterion) {
-            setSortDirection((current) =>
-                current === Direction.ASC ? Direction.DESC : Direction.ASC,
-            );
+            setSortDirection((current) => (current === Direction.ASC ? Direction.DESC : Direction.ASC));
             return;
         }
         setSortByCriterion(criterion);
@@ -292,10 +279,7 @@ export default function People() {
                                     }}
                                 >
                                     Imię
-                                    {renderSortingIcon(SortBy.FIRST_NAME)(
-                                        sortByCriterion,
-                                        sortDirection,
-                                    )}
+                                    {renderSortingIcon(SortBy.FIRST_NAME)(sortByCriterion, sortDirection)}
                                 </button>
                             </TableHead>
                             <TableHead>
@@ -307,10 +291,7 @@ export default function People() {
                                     }}
                                 >
                                     Przydomek
-                                    {renderSortingIcon(SortBy.NICK_NAME)(
-                                        sortByCriterion,
-                                        sortDirection,
-                                    )}
+                                    {renderSortingIcon(SortBy.NICK_NAME)(sortByCriterion, sortDirection)}
                                 </button>
                             </TableHead>
                             <TableHead>
@@ -322,10 +303,7 @@ export default function People() {
                                     }}
                                 >
                                     Nazwisko
-                                    {renderSortingIcon(SortBy.LAST_NAME)(
-                                        sortByCriterion,
-                                        sortDirection,
-                                    )}
+                                    {renderSortingIcon(SortBy.LAST_NAME)(sortByCriterion, sortDirection)}
                                 </button>
                             </TableHead>
                             <TableHead>
@@ -337,10 +315,7 @@ export default function People() {
                                     }}
                                 >
                                     Ojciec
-                                    {renderSortingIcon(SortBy.FATHER)(
-                                        sortByCriterion,
-                                        sortDirection,
-                                    )}
+                                    {renderSortingIcon(SortBy.FATHER)(sortByCriterion, sortDirection)}
                                 </button>
                             </TableHead>
                             <TableHead>
@@ -352,10 +327,7 @@ export default function People() {
                                     }}
                                 >
                                     Matka
-                                    {renderSortingIcon(SortBy.MOTHER)(
-                                        sortByCriterion,
-                                        sortDirection,
-                                    )}
+                                    {renderSortingIcon(SortBy.MOTHER)(sortByCriterion, sortDirection)}
                                 </button>
                             </TableHead>
                             <TableHead>
@@ -367,10 +339,7 @@ export default function People() {
                                     }}
                                 >
                                     Rok urodzenia
-                                    {renderSortingIcon(SortBy.BIRTH)(
-                                        sortByCriterion,
-                                        sortDirection,
-                                    )}
+                                    {renderSortingIcon(SortBy.BIRTH)(sortByCriterion, sortDirection)}
                                 </button>
                             </TableHead>
                             <TableHead>
@@ -382,10 +351,7 @@ export default function People() {
                                     }}
                                 >
                                     Rok śmierci
-                                    {renderSortingIcon(SortBy.DEATH)(
-                                        sortByCriterion,
-                                        sortDirection,
-                                    )}
+                                    {renderSortingIcon(SortBy.DEATH)(sortByCriterion, sortDirection)}
                                 </button>
                             </TableHead>
                         </TableRow>
@@ -400,19 +366,13 @@ export default function People() {
                                         void navigate(`${RouterPath.OSOBY}/${person.id}`);
                                     }}
                                 >
-                                    <TableCell className="text-center">
-                                        {person.firstName}
-                                    </TableCell>
+                                    <TableCell className="text-center">{person.firstName}</TableCell>
                                     <TableCell className="text-center">{person.nickName}</TableCell>
                                     <TableCell className="text-center">{person.lastName}</TableCell>
                                     <TableCell className="text-center">{person.dad}</TableCell>
                                     <TableCell className="text-center">{person.mom}</TableCell>
-                                    <TableCell className="text-center">
-                                        {person.birth?.date.year}
-                                    </TableCell>
-                                    <TableCell className="text-center">
-                                        {person.death?.date.year}
-                                    </TableCell>
+                                    <TableCell className="text-center">{person.birth?.date.year}</TableCell>
+                                    <TableCell className="text-center">{person.death?.date.year}</TableCell>
                                 </TableRow>
                             ))
                         ) : (

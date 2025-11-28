@@ -1,12 +1,12 @@
 import { useParams } from "react-router";
 
 import { isNil } from "@/lib/utils";
-import { useHeritage } from "@/features/heritage/heritageContext";
+import { useHeritage } from "@/features/heritageData/heritageContext";
 import { searchFamily, searchPerson } from "@/features/heritageGraph/utils";
 import { Section } from "./Section";
 import { SectionWithLinks } from "./SectionWithLinks";
 
-import type { HeritageRaw, FullPerson, RawConnection } from "@/types/heritage.types.ts";
+import type { FullPerson, HeritageRaw, RawConnection } from "@/types/heritage.types.ts";
 
 type Params = {
     id: string;
@@ -81,9 +81,7 @@ function collectPersonDetails(heritage: HeritageRaw, invesigatedPerson: FullPers
     const familyOfParents = searchFamily(heritage, invesigatedPerson.famc);
 
     const parents = getParents(heritage, familyOfParents);
-    const siblings = getChildren(heritage, familyOfParents).filter(
-        (child) => child.id !== invesigatedPerson.id,
-    );
+    const siblings = getChildren(heritage, familyOfParents).filter((child) => child.id !== invesigatedPerson.id);
     const familiesOfPerson = invesigatedPerson.fams
         .map((familyId) => searchFamily(heritage, familyId))
         .filter((family) => !isNil(family));
