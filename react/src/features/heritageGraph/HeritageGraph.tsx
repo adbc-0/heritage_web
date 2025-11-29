@@ -25,6 +25,16 @@ type StartingPosition = {
     y: number;
 };
 
+const TREE_FONT = "PlaypenSans";
+
+/** @description name */
+const MAIN_FONT_WEIGHT = 400;
+const MAIN_FONT_SIZE = 17;
+
+/** @description dates */
+const SIDE_FONT_SIZE = 13;
+const SIDE_FONT_WEIGHT = 400;
+
 function getParentAnchor(parent: HierarchyPointNode<HeritageSVGNode>) {
     if (parent.data.members.length === 1) {
         return { x: 0, y: 0 };
@@ -240,18 +250,18 @@ function Node({ node }: { node: HierarchyPointNode<HeritageSVGNode> }) {
                         height={NODE_HEIGHT}
                     />
                     <text
-                        fontSize={18}
+                        fontSize={MAIN_FONT_SIZE}
                         textAnchor="middle"
-                        fontFamily="Josefin"
-                        fontWeight={400}
+                        fontFamily={TREE_FONT}
+                        fontWeight={MAIN_FONT_WEIGHT}
                         fill="#000"
                         transform={`translate(${(personWidth / 2).toString()}, ${(NODE_HEIGHT / 4).toString()})`}
                     >
-                        <tspan fontWeight="bold">{getPersonName(person)}</tspan>
-                        <tspan x="0" y="25" fontWeight="bold">
+                        <tspan>{getPersonName(person)}</tspan>
+                        <tspan x="0" y="25">
                             {person.lastName}
                         </tspan>
-                        <tspan x="0" y="50">
+                        <tspan x="0" y="50" fontSize={SIDE_FONT_SIZE} fontWeight={SIDE_FONT_WEIGHT}>
                             {birthAndDeath(person.birthDate, person.deathDate)}
                         </tspan>
                     </text>
@@ -285,18 +295,18 @@ function Node({ node }: { node: HierarchyPointNode<HeritageSVGNode> }) {
                         shapeRendering="optimizeSpeed"
                     />
                     <text
-                        fontSize={18}
+                        fontSize={MAIN_FONT_SIZE}
                         textAnchor="middle"
-                        fontFamily={"Josefin"}
-                        fontWeight={400}
+                        fontFamily={TREE_FONT}
+                        fontWeight={MAIN_FONT_WEIGHT}
                         fill="#000"
                         transform={`translate(${(secondPartnerWidth / 2).toString()}, ${(NODE_HEIGHT / 4).toString()})`}
                     >
-                        <tspan fontWeight="bold">{getPersonName(secondPartner)}</tspan>
-                        <tspan x="0" y="25" fontWeight="bold">
+                        <tspan>{getPersonName(secondPartner)}</tspan>
+                        <tspan x="0" y="25">
                             {secondPartner.lastName}
                         </tspan>
-                        <tspan x="0" y="50">
+                        <tspan x="0" y="50" fontSize={SIDE_FONT_SIZE} fontWeight={SIDE_FONT_WEIGHT}>
                             {birthAndDeath(secondPartner.birthDate, secondPartner.deathDate)}
                         </tspan>
                     </text>
@@ -312,18 +322,18 @@ function Node({ node }: { node: HierarchyPointNode<HeritageSVGNode> }) {
                         transform={`translate(${secondPartnerWidth.toString()}, ${(0).toString()})`}
                     />
                     <text
-                        fontSize={18}
+                        fontSize={MAIN_FONT_SIZE}
                         textAnchor="middle"
-                        fontFamily="Josefin"
-                        fontWeight={400}
+                        fontFamily={TREE_FONT}
+                        fontWeight={MAIN_FONT_WEIGHT}
                         fill="#000"
                         transform={`translate(${(secondPartnerWidth + firstPartnerWidth / 2).toString()}, ${(NODE_HEIGHT / 4).toString()})`}
                     >
-                        <tspan fontWeight="bold">{getPersonName(firstPartner)}</tspan>
-                        <tspan x="0" y="25" fontWeight="bold">
+                        <tspan>{getPersonName(firstPartner)}</tspan>
+                        <tspan x="0" y="25">
                             {firstPartner.lastName}
                         </tspan>
-                        <tspan x="0" y="50">
+                        <tspan x="0" y="50" fontSize={SIDE_FONT_SIZE} fontWeight={SIDE_FONT_WEIGHT}>
                             {birthAndDeath(firstPartner.birthDate, firstPartner.deathDate)}
                         </tspan>
                     </text>
