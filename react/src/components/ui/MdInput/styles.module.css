@@ -1,0 +1,58 @@
+.input-wrapper {
+    position: relative;
+}
+
+.input {
+    font-family: inherit;
+    height: 2.5rem;
+    padding: 0.5rem 1rem;
+    background-color: inherit;
+    border-width: 1px;
+    border-radius: 0.25rem;
+    border-style: solid;
+    border-color: var(--md-sys-color-outline);
+    outline: none;
+
+    transition: all 0.15s;
+
+}
+
+/* focus vs focus-visible */
+.input:focus {
+    border-width: 2px;
+    border-color: var(--md-sys-color-primary);
+}
+
+.input:focus~label,
+.input:valid~label {
+    top: 0;
+    left: 15px;
+    font-size: 14px;
+    background: #121a23;
+    padding: 0 5px;
+}
+
+/*.input-field {*/
+/*    !*padding: 1rem;*!*/
+/*    !*color: #FFF;*!*/
+/*    !*border: 2px solid rgba(255, 255, 255, 0.17);*!*/
+/*    !*transition: all 0.15s;*!*/
+/*    background-color: transparent;*/
+/*    !*outline: none;*!*/
+/*    width: 100%;*/
+/*}*/
+
+/*.input-field:focus-visible {*/
+/*    border-color: #6366f1;*/
+/*}*/
+
+.label {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    transform: translateY(-50%);
+    color: #FFF;
+    transition: .3s;
+    pointer-events: none;
+}

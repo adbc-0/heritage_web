@@ -1,44 +1,41 @@
-@import "tailwindcss";
+/*@import "tailwindcss";*/
 
-@plugin 'tailwindcss-animate';
+/*@plugin 'tailwindcss-animate';*/
 
-@custom-variant dark (&:is(.dark *));
+/*@custom-variant dark (&:is(.dark *));*/
 
-@layer base, utilites;
+@layer reset, theme, base, components, utilities;
 
-/* ToDo: Change accent color to green */
-/* ToDo: Use hsl(113.71deg 100% 24.31%) */
-@layer base {
+@layer reset {
     :root {
-        --background: 0 0% 100%;
-        --foreground: 240 10% 3.9%;
-        --card: 0 0% 100%;
-        --card-foreground: 240 10% 3.9%;
-        --popover: 0 0% 100%;
-        --popover-foreground: 240 10% 3.9%;
-        --primary: 195 91% 34%;
-        --primary-foreground: 0 0% 98%;
-        --secondary: 240 4.8% 95.9%;
-        --secondary-foreground: 240 5.9% 10%;
-        --muted: 240 4.8% 95.9%;
-        --muted-foreground: 240 3.8% 46.1%;
-        --accent: 240 4.8% 95.9%;
-        --accent-foreground: 240 5.9% 10%;
-        --destructive: 0 84.2% 60.2%;
-        --destructive-foreground: 0 0% 98%;
-        --border: 240 5.9% 90%;
-        --input: 240 5.9% 90%;
-        --ring: 195 91% 34%;
-        --chart-1: 12 76% 61%;
-        --chart-2: 173 58% 39%;
-        --chart-3: 197 37% 24%;
-        --chart-4: 43 74% 66%;
-        --chart-5: 27 87% 67%;
-        --radius: 0.5rem;
-        --background-darker: 220 14% 96%;
-        --highlight: 195 91% 34%;
-        --highlight-background: 199 100% 95%;
+        font-family: "Outfit", sans-serif;
+        font-optical-sizing: auto;
+
+        line-height: 1.5;
+        font-weight: 400;
+
+        /*color-scheme: light dark;*/
+        color-scheme: light;
+
+        font-synthesis: none;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
     }
+
+    body {
+        margin: 0;
+    }
+
+    h1, h2, h3, h4, h5, h6, p {
+        font-weight: inherit;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    /*button {*/
+    /*    border: none;*/
+    /*}*/
 
     @font-face {
         font-family: Outfit;
@@ -76,21 +73,6 @@
         unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
     }
 
-    :root {
-        font-family: "Outfit", sans-serif;
-        font-optical-sizing: auto;
-
-        line-height: 1.5;
-        font-weight: 400;
-
-        color-scheme: light dark;
-
-        font-synthesis: none;
-        text-rendering: optimizeLegibility;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-    }
-
     /* BOX SIZING FIX */
     :root {
         box-sizing: border-box;
@@ -102,17 +84,205 @@
     }
 }
 
-@layer utilities {
+/* Source colors */
+/* #7A944D - olive */
+/* #0ECAA2 - green with cyan */
+/* #6D9B7B - curtain green */
+
+@layer theme {
+    :root {
+        --background: 0 0% 100%;
+        --foreground: 240 10% 3.9%;
+        --card: 0 0% 100%;
+        --card-foreground: 240 10% 3.9%;
+        --popover: 0 0% 100%;
+        --popover-foreground: 240 10% 3.9%;
+        --primary: 195 91% 34%;
+        --primary-foreground: 0 0% 98%;
+        --secondary: 240 4.8% 95.9%;
+        --secondary-foreground: 240 5.9% 10%;
+        --muted: 240 4.8% 95.9%;
+        --muted-foreground: 240 3.8% 46.1%;
+        --accent: 240 4.8% 95.9%;
+        --accent-foreground: 240 5.9% 10%;
+        --destructive: 0 84.2% 60.2%;
+        --destructive-foreground: 0 0% 98%;
+        --border: 240 5.9% 90%;
+        --input: 240 5.9% 90%;
+        --ring: 195 91% 34%;
+        --chart-1: 12 76% 61%;
+        --chart-2: 173 58% 39%;
+        --chart-3: 197 37% 24%;
+        --chart-4: 43 74% 66%;
+        --chart-5: 27 87% 67%;
+        --radius: 0.5rem;
+        --background-darker: 220 14% 96%;
+        --highlight: 195 91% 34%;
+        --highlight-background: 199 100% 95%;
+
+        /* Material Design Scheme */
+        --md-sys-color-primary: rgb(44 106 70);
+        --md-sys-color-surface-tint: rgb(44 106 70);
+        --md-sys-color-on-primary: rgb(255 255 255);
+        --md-sys-color-primary-container: rgb(176 241 195);
+        --md-sys-color-on-primary-container: rgb(14 81 47);
+        --md-sys-color-secondary: rgb(79 99 84);
+        --md-sys-color-on-secondary: rgb(255 255 255);
+        --md-sys-color-secondary-container: rgb(209 232 213);
+        --md-sys-color-on-secondary-container: rgb(55 75 61);
+        --md-sys-color-tertiary: rgb(59 100 112);
+        --md-sys-color-on-tertiary: rgb(255 255 255);
+        --md-sys-color-tertiary-container: rgb(190 234 247);
+        --md-sys-color-on-tertiary-container: rgb(33 76 87);
+        --md-sys-color-error: rgb(186 26 26);
+        --md-sys-color-on-error: rgb(255 255 255);
+        --md-sys-color-error-container: rgb(255 218 214);
+        --md-sys-color-on-error-container: rgb(147 0 10);
+        --md-sys-color-background: rgb(246 251 243);
+        --md-sys-color-on-background: rgb(24 29 25);
+        --md-sys-color-surface: rgb(246 251 243);
+        --md-sys-color-on-surface: rgb(24 29 25);
+        --md-sys-color-surface-variant: rgb(220 229 219);
+        --md-sys-color-on-surface-variant: rgb(65 73 66);
+        --md-sys-color-outline: rgb(113 121 113);
+        --md-sys-color-outline-variant: rgb(192 201 192);
+        --md-sys-color-shadow: rgb(0 0 0);
+        --md-sys-color-scrim: rgb(0 0 0);
+        --md-sys-color-inverse-surface: rgb(44 50 45);
+        --md-sys-color-inverse-on-surface: rgb(237 242 235);
+        --md-sys-color-inverse-primary: rgb(148 213 168);
+        --md-sys-color-primary-fixed: rgb(176 241 195);
+        --md-sys-color-on-primary-fixed: rgb(0 33 15);
+        --md-sys-color-primary-fixed-dim: rgb(148 213 168);
+        --md-sys-color-on-primary-fixed-variant: rgb(14 81 47);
+        --md-sys-color-secondary-fixed: rgb(209 232 213);
+        --md-sys-color-on-secondary-fixed: rgb(12 31 19);
+        --md-sys-color-secondary-fixed-dim: rgb(182 204 185);
+        --md-sys-color-on-secondary-fixed-variant: rgb(55 75 61);
+        --md-sys-color-tertiary-fixed: rgb(190 234 247);
+        --md-sys-color-on-tertiary-fixed: rgb(0 31 38);
+        --md-sys-color-tertiary-fixed-dim: rgb(163 205 219);
+        --md-sys-color-on-tertiary-fixed-variant: rgb(33 76 87);
+        --md-sys-color-surface-dim: rgb(214 219 212);
+        --md-sys-color-surface-bright: rgb(246 251 243);
+        --md-sys-color-surface-container-lowest: rgb(255 255 255);
+        --md-sys-color-surface-container-low: rgb(240 245 238);
+        --md-sys-color-surface-container: rgb(234 239 232);
+        --md-sys-color-surface-container-high: rgb(229 234 226);
+        --md-sys-color-surface-container-highest: rgb(223 228 221);
+
+        --md-palette-primary-0: #000000;
+        --md-palette-primary-5: #001508;
+        --md-palette-primary-10: #00210F;
+        --md-palette-primary-15: #002D16;
+        --md-palette-primary-20: #083820;
+        --md-palette-primary-25: #17432A;
+        --md-palette-primary-30: #234F35;
+        --md-palette-primary-35: #2F5B40;
+        --md-palette-primary-40: #3B684B;
+        --md-palette-primary-50: #548162;
+        --md-palette-primary-60: #6D9B7B;
+        --md-palette-primary-70: #87B694;
+        --md-palette-primary-80: #A2D2AF;
+        --md-palette-primary-90: #BDEECA;
+        --md-palette-primary-95: #CBFDD8;
+        --md-palette-primary-98: #E9FFEC;
+        --md-palette-primary-99: #F5FFF4;
+        --md-palette-primary-100: #FFFFFF;
+
+        --md-palette-secondary-0: #000000;
+        --md-palette-secondary-5: #0A130D;
+        --md-palette-secondary-10: #141E17;
+        --md-palette-secondary-15: #1E2821;
+        --md-palette-secondary-20: #29332B;
+        --md-palette-secondary-25: #343E36;
+        --md-palette-secondary-30: #3F4941;
+        --md-palette-secondary-35: #4B554C;
+        --md-palette-secondary-40: #566158;
+        --md-palette-secondary-50: #6F7A70;
+        --md-palette-secondary-60: #899389;
+        --md-palette-secondary-70: #A3AEA4;
+        --md-palette-secondary-80: #BEC9BE;
+        --md-palette-secondary-90: #DAE5DA;
+        --md-palette-secondary-95: #E9F4E8;
+        --md-palette-secondary-98: #F1FCF1;
+        --md-palette-secondary-99: #F5FFF4;
+        --md-palette-secondary-100: #FFFFFF;
+
+        --md-palette-tertiary-0: #000000;
+        --md-palette-tertiary-5: #011319;
+        --md-palette-tertiary-10: #0A1E24;
+        --md-palette-tertiary-15: #15292E;
+        --md-palette-tertiary-20: #203339;
+        --md-palette-tertiary-25: #2B3E44;
+        --md-palette-tertiary-30: #364A50;
+        --md-palette-tertiary-35: #42565C;
+        --md-palette-tertiary-40: #4E6268;
+        --md-palette-tertiary-50: #667A81;
+        --md-palette-tertiary-60: #80949B;
+        --md-palette-tertiary-70: #9AAFB6;
+        --md-palette-tertiary-80: #B5CAD1;
+        --md-palette-tertiary-90: #D1E6ED;
+        --md-palette-tertiary-95: #DFF4FC;
+        --md-palette-tertiary-98: #F1FBFF;
+        --md-palette-tertiary-99: #F8FDFF;
+        --md-palette-tertiary-100: #FFFFFF;
+
+        --md-palette-neutral-0: #000000;
+        --md-palette-neutral-5: #101110;
+        --md-palette-neutral-10: #1A1C1A;
+        --md-palette-neutral-15: #252624;
+        --md-palette-neutral-20: #2F312F;
+        --md-palette-neutral-25: #3B3C3A;
+        --md-palette-neutral-30: #464745;
+        --md-palette-neutral-35: #525351;
+        --md-palette-neutral-40: #5E5F5C;
+        --md-palette-neutral-50: #777775;
+        --md-palette-neutral-60: #91918E;
+        --md-palette-neutral-70: #ABABA9;
+        --md-palette-neutral-80: #C7C6C4;
+        --md-palette-neutral-90: #E3E2DF;
+        --md-palette-neutral-95: #F2F1ED;
+        --md-palette-neutral-98: #FAF9F6;
+        --md-palette-neutral-99: #FDFCF9;
+        --md-palette-neutral-100: #FFFFFF;
+
+        --md-palette-neutral-variant-0: #000000;
+        --md-palette-neutral-variant-5: #0E120F;
+        --md-palette-neutral-variant-10: #191D19;
+        --md-palette-neutral-variant-15: #232723;
+        --md-palette-neutral-variant-20: #2D312E;
+        --md-palette-neutral-variant-25: #383C39;
+        --md-palette-neutral-variant-30: #444844;
+        --md-palette-neutral-variant-35: #50534F;
+        --md-palette-neutral-variant-40: #5C5F5B;
+        --md-palette-neutral-variant-50: #747873;
+        --md-palette-neutral-variant-60: #8E928D;
+        --md-palette-neutral-variant-70: #A9ACA7;
+        --md-palette-neutral-variant-80: #C4C7C2;
+        --md-palette-neutral-variant-90: #E0E3DE;
+        --md-palette-neutral-variant-95: #EFF2EC;
+        --md-palette-neutral-variant-98: #F7FAF4;
+        --md-palette-neutral-variant-99: #FAFDF7;
+        --md-palette-neutral-variant-100: #FFFFFF;
+
+        --border-radius: 1.5rem;
+        --text-lg: 2rem;
+    }
+
+    /* ALSO FIXES UNSTYLED CONTENT FLASH WHEN DARK MODE */
+    body {
+        background-color: var(--md-sys-color-background);
+        color: var(--md-sys-color-on-background);
+    }
+}
+
+@layer base {
     /* SET 100% HEIGHT FOR BASE ELEMENTS */
     html,
     body,
     #root {
         height: 100%;
-    }
-
-    /* FIX FOR UNSTYLED CONTENT FLASH WHEN DARK MODE */
-    body {
-        @apply bg-background text-foreground;
     }
 }
 

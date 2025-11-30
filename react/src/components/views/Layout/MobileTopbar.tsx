@@ -4,14 +4,7 @@ import { NavLink, NavLinkRenderProps } from "react-router";
 import { BookHeart, HandCoins, House, Mail, Menu, ScrollText, User } from "lucide-react";
 
 import { RouterPath } from "@/constants/routePaths";
-import {
-    Sheet,
-    SheetContent,
-    SheetDescription,
-    SheetHeader,
-    SheetTitle,
-    SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
 import LOGO from "@/assets/logo.svg";
 
@@ -28,7 +21,7 @@ export function MobileTopbar() {
     return (
         <nav className="flex items-center justify-between bg-background px-8 py-3 border-b border-border ">
             <NavLink to={RouterPath.ROOT}>
-                <img src={LOGO} width={170} height={32} alt="logo" />
+                <img src={LOGO} width={170} alt="logo" />
             </NavLink>
             <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
                 <SheetTrigger>
