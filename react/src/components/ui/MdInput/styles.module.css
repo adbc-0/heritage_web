@@ -1,12 +1,12 @@
-.input-wrapper {
+.inputWrapper {
     position: relative;
 }
 
 .input {
     font-family: inherit;
+    background-color: inherit;
     height: 2.5rem;
     padding: 0.5rem 1rem;
-    background-color: inherit;
     border-width: 1px;
     border-radius: 0.25rem;
     border-style: solid;
@@ -14,22 +14,34 @@
     outline: none;
 
     transition: all 0.15s;
-
 }
-
-/* focus vs focus-visible */
+/* Read about: focus vs focus-visible */
 .input:focus {
     border-width: 2px;
     border-color: var(--md-sys-color-primary);
 }
 
-.input:focus~label,
-.input:valid~label {
+.label {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    transform: translateY(-50%);
+    transition: .2s;
+    pointer-events: none;
+}
+
+.input:focus + .label,
+.input:not(:placeholder-shown) + .label {
+    background-color: inherit;
     top: 0;
-    left: 15px;
+    left: 5px;
     font-size: 14px;
-    background: #121a23;
     padding: 0 5px;
+}
+
+.input::placeholder {
+    opacity: 0;
 }
 
 /*.input-field {*/
@@ -46,13 +58,6 @@
 /*    border-color: #6366f1;*/
 /*}*/
 
-.label {
-    display: block;
-    position: absolute;
-    top: 50%;
-    left: 20px;
-    transform: translateY(-50%);
-    color: #FFF;
-    transition: .3s;
-    pointer-events: none;
-}
+/* Issues to resolve */
+/* Center vertically the text better */
+/* Background of floating text */
