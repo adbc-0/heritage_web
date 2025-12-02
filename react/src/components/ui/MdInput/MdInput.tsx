@@ -4,12 +4,11 @@ import styles from "./styles.module.css";
 
 type InputProps = React.InputHTMLAttributes<HTMLInputElement>;
 
-export function MdInput({ ...props }: InputProps) {
+export function MdInput({ placeholder, ...props }: InputProps) {
     return (
-        <input {...props} className={styles.input} />
-        // <div className={styles.inputWrapper}>
-        //     <input {...props} className={styles.input} />
-        //     <span className={styles.label}>dwa</span>
-        // </div>
+        <div className={styles.inputWrapper}>
+            <input {...props} className={styles.input} placeholder={placeholder} />
+            <span className={styles.label}>{placeholder}</span>
+        </div>
     );
 }
