@@ -6,6 +6,6 @@ import styles from "./styles.module.css";
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
 
-export function MdButton({ className, ...props }: ButtonProps) {
-    return <button {...props} className={cn(styles.button, className)}></button>;
+export function MdButton({ className, ...buttonProps }: ButtonProps) {
+    return <button {...buttonProps} className={cn(styles.button, className)}></button>;
 }

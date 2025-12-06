@@ -1,0 +1,96 @@
+.outlined_input {
+    position: relative;
+}
+
+.input {
+    height: 3.5rem;
+
+    background-color: inherit;
+    color: var(--md-sys-color-on-surface);
+
+    outline: 1px solid var(--md-sys-color-outline);
+    border-radius: 4px;
+    border: none;
+
+    transition-property: top, left, font-size;
+    transition-duration: .2s;
+    transition-timing-function: cubic-bezier(.65,.05,.36,1);
+
+    width: inherit;
+
+    padding: 0 16px;
+}
+
+.input:hover {
+    outline-color: var(--md-sys-color-on-surface);
+}
+
+.input:focus {
+    outline: 2px solid var(--md-sys-color-primary);
+}
+
+.input[aria-invalid="true"] {
+    outline-color: var(--md-sys-color-error);
+}
+
+.input[aria-invalid="true"]:hover {
+    outline-color: var(--md-sys-color-on-error-container);
+}
+
+.label {
+    background-color: inherit;
+
+    padding: 0 4px;
+
+    position: absolute;
+    top: 50%;
+    left: 16px;
+
+    color: var(--md-sys-color-on-surface-variant);
+    font-size: var(--md-sys-typescale-body-large-size);
+    font-weight: var(--md-sys-typescale-body-large-weight);
+
+    transform: translateY(-50%);
+
+    transition-property: top, left, font-size;
+    transition-duration: .2s;
+    transition-timing-function: cubic-bezier(.65,.05,.36,1);
+
+    /*label can be clicked through */
+    pointer-events: none;
+}
+
+/* Focused label when | not placeholder label */
+.input:not(:placeholder-shown) ~ label,
+.input:focus ~ label {
+    top: 0;
+    left: 16px;
+
+    font-size: var(--md-sys-typescale-body-small-size);
+}
+
+.input:hover ~ label {
+    color: var(--md-sys-color-on-surface);
+}
+
+.input:focus ~ label {
+    color: var(--md-sys-color-primary);
+}
+
+.input[aria-invalid="true"] ~ label {
+    color: var(--md-sys-color-error);
+}
+
+.input[aria-invalid="true"]:hover ~ label {
+    color: var(--md-sys-color-on-error-container);
+}
+
+.error_message {
+    color: var(--md-sys-color-error);
+
+    font-size: var(--md-sys-typescale-body-small-size);
+    font-weight: var(--md-sys-typescale-body-large-weight);
+
+    padding: 0 16px;
+    margin-top: 4px;
+}
