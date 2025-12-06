@@ -1,14 +1,11 @@
 import * as React from "react";
 
+import { cn } from "@/lib/utils.ts";
+
 import styles from "./styles.module.css";
 
 type InputProps = React.InputHTMLAttributes<HTMLInputElement>;
 
-export function MdInput({ placeholder, ...props }: InputProps) {
-    return (
-        <div className={styles.inputWrapper}>
-            <input {...props} className={styles.input} placeholder={placeholder} />
-            <span className={styles.label}>{placeholder}</span>
-        </div>
-    );
+export function MdInput({ className, placeholder, ...inputProps }: InputProps) {
+    return <input {...inputProps} className={cn(styles.input, className)} placeholder={placeholder} />;
 }

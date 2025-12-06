@@ -1,7 +1,19 @@
+.container {
+
+}
+
+.label {
+    display: block;
+
+    font-size: var(--md-sys-typescale-body-small-size);
+}
+
 .input {
+    display: block;
+
     font-family: inherit;
 
-    height: 2.5rem;
+    height: 2.75rem;
     padding: 0.5rem 1rem;
 
     border-width: 1px;
@@ -14,8 +26,3 @@
     outline-offset: -1px;
     outline: var(--md-sys-color-primary) solid 2px;
 }
-
-/* Primer: https://primer.style/product/components/form-control/ */
-/* MUI https://m3.material.io/components/text-fields/overview */
-/* Mantine https://ui.mantine.dev/category/inputs/ */
-/* Blog https://jakedawkins.com/blog/accessible-input-floating-label/ */

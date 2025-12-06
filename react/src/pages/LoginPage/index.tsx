@@ -5,26 +5,35 @@ import { http } from "@/constants/httpStatusCodes";
 import { RouterPath } from "@/constants/routePaths";
 import { useHeritage } from "@/features/heritageData/heritageContext";
 import { useAuth } from "@/features/auth/authContext";
-import { AuthErrorType, AuthStatus } from "@/features/auth/constants";
+import { AuthErrorType, AuthErrorTypeValues, AuthStatus } from "@/features/auth/constants";
+import { OutlineTextField } from "@/components/ui/OutlineTextField/OutlineTextField.tsx";
+import { MdButton } from "@/components/ui/MdButton/MdButton.tsx";
+
 import { GlobalError } from "../GlobalError/GlobalError";
 
 import styles from "./styles.module.css";
-import { MdButton } from "@/components/ui/MdButton/MdButton.tsx";
-import { MdInput } from "@/components/ui/MdInput/MdInput.tsx";
 
 type LoginFormInputs = {
     password: string;
 };
 
-// use material ui icons
-// use css modules for styling
-// create new generic components
+function getLoginError(authError: AuthErrorTypeValues | null) {
+    if (!authError) {
+        return { ok: true, text: null };
+    }
+    if (authError === AuthErrorType.WRONG_PASSWORD) {
+        return { ok: false, text: "Niepoprawne hasło" };
+    }
+    throw new Error("all error values must be handled");
+}
 
 export function LoginPage() {
     const navigate = useNavigate();
 
     const { fetchHeritage, heritageError } = useHeritage();
     const { authError, authInProgress, authStatus, setAuthCookieAndAuthorize } = useAuth();
+
+    const loginNetworkError = getLoginError(authError);
 
     useEffect(() => {
         if (authStatus !== AuthStatus.AUTHORIZED) {
@@ -70,25 +79,17 @@ export function LoginPage() {
                     <div className={styles.no_access_wrapper}>
                         <img src="/icon.svg" width={50} alt="logo" className={styles.logo} />
                         <h1 className={styles.no_access_main_text}>Brak dostępu</h1>
-                        <p className={styles.no_access_subtext}>Dostęp do zawartości jest chroniony hasłem</p>
-                        {/*{authError === AuthErrorType.WRONG_PASSWORD && (*/}
-                        {/*    <div className="w-full bg-red-50 py-2 px-4 rounded-md">*/}
-                        {/*        <p className="text-red-800 text-center">Niepoprawne hasło</p>*/}
-                        {/*    </div>*/}
-                        {/*)}*/}
+                        <p>Dostęp do zawartości jest chroniony hasłem</p>
                     </div>
                     <div className={styles.login_actions}>
-                        {/*<Label className="text-sm" htmlFor={passwordId}>*/}
-                        {/*    Hasło*/}
-                        {/*</Label>*/}
-                        {/*<Input*/}
-                        {/*    className="bg-white h-12"*/}
-                        {/*    type="password"*/}
-                        {/*    name="password"*/}
-                        {/*    autoComplete="current-password"*/}
-                        {/*    placeholder="Hasło"*/}
-                        {/*/>*/}
-                        <MdInput type="password" name="password" autoComplete="current-password" placeholder="Hasło" />
+                        <OutlineTextField
+                            label="Hasło"
+                            className={styles.password_input}
+                            type="password"
+                            name="password"
+                            autoComplete="current-password"
+                            error={loginNetworkError.text}
+                        />
                         <MdButton type="submit" disabled={authInProgress} className={styles.login_button}>
                             Wyślij
                         </MdButton>
@@ -98,3 +99,5 @@ export function LoginPage() {
         </div>
     );
 }
+
+// ToDo: check out https://naszrod.pl/osoby/I87
