@@ -7,6 +7,8 @@ import { ErrorFallback, HeritageGraph } from "@/features/heritageGraph/HeritageG
 
 import { SVGSettings } from "./SVGSettings";
 
+import styles from "./styles.module.css";
+
 // ToDo: Remove hardcoded values? Define branches roots in config?
 const defaultBranches = [
     {
@@ -46,21 +48,13 @@ const defaultBranches = [
     },
 ];
 
-// ToDo: play with memoization
 export default function Home() {
-    // const location = useLocation();
-    // console.log(location);
-
     const [branches, setBranches] = useState(defaultBranches);
     const [settingsAreOpen, setSettingsAreOpen] = useState(false);
 
-    const inactiveBranches = branches
-        .filter((branch) => !branch.active)
-        .flatMap((branch) => branch.rootIndiId);
+    const inactiveBranches = branches.filter((branch) => !branch.active).flatMap((branch) => branch.rootIndiId);
 
-    const renderedBranches = branches
-        .filter((branch) => branch.active)
-        .map((branch) => branch.name);
+    const renderedBranches = branches.filter((branch) => branch.active).map((branch) => branch.name);
 
     function openSVGSettingsView() {
         setSettingsAreOpen(true);
@@ -76,8 +70,7 @@ export default function Home() {
         if (!branch) {
             throw new Error("Branch was not found");
         }
-        const userIsAttemptingToRemoveLastActiveBranch =
-            branch.active && renderedBranches.length === 1;
+        const userIsAttemptingToRemoveLastActiveBranch = branch.active && renderedBranches.length === 1;
         if (userIsAttemptingToRemoveLastActiveBranch) {
             return;
         }
@@ -86,27 +79,18 @@ export default function Home() {
     };
 
     return (
-        <div className="h-full">
-            <div className="bg-background h-full flex flex-col">
-                {/* ToDo: Make ToolBar Component */}
+        <div className={styles.main}>
+            <div className={styles.tree}>
                 {settingsAreOpen && (
                     <div className="flex border-b border-border p-2 justify-end">
-                        <button
-                            type="button"
-                            className="cursor-pointer p-1 rounded-md"
-                            onClick={closeSVGSettingsView}
-                        >
+                        <button type="button" className="cursor-pointer p-1 rounded-md" onClick={closeSVGSettingsView}>
                             <ChevronLeft size={22} />
                         </button>
                     </div>
                 )}
                 {!settingsAreOpen && (
-                    <div className="flex border-b border-border p-2 justify-end">
-                        <button
-                            type="button"
-                            className="cursor-pointer p-1 rounded-md"
-                            onClick={openSVGSettingsView}
-                        >
+                    <div className={styles.tree_settings}>
+                        <button type="button" className={styles.icon_button} onClick={openSVGSettingsView}>
                             <Settings size={22} />
                         </button>
                     </div>

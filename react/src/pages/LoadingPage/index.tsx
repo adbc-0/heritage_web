@@ -1,11 +1,13 @@
 import { Loader } from "lucide-react";
 
+import styles from "./styles.module.css";
+
 export function LoadingPage() {
     return (
-        <div className="relative h-full w-full">
-            <div className="absolute top-0 left-0 h-full w-full">
-                <div className="h-full flex items-center justify-center">
-                    <Loader size={40} className="animate-spin" />
+        <div className={styles.wrapper}>
+            <div className={styles.overlay}>
+                <div className={styles.center}>
+                    <Loader size={40} className={styles.spinner} />
                 </div>
             </div>
         </div>
