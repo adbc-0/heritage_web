@@ -1,103 +1,74 @@
 import { useState } from "react";
 import { preload } from "react-dom";
-import { NavLink, NavLinkRenderProps } from "react-router";
-import { BookHeart, HandCoins, House, Mail, Menu, ScrollText, User } from "lucide-react";
 
-import { RouterPath } from "@/constants/routePaths";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { useGlobalSearch } from "@/features/globalSearch/globalSearch.ts";
 
 import LOGO from "@/assets/logo.svg";
 
-const sidebarNavlinkStyle = ({ isActive }: NavLinkRenderProps) =>
-    isActive
-        ? "flex gap-2 p-2 bg-highlight-background text-highlight rounded-md"
-        : "flex gap-2 p-2 bg-background text-foreground rounded-md";
+import styles from "./styles.module.css";
+
+// const sidebarNavlinkStyle = ({ isActive }: NavLinkRenderProps) =>
+//     isActive
+//         ? "flex gap-2 p-2 bg-highlight-background text-highlight rounded-md"
+//         : "flex gap-2 p-2 bg-background text-foreground rounded-md";
 
 export function MobileTopbar() {
     preload(LOGO, { as: "image", type: "image/svg+xml" });
 
-    const [sidebarOpen, setSidebarOpen] = useState(false);
+    const { query, searchResults, search } = useGlobalSearch();
+
+    // const [navbarOpen, setNavbarOpen] = useState(false);
+    const [searchOpen, setSearchOpen] = useState(false);
 
     return (
-        <nav className="flex items-center justify-between bg-background px-8 py-3 border-b border-border ">
-            <NavLink to={RouterPath.ROOT}>
-                <img src={LOGO} width={170} alt="logo" />
-            </NavLink>
-            <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
-                <SheetTrigger>
-                    <Menu size={26} className="m-auto" />
-                </SheetTrigger>
-                <SheetContent className="flex flex-col justify-center">
-                    <SheetHeader>
-                        <SheetTitle>Nasz Ród</SheetTitle>
-                        <SheetDescription />
-                    </SheetHeader>
-                    <NavLink
-                        to={RouterPath.ROOT}
-                        className={sidebarNavlinkStyle}
+        <>
+            <nav className={styles.top_bar}>
+                <div className={styles.search_input_wrapper}>
+                    <button
+                        type="button"
+                        className={styles.search_input}
                         onClick={() => {
-                            setSidebarOpen(false);
+                            setSearchOpen(true);
                         }}
                     >
-                        <House />
-                        <span>Drzewo</span>
-                    </NavLink>
-                    <NavLink
-                        to={RouterPath.OSOBY}
-                        className={sidebarNavlinkStyle}
-                        onClick={() => {
-                            setSidebarOpen(false);
-                        }}
-                    >
-                        <User />
-                        <span>Osoby</span>
-                    </NavLink>
-                    <SheetHeader>
-                        <SheetTitle>O stronie</SheetTitle>
-                        <SheetDescription />
-                    </SheetHeader>
-                    <NavLink
-                        to={RouterPath.O_MNIE}
-                        className={sidebarNavlinkStyle}
-                        onClick={() => {
-                            setSidebarOpen(false);
-                        }}
-                    >
-                        <BookHeart />
-                        <span>O mnie</span>
-                    </NavLink>
-                    <NavLink
-                        to={RouterPath.RODO}
-                        className={sidebarNavlinkStyle}
-                        onClick={() => {
-                            setSidebarOpen(false);
-                        }}
-                    >
-                        <ScrollText />
-                        <span>Rodo</span>
-                    </NavLink>
-                    <NavLink
-                        to={RouterPath.KONTAKT}
-                        className={sidebarNavlinkStyle}
-                        onClick={() => {
-                            setSidebarOpen(false);
-                        }}
-                    >
-                        <Mail />
-                        <span>Kontakt</span>
-                    </NavLink>
-                    <NavLink
-                        to={RouterPath.WSPARCIE}
-                        className={sidebarNavlinkStyle}
-                        onClick={() => {
-                            setSidebarOpen(false);
-                        }}
-                    >
-                        <HandCoins />
-                        <span>Wsparcie</span>
-                    </NavLink>
-                </SheetContent>
-            </Sheet>
-        </nav>
+                        <span>Szukaj</span>
+                    </button>
+                    {/*<input name="global_search" className={styles.search_input} type="text" placeholder="Szukaj" />*/}
+                    {/*<span>SideBar icon</span>*/}
+                    {/*<span>Search icon</span>*/}
+                </div>
+            </nav>
+            {searchOpen && (
+                <div className={styles.search}>
+                    <div className={styles.active_search_input_section}>
+                        <button
+                            className={styles.active_search_button}
+                            onClick={() => {
+                                setSearchOpen(false);
+                            }}
+                        >
+                            ‹
+                        </button>
+                        <input
+                            /* eslint-disable-next-line jsx-a11y/no-autofocus */
+                            autoFocus
+                            type="text"
+                            placeholder="Szukaj"
+                            className={styles.active_search_input}
+                            value={query}
+                            onChange={(e) => {
+                                search(e.target.value);
+                            }}
+                        />
+                    </div>
+                    <hr className={styles.active_search_break} />
+                    {searchResults.map((person) => (
+                        <div key={person.id} className={styles.list_item}>
+                            {person.firstName} {person.lastName}
+                        </div>
+                    ))}
+                </div>
+            )}
+        </>
     );
 }

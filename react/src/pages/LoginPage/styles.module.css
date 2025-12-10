@@ -56,7 +56,8 @@
     margin: 2rem auto;
 }
 
-@media (width >= 40rem /* 640px */) {
+/*https://m3.material.io/foundations/layout/applying-layout/window-size-classes*/
+@media (width >= 40rem /* 600px */) {
     .login_page_wrapper {
         background-color: var(--md-sys-color-surface);
         align-items: center;
