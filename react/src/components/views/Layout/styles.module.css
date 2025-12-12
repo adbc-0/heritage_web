@@ -83,3 +83,17 @@
 .list_item {
     padding: 0.5rem 1rem;
 }
+
+.modal {
+    top: 1rem;
+    margin: 0;
+    margin-inline: auto;
+    width: 90%;
+    border: none;
+    border-radius: 1.5rem;
+    background-color: var(--md-sys-color-surface-container-high);
+}
+
+.modal::backdrop {
+    background-color: transparent;
+}

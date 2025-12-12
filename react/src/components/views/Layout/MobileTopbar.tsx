@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ElementRef, useRef, useState } from "react";
 import { preload } from "react-dom";
 
 import { useGlobalSearch } from "@/features/globalSearch/globalSearch.ts";
@@ -15,6 +15,8 @@ import styles from "./styles.module.css";
 export function MobileTopbar() {
     preload(LOGO, { as: "image", type: "image/svg+xml" });
 
+    const dialogRef = useRef<ElementRef<"dialog">>(null);
+
     const { query, searchResults, search } = useGlobalSearch();
 
     // const [navbarOpen, setNavbarOpen] = useState(false);
@@ -28,7 +30,8 @@ export function MobileTopbar() {
                         type="button"
                         className={styles.search_input}
                         onClick={() => {
-                            setSearchOpen(true);
+                            // setSearchOpen(true);
+                            dialogRef.current.showModal();
                         }}
                     >
                         <span>Szukaj</span>
@@ -38,8 +41,8 @@ export function MobileTopbar() {
                     {/*<span>Search icon</span>*/}
                 </div>
             </nav>
-            {searchOpen && (
-                <div className={styles.search}>
+            <dialog ref={dialogRef} closedby="any" className={styles.modal}>
+                <div>
                     <div className={styles.active_search_input_section}>
                         <button
                             className={styles.active_search_button}
@@ -50,8 +53,8 @@ export function MobileTopbar() {
                             ‹
                         </button>
                         <input
-                            /* eslint-disable-next-line jsx-a11y/no-autofocus */
-                            autoFocus
+                            // /* eslint-disable-next-line jsx-a11y/no-autofocus */
+                            // autoFocus
                             type="text"
                             placeholder="Szukaj"
                             className={styles.active_search_input}
@@ -68,7 +71,9 @@ export function MobileTopbar() {
                         </div>
                     ))}
                 </div>
-            )}
+            </dialog>
         </>
     );
 }
+
+// instead of using dialogs I could conditionally change style on input focus
