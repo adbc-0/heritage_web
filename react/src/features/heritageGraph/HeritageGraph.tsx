@@ -481,7 +481,7 @@ export function HeritageGraph({ rootPerson, highlightedPerson, inactiveBranches 
         treeSVG.call(treeZoom.transform, setInitialPositon);
 
         return () => {
-            treeSVG.on("zoom", treeZoom);
+            treeSVG.on("zoom", null);
         };
     }, [highlightedPerson, rootPerson, tree]);
 
