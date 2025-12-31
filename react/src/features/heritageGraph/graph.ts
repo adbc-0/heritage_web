@@ -260,28 +260,28 @@ interface GraphOptions {
  * @description Directed Acyclic Graph storing family data.
  */
 export class Graph {
-    root: Family | Person;
-    dataset: HeritageRaw;
+    #root: Family | Person;
+    #dataset: HeritageRaw;
 
-    people = new Map<PersonIdentifier, Person>();
-    families = new Map<PersonIdentifier, Family>();
+    #people = new Map<PersonIdentifier, Person>();
+    #families = new Map<PersonIdentifier, Family>();
 
     // all cases where person has two parents from different houses
-    multiHouseMap = new Map<PersonIdentifier, PersonIdentifier>();
+    #multiHouseMap = new Map<PersonIdentifier, PersonIdentifier>();
     // all remarriages could be listed as second node and later merged. More in line with real structure.
-    remarriageMap = new Map<PersonIdentifier, PersonIdentifier>();
+    #remarriageMap = new Map<PersonIdentifier, PersonIdentifier>();
 
     #addPerson(newPerson: Person) {
-        this.people.set(newPerson.id, newPerson);
+        this.#people.set(newPerson.id, newPerson);
     }
 
     #addFamily(newFamily: Family) {
-        this.families.set(newFamily.id, newFamily);
+        this.#families.set(newFamily.id, newFamily);
     }
 
     #addMembers(newFamily: Family, relation: RawConnection) {
         if (relation.husb) {
-            const member = this.people.get(relation.husb);
+            const member = this.#people.get(relation.husb);
             if (!member) {
                 throw new GraphError("person does not exist");
             }
@@ -289,7 +289,7 @@ export class Graph {
             member.attachFamily(newFamily);
         }
         if (relation.wife) {
-            const member = this.people.get(relation.wife);
+            const member = this.#people.get(relation.wife);
             if (!member) {
                 throw new GraphError("person does not exist");
             }
@@ -300,14 +300,14 @@ export class Graph {
 
     #addChildToParents(child: Person, relation: RawConnection) {
         if (relation.husb) {
-            const member = this.people.get(relation.husb);
+            const member = this.#people.get(relation.husb);
             if (!member) {
                 throw new GraphError("person does not exist");
             }
             member.addChild(child);
         }
         if (relation.wife) {
-            const member = this.people.get(relation.wife);
+            const member = this.#people.get(relation.wife);
             if (!member) {
                 throw new GraphError("person does not exist");
             }
@@ -321,7 +321,7 @@ export class Graph {
          * add children using document order
          * */
         for (const childId of relation.children) {
-            const child = this.people.get(childId);
+            const child = this.#people.get(childId);
             if (!child) {
                 throw new GraphError("person does not exist");
             }
@@ -332,7 +332,7 @@ export class Graph {
     }
 
     #createPeople() {
-        for (const person of this.dataset.people) {
+        for (const person of this.#dataset.people) {
             if (person.type === PersonType.PERSON_NODE) {
                 const newPerson = new Person({
                     id: person.id,
@@ -356,7 +356,7 @@ export class Graph {
     }
 
     #createFamilies() {
-        for (const relation of this.dataset.relations) {
+        for (const relation of this.#dataset.relations) {
             const newFamily = new Family(relation.id);
             this.#addMembers(newFamily, relation);
             this.#addChildren(newFamily, relation);
@@ -365,7 +365,7 @@ export class Graph {
     }
 
     #findNodeWithoutParent() {
-        const person = this.people.values().find((personNode) => isNil(personNode.parent));
+        const person = this.#people.values().find((personNode) => isNil(personNode.parent));
         if (!person) {
             throw new GraphError("person without a parent does not exist");
         }
@@ -394,7 +394,7 @@ export class Graph {
             // ToDo: Create and append new node at the top
             throw new GraphError("multi-parent root not implemented");
         }
-        const root = this.people.get(rootPersonId);
+        const root = this.#people.get(rootPersonId);
         if (!root) {
             throw new GraphError("could not find person with given id");
         }
@@ -413,7 +413,7 @@ export class Graph {
     }
 
     #setHierarchy() {
-        for (const family of this.families.values()) {
+        for (const family of this.#families.values()) {
             for (const member of family.members.values()) {
                 if (member.parent) {
                     family.attachParentFamily(member.parent);
@@ -424,14 +424,14 @@ export class Graph {
 
     #removeLinkToNonDescendants() {
         // remove parent connection from new root
-        if (this.root instanceof Person) {
-            const rootPerson = this.root;
+        if (this.#root instanceof Person) {
+            const rootPerson = this.#root;
             rootPerson.parent = null;
             return;
         }
 
         // remove parent connection from new root
-        const rootFamily = this.root;
+        const rootFamily = this.#root;
         for (const member of rootFamily.members.values()) {
             for (const parent of rootFamily.parents.values()) {
                 rootFamily.detachParentFamily(member.id, parent.id);
@@ -439,14 +439,14 @@ export class Graph {
         }
 
         const descendants = new Map<PersonIdentifier, Family>();
-        for (const node of this.root) {
+        for (const node of this.#root) {
             if (node instanceof Family) {
                 descendants.set(node.id, node);
             }
         }
 
         // remove second parent coming from "external" part of the tree
-        for (const node of this.root) {
+        for (const node of this.#root) {
             if (node instanceof Family) {
                 if (node.parents.size > 1) {
                     for (const parent of node.parents.values()) {
@@ -461,7 +461,7 @@ export class Graph {
 
     #disconnectExcludedNodes(excluded: string[]) {
         for (const filteredOutPerson of excluded) {
-            const removedPerson = this.people.get(filteredOutPerson);
+            const removedPerson = this.#people.get(filteredOutPerson);
             if (!removedPerson) {
                 throw new GraphError("no person with given id");
             }
@@ -505,7 +505,7 @@ export class Graph {
     #handleDeduplication() {
         // dedupe nodes and handle extra parent
         // self note: deduping and handling extra parents should be a separate process
-        for (const node of this.root) {
+        for (const node of this.#root) {
             // one person cannot be connected to two different families
             if (node instanceof Family) {
                 if (node.parents.size > 1) {
@@ -526,7 +526,7 @@ export class Graph {
                             if (!randomParent) {
                                 throw new GraphError("Parent does not exist");
                             }
-                            this.multiHouseMap.set(node.id, randomParent.id);
+                            this.#multiHouseMap.set(node.id, randomParent.id);
                             node.softDetachParentFamily(randomParent.id);
                         } else {
                             const parents = Array.from(node.members.values());
@@ -537,7 +537,7 @@ export class Graph {
                             if (!woman.parent) {
                                 throw new GraphError("Woman parent is root node");
                             }
-                            this.multiHouseMap.set(node.id, woman.parent.id);
+                            this.#multiHouseMap.set(node.id, woman.parent.id);
                             node.softDetachParentFamily(woman.parent.id);
                         }
                     } else {
@@ -551,7 +551,7 @@ export class Graph {
     #collectRemarriages() {
         // handle remarriages
         const peopleWithMultipleMarriages = new Set<Person>();
-        for (const node of this.root) {
+        for (const node of this.#root) {
             if (node instanceof Family) {
                 for (const member of node.members.values()) {
                     if (member.families.size > 1) {
@@ -572,20 +572,20 @@ export class Graph {
                  * marking additional marriages as remarriages
                  * */
                 marriage.remarriageStatus = true;
-                this.remarriageMap.set(originalMarriage.id, marriage.id);
+                this.#remarriageMap.set(originalMarriage.id, marriage.id);
             }
         }
     }
 
     constructor(dataset: HeritageRaw, options: GraphOptions = {}) {
-        this.dataset = dataset;
+        this.#dataset = dataset;
 
         this.#createPeople();
         this.#createFamilies();
 
         this.#setHierarchy();
 
-        this.root = this.#getRootNode(options.rootPerson);
+        this.#root = this.#getRootNode(options.rootPerson);
         if (options.rootPerson) {
             this.#removeLinkToNonDescendants();
         }
@@ -599,11 +599,11 @@ export class Graph {
         this.#collectRemarriages();
     }
 
-    toList() {
-        return [...this.root];
+    #toList() {
+        return [...this.#root];
     }
 
-    toD3() {
+    toCanvas() {
         function createSVGNodeFromFamily(node: Family) {
             const membersAreEmptyNodes = node.members.values().every((member) => member.type === "EMPTY_NODE");
             return {
@@ -631,7 +631,7 @@ export class Graph {
             };
         }
 
-        const svgList: HeritageSVGNode[] = this.toList().map((node) => {
+        const svgList: HeritageSVGNode[] = this.#toList().map((node) => {
             if (node instanceof Family) {
                 return createSVGNodeFromFamily(node);
             } else if (node instanceof Person) {
@@ -663,7 +663,7 @@ export class Graph {
             from: HierarchyPointNode<HeritageSVGNode>;
             to: HierarchyPointNode<HeritageSVGNode>;
         }[] = [];
-        for (const [childId, extraParentId] of this.multiHouseMap.entries()) {
+        for (const [childId, extraParentId] of this.#multiHouseMap.entries()) {
             const child = descendantHashMap.get(childId);
             const extraParent = descendantHashMap.get(extraParentId);
             if (!child) {
@@ -679,7 +679,7 @@ export class Graph {
             from: HierarchyPointNode<HeritageSVGNode>;
             to: HierarchyPointNode<HeritageSVGNode>;
         }[] = [];
-        for (const [originalMarriageId, remarriageId] of this.remarriageMap.entries()) {
+        for (const [originalMarriageId, remarriageId] of this.#remarriageMap.entries()) {
             const originalMarriage = descendantHashMap.get(originalMarriageId);
             const remarriage = descendantHashMap.get(remarriageId);
             if (!originalMarriage) {
