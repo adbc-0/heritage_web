@@ -7,7 +7,7 @@ import { RouterPath } from "@/constants/routePaths";
 import { useHeritage } from "@/features/heritageData/heritageContext";
 
 import { NODE_HEIGHT } from "./constants";
-import { getCanvasSize } from "./utils";
+import { getCanvasSizeFromParent } from "./utils";
 import { Canvas } from "./canvas";
 import { Graph, type HeritageSVGNode, type SVGPersonDetails } from "./graph";
 
@@ -127,7 +127,7 @@ export function HeritageGraph({ rootPerson, highlightedPerson, inactiveBranches 
             throw new Error("no canvas element");
         }
 
-        const canvasSize = getCanvasSize(canvas);
+        const canvasSize = getCanvasSizeFromParent(canvas);
 
         const graph = new Graph(heritage, { excludedPeople: inactiveBranches, rootPerson });
         const graphDataset = graph.toCanvas();

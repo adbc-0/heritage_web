@@ -6,7 +6,7 @@ import { isNil } from "@/lib/utils.ts";
 import type { PersonEvent } from "@/types/heritage.types";
 
 import { NODE_BASE_WIDTH, NODE_HEIGHT, NODE_SIZE_FACTOR, VERTICAL_SPACE_BETWEEN_NODES } from "./constants";
-import { getCanvasSize } from "./utils";
+import { getCanvasSizeFromParent as getStretchedCanvasSize } from "./utils";
 import type { HeritageSVGNode, SVGPersonDetails } from "./graph";
 import type { CanvasGraphDataset, StartingPosition } from "./graph.types";
 
@@ -123,8 +123,11 @@ export class Canvas {
     }
 
     #setCanvasSize() {
-        const { height, width } = getCanvasSize(this.#canvas);
+        // reset canvas size so it does not affect parent element
+        this.#canvas.width = 0;
+        this.#canvas.height = 0;
 
+        const { height, width } = getStretchedCanvasSize(this.#canvas);
         this.#canvas.width = width;
         this.#canvas.height = height;
     }
