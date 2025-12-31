@@ -126,10 +126,18 @@ export class Canvas {
         // reset canvas size so it does not affect parent element
         this.#canvas.width = 0;
         this.#canvas.height = 0;
+        this.#canvas.style.width = "0";
+        this.#canvas.style.height = "0";
 
         const { height, width } = getStretchedCanvasSize(this.#canvas);
-        this.#canvas.width = width;
-        this.#canvas.height = height;
+
+        const dpr = window.devicePixelRatio || 1;
+
+        this.#canvas.style.width = `${width.toString()}px`;
+        this.#canvas.style.height = `${height.toString()}px`;
+
+        this.#canvas.width = width * dpr;
+        this.#canvas.height = height * dpr;
     }
 
     #render() {
@@ -137,6 +145,9 @@ export class Canvas {
 
         this.#canvasContext.reset();
 
+        const dpr = window.devicePixelRatio || 1;
+
+        this.#canvasContext.scale(dpr, dpr);
         this.#canvasContext.translate(this.#canvasTransform.x, this.#canvasTransform.y);
         this.#canvasContext.scale(this.#canvasTransform.k, this.#canvasTransform.k);
 
