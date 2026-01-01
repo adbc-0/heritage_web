@@ -11,6 +11,8 @@ import { getCanvasSizeFromParent } from "./utils";
 import { Canvas } from "./canvas";
 import { Graph, type HeritageSVGNode, type SVGPersonDetails } from "./graph";
 
+import styles from "./styles.module.css";
+
 import type { CanvasGraphDataset, StartingPosition } from "./graph.types";
 
 type FamilyGraphComponent = {
@@ -111,23 +113,6 @@ function getStartingPosition(canvasSize: CanvasSize, graph: CanvasGraphDataset, 
     throw new Error("unknown focus mode");
 }
 
-// ToDo: Try drawing parents with line between them
-
-function countDOMNodes(node) {
-    if (node == null) {
-        return null;
-    }
-    // Start with 1 to count the current node
-    let count = 1;
-
-    // Recursively add the count of all child nodes
-    for (let child of node.childNodes) {
-        count += countDOMNodes(child);
-    }
-
-    return count;
-}
-
 export function HeritageGraph({ rootPerson, highlightedPerson, inactiveBranches = [] }: FamilyGraphComponent) {
     const navigate = useNavigate();
     const { heritage } = useHeritage();
@@ -164,7 +149,7 @@ export function HeritageGraph({ rootPerson, highlightedPerson, inactiveBranches 
     }, [highlightedPerson, rootPerson, heritage, inactiveBranches, navigate]);
 
     return (
-        <div className="h-full w-full">
+        <div className={styles.canvas_wrapper}>
             <canvas ref={canvasRef} />
         </div>
     );

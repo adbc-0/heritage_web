@@ -52,19 +52,10 @@ const defaultBranches = [
 export default function Home() {
     const [branches, setBranches] = useState(defaultBranches);
     const deferredBranches = useDeferredValue(branches);
-    const [settingsAreOpen, setSettingsAreOpen] = useState(false);
 
     const inactiveBranches = deferredBranches.filter((branch) => !branch.active).flatMap((branch) => branch.rootIndiId);
 
     const renderedBranches = deferredBranches.filter((branch) => branch.active).map((branch) => branch.name);
-
-    function openSVGSettingsView() {
-        setSettingsAreOpen(true);
-    }
-
-    function closeSVGSettingsView() {
-        setSettingsAreOpen(false);
-    }
 
     const toggleBranch = (branchName: string) => {
         const copy = structuredClone(branches);
@@ -84,29 +75,16 @@ export default function Home() {
         <>
             <div className={styles.main}>
                 <div className={styles.tree}>
-                    {settingsAreOpen && (
-                        <div className="flex border-b border-border p-2 justify-end">
-                            <button
-                                type="button"
-                                className="cursor-pointer p-1 rounded-md"
-                                onClick={closeSVGSettingsView}
-                            >
-                                <ChevronLeft size={22} />
-                            </button>
-                        </div>
-                    )}
-                    {!settingsAreOpen && (
-                        <div className={styles.tree_settings}>
-                            <button
-                                type="button"
-                                className={clsx("material-symbols-outlined", styles.icon_button)}
-                                command="show-modal"
-                                commandFor="graph_settings"
-                            >
-                                settings
-                            </button>
-                        </div>
-                    )}
+                    <div className={styles.tree_settings}>
+                        <button
+                            type="button"
+                            className={clsx("material-symbols-outlined", styles.icon_button)}
+                            command="show-modal"
+                            commandFor="graph_settings"
+                        >
+                            settings
+                        </button>
+                    </div>
                     <ErrorBoundary FallbackComponent={ErrorFallback}>
                         <HeritageGraph inactiveBranches={inactiveBranches} />
                     </ErrorBoundary>
