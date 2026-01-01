@@ -1,13 +1,14 @@
-import { useState } from "react";
+import { useDeferredValue, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
-import { ChevronLeft, Settings } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 
 import { ErrorFallback, HeritageGraph } from "@/features/heritageGraph/HeritageGraph";
 
 import { SVGSettings } from "./SVGSettings";
 
 import styles from "./styles.module.css";
+import { clsx } from "clsx";
 
 // ToDo: Remove hardcoded values? Define branches roots in config?
 const defaultBranches = [
@@ -50,11 +51,12 @@ const defaultBranches = [
 
 export default function Home() {
     const [branches, setBranches] = useState(defaultBranches);
+    const deferredBranches = useDeferredValue(branches);
     const [settingsAreOpen, setSettingsAreOpen] = useState(false);
 
-    const inactiveBranches = branches.filter((branch) => !branch.active).flatMap((branch) => branch.rootIndiId);
+    const inactiveBranches = deferredBranches.filter((branch) => !branch.active).flatMap((branch) => branch.rootIndiId);
 
-    const renderedBranches = branches.filter((branch) => branch.active).map((branch) => branch.name);
+    const renderedBranches = deferredBranches.filter((branch) => branch.active).map((branch) => branch.name);
 
     function openSVGSettingsView() {
         setSettingsAreOpen(true);
@@ -79,27 +81,40 @@ export default function Home() {
     };
 
     return (
-        <div className={styles.main}>
-            <div className={styles.tree}>
-                {settingsAreOpen && (
-                    <div className="flex border-b border-border p-2 justify-end">
-                        <button type="button" className="cursor-pointer p-1 rounded-md" onClick={closeSVGSettingsView}>
-                            <ChevronLeft size={22} />
-                        </button>
-                    </div>
-                )}
-                {!settingsAreOpen && (
-                    <div className={styles.tree_settings}>
-                        <button type="button" className={styles.icon_button} onClick={openSVGSettingsView}>
-                            <Settings size={22} />
-                        </button>
-                    </div>
-                )}
-                {settingsAreOpen && <SVGSettings branches={branches} toggleBranch={toggleBranch} />}
-                <ErrorBoundary FallbackComponent={ErrorFallback}>
-                    <HeritageGraph inactiveBranches={inactiveBranches} />
-                </ErrorBoundary>
+        <>
+            <div className={styles.main}>
+                <div className={styles.tree}>
+                    {settingsAreOpen && (
+                        <div className="flex border-b border-border p-2 justify-end">
+                            <button
+                                type="button"
+                                className="cursor-pointer p-1 rounded-md"
+                                onClick={closeSVGSettingsView}
+                            >
+                                <ChevronLeft size={22} />
+                            </button>
+                        </div>
+                    )}
+                    {!settingsAreOpen && (
+                        <div className={styles.tree_settings}>
+                            <button
+                                type="button"
+                                className={clsx("material-symbols-outlined", styles.icon_button)}
+                                command="show-modal"
+                                commandFor="graph_settings"
+                            >
+                                settings
+                            </button>
+                        </div>
+                    )}
+                    <ErrorBoundary FallbackComponent={ErrorFallback}>
+                        <HeritageGraph inactiveBranches={inactiveBranches} />
+                    </ErrorBoundary>
+                </div>
             </div>
-        </div>
+            <dialog id="graph_settings" className={styles.dialog}>
+                <SVGSettings branches={branches} toggleBranch={toggleBranch} />
+            </dialog>
+        </>
     );
 }

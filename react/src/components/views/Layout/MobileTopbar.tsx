@@ -1,79 +1,187 @@
-import { ElementRef, useRef, useState } from "react";
+import { useState } from "react";
 import { preload } from "react-dom";
-
-import { useGlobalSearch } from "@/features/globalSearch/globalSearch.ts";
+import { clsx } from "clsx";
 
 import LOGO from "@/assets/logo.svg";
 
-import styles from "./styles.module.css";
+import { useGlobalSearch } from "@/features/globalSearch/globalSearch.ts";
 
-// const sidebarNavlinkStyle = ({ isActive }: NavLinkRenderProps) =>
-//     isActive
-//         ? "flex gap-2 p-2 bg-highlight-background text-highlight rounded-md"
-//         : "flex gap-2 p-2 bg-background text-foreground rounded-md";
+import styles from "./styles.module.css";
+import { useLocation, useNavigate } from "react-router";
+import { RouterPath } from "@/constants/routePaths.ts";
 
 export function MobileTopbar() {
     preload(LOGO, { as: "image", type: "image/svg+xml" });
 
-    const dialogRef = useRef<ElementRef<"dialog">>(null);
-
+    const location = useLocation();
+    const navigate = useNavigate();
     const { query, searchResults, search } = useGlobalSearch();
 
-    // const [navbarOpen, setNavbarOpen] = useState(false);
     const [searchOpen, setSearchOpen] = useState(false);
+
+    const dockedContainer = searchOpen && searchResults.length > 0;
+    const moreResultsText = searchResults.length > 5;
 
     return (
         <>
             <nav className={styles.top_bar}>
-                <div className={styles.search_input_wrapper}>
-                    <button
-                        type="button"
-                        className={styles.search_input}
-                        onClick={() => {
-                            // setSearchOpen(true);
-                            dialogRef.current.showModal();
+                <div className={styles.input_wrapper}>
+                    <input
+                        name="global_search"
+                        className={clsx(styles.search, {
+                            [styles.open_search]: dockedContainer,
+                        })}
+                        type="text"
+                        placeholder="Szukaj"
+                        value={query}
+                        onChange={(e) => {
+                            search(e.target.value);
                         }}
-                    >
-                        <span>Szukaj</span>
-                    </button>
-                    {/*<input name="global_search" className={styles.search_input} type="text" placeholder="Szukaj" />*/}
-                    {/*<span>SideBar icon</span>*/}
-                    {/*<span>Search icon</span>*/}
+                        onFocus={() => {
+                            setSearchOpen(true);
+                        }}
+                        onBlur={() => {
+                            setSearchOpen(false);
+                        }}
+                    />
+                    <div className={styles.leading_icon}>
+                        <button
+                            type="button"
+                            className={clsx("material-symbols-outlined", styles.leading_icon_style)}
+                            command="show-modal"
+                            commandFor="navigation_rail"
+                        >
+                            menu
+                        </button>
+                    </div>
+                    <div className={styles.trailing_icon}>
+                        <span className={clsx("material-symbols-outlined", styles.trailing_icon_style)}>search</span>
+                    </div>
+                    <div className={styles.docked_container}>
+                        {dockedContainer && (
+                            <>
+                                <div className={styles.search_list}>
+                                    {searchResults.slice(0, 5).map((person) => (
+                                        <button
+                                            key={person.id}
+                                            className={clsx(styles.search_list_item, {
+                                                [styles.has_last_list_element]: !moreResultsText,
+                                            })}
+                                            type="button"
+                                        >
+                                            {person.firstName} {person.nickName} {person.lastName}
+                                        </button>
+                                    ))}
+                                </div>
+                                {moreResultsText && (
+                                    <>
+                                        <div className={styles.break_line} />
+                                        <button className={clsx(styles.search_list_item, styles.has_last_list_element)}>
+                                            Zobacz pozostałe wyniki ({searchResults.length - 5})
+                                        </button>
+                                    </>
+                                )}
+                            </>
+                        )}
+                    </div>
                 </div>
             </nav>
-            <dialog ref={dialogRef} closedby="any" className={styles.modal}>
-                <div>
-                    <div className={styles.active_search_input_section}>
-                        <button
-                            className={styles.active_search_button}
-                            onClick={() => {
-                                setSearchOpen(false);
-                            }}
-                        >
-                            ‹
-                        </button>
-                        <input
-                            // /* eslint-disable-next-line jsx-a11y/no-autofocus */
-                            // autoFocus
-                            type="text"
-                            placeholder="Szukaj"
-                            className={styles.active_search_input}
-                            value={query}
-                            onChange={(e) => {
-                                search(e.target.value);
-                            }}
-                        />
-                    </div>
-                    <hr className={styles.active_search_break} />
-                    {searchResults.map((person) => (
-                        <div key={person.id} className={styles.list_item}>
-                            {person.firstName} {person.lastName}
-                        </div>
-                    ))}
-                </div>
+            <dialog id="navigation_rail" closedby="any" className={styles.modal}>
+                <ul className={styles.navigation_rail}>
+                    <button
+                        type="button"
+                        className={clsx(styles.navigation_item, {
+                            [styles.active_navigation_item]: location.pathname === RouterPath.ROOT,
+                        })}
+                        command="close"
+                        commandFor="navigation_rail"
+                        onClick={() => {
+                            void navigate(RouterPath.ROOT);
+                        }}
+                    >
+                        <span className={clsx("material-symbols-outlined", styles.navigation_item_icon)}>
+                            family_history
+                        </span>
+                        <span className={styles.navigation_item_text}>Drzewo</span>
+                    </button>
+                    <button
+                        type="button"
+                        className={clsx(styles.navigation_item, {
+                            [styles.active_navigation_item]: location.pathname === RouterPath.OSOBY,
+                        })}
+                        command="close"
+                        commandFor="navigation_rail"
+                        onClick={() => {
+                            void navigate(RouterPath.OSOBY);
+                        }}
+                    >
+                        <span className={clsx("material-symbols-outlined", styles.navigation_item_icon)}>
+                            table_view
+                        </span>
+                        <span className={styles.navigation_item_text}>Osoby</span>
+                    </button>
+                    <button
+                        type="button"
+                        className={clsx(styles.navigation_item, {
+                            [styles.active_navigation_item]: location.pathname === RouterPath.O_MNIE,
+                        })}
+                        command="close"
+                        commandFor="navigation_rail"
+                        onClick={() => {
+                            void navigate(RouterPath.O_MNIE);
+                        }}
+                    >
+                        <span className={clsx("material-symbols-outlined", styles.navigation_item_icon)}>info</span>
+                        <span className={styles.navigation_item_text}>O nas</span>
+                    </button>
+                    <button
+                        type="button"
+                        className={clsx(styles.navigation_item, {
+                            [styles.active_navigation_item]: location.pathname === RouterPath.RODO,
+                        })}
+                        command="close"
+                        commandFor="navigation_rail"
+                        onClick={() => {
+                            void navigate(RouterPath.RODO);
+                        }}
+                    >
+                        <span className={clsx("material-symbols-outlined", styles.navigation_item_icon)}>policy</span>
+                        <span className={styles.navigation_item_text}>RODO</span>
+                    </button>
+                    <button
+                        type="button"
+                        className={clsx(styles.navigation_item, {
+                            [styles.active_navigation_item]: location.pathname === RouterPath.KONTAKT,
+                        })}
+                        command="close"
+                        commandFor="navigation_rail"
+                        onClick={() => {
+                            void navigate(RouterPath.KONTAKT);
+                        }}
+                    >
+                        <span className={clsx("material-symbols-outlined", styles.navigation_item_icon)}>
+                            contact_page
+                        </span>
+                        <span className={styles.navigation_item_text}>Kontakt</span>
+                    </button>
+                    <button
+                        type="button"
+                        className={clsx(styles.navigation_item, {
+                            [styles.active_navigation_item]: location.pathname === RouterPath.WSPARCIE,
+                        })}
+                        command="close"
+                        commandFor="navigation_rail"
+                        onClick={() => {
+                            void navigate(RouterPath.WSPARCIE);
+                        }}
+                    >
+                        <span className={clsx("material-symbols-outlined", styles.navigation_item_icon)}>
+                            crowdsource
+                        </span>
+                        <span className={styles.navigation_item_text}>Wsparcie</span>
+                    </button>
+                </ul>
             </dialog>
         </>
     );
 }
-
-// instead of using dialogs I could conditionally change style on input focus
