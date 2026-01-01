@@ -111,6 +111,23 @@ function getStartingPosition(canvasSize: CanvasSize, graph: CanvasGraphDataset, 
     throw new Error("unknown focus mode");
 }
 
+// ToDo: Try drawing parents with line between them
+
+function countDOMNodes(node) {
+    if (node == null) {
+        return null;
+    }
+    // Start with 1 to count the current node
+    let count = 1;
+
+    // Recursively add the count of all child nodes
+    for (let child of node.childNodes) {
+        count += countDOMNodes(child);
+    }
+
+    return count;
+}
+
 export function HeritageGraph({ rootPerson, highlightedPerson, inactiveBranches = [] }: FamilyGraphComponent) {
     const navigate = useNavigate();
     const { heritage } = useHeritage();

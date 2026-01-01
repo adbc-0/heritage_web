@@ -4,7 +4,6 @@ import { useDeviceDetect } from "@/features/deviceMode/deviceModeContext";
 import { DeviceType } from "@/features/deviceMode/constants";
 
 import { DesktopTopbar } from "./DesktopTopbar";
-import { DesktopFooter } from "./DesktopFooter";
 import { MobileTopbar } from "./MobileTopbar";
 
 import styles from "./styles.module.css";
@@ -22,18 +21,17 @@ export function Layout() {
     const { deviceType } = useDeviceDetect();
     if (deviceType === DeviceType.DESKTOP) {
         return (
-            <div className="min-h-full grid grid-rows-[min-content_auto_min-content] grid-cols-1 bg-background-darker">
+            <div className={styles.main_desktop}>
                 <DesktopTopbar />
-                <main>
+                <main className={styles.desktop_content}>
                     <Outlet />
                 </main>
-                <DesktopFooter />
             </div>
         );
     }
     if (deviceType === DeviceType.MOBILE) {
         return (
-            <div className={styles.mobile_wrapper}>
+            <div className={styles.main}>
                 <MobileTopbar />
                 <main>
                     <Outlet />

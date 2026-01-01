@@ -281,21 +281,24 @@
         --md-palette-neutral-variant-99: #FAFDF7;
         --md-palette-neutral-variant-100: #FFFFFF;
 
-        --border-radius: 1.5rem;
-        --text-lg: 2rem;
-
         /* Typography */
         --md-sys-typescale-body-large-size: 1rem; /* 16px */
         --md-sys-typescale-body-medium-size: 0.875rem; /* 14px */
         --md-sys-typescale-body-small-size: 0.75rem; /* 12px */
 
         --md-sys-typescale-body-large-weight: 400;
+
+        --md-sys-elevation-level3: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
     }
 
     /* ALSO FIXES UNSTYLED CONTENT FLASH WHEN DARK MODE */
     body {
         background-color: var(--md-sys-color-surface);
         color: var(--md-sys-color-on-background);
+    }
+
+    input {
+        accent-color: var(--md-sys-color-primary);
     }
 }
 

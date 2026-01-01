@@ -1,6 +1,15 @@
-import { useHeritage } from "@/features/heritageData/heritageContext.ts";
 import { useState } from "react";
+
+import { useHeritage } from "@/features/heritageData/heritageContext.ts";
+
 import { FullPerson } from "@/types/heritage.types.ts";
+
+function composeFullName(person: FullPerson) {
+    return [person.firstName, person.nickName, person.lastName]
+        .filter((name) => name !== "")
+        .map((name) => name.toLowerCase())
+        .join(" ");
+}
 
 export function useGlobalSearch() {
     const { heritage } = useHeritage();
@@ -15,7 +24,8 @@ export function useGlobalSearch() {
             throw new Error("No data to search through");
         }
 
-        if (newQuery === "") {
+        const emptySearchQuery = newQuery.trim() === "";
+        if (emptySearchQuery) {
             setSearchResults([]);
             return;
         }
@@ -23,7 +33,10 @@ export function useGlobalSearch() {
         const queriedPeople = heritage.people
             .filter((person) => person.type === "PERSON_NODE")
             .filter((person) => person.firstName.length !== 0 && person.lastName.length !== 0)
-            .filter((person) => person.firstName.includes(newQuery));
+            .map((person) => ({ ...person, fullName: composeFullName(person) }))
+            .filter((person) => person.fullName.includes(newQuery.toLowerCase()));
+
+        console.log(queriedPeople, newQuery.toLowerCase());
 
         setSearchResults(queriedPeople);
     };
