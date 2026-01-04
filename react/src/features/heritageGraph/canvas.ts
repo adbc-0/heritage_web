@@ -130,12 +130,11 @@ export class Canvas {
         this.#canvas.style.height = "0";
 
         const { height, width } = getStretchedCanvasSize(this.#canvas);
-
         const dpr = window.devicePixelRatio || 1;
 
-        this.#canvas.style.width = `${width.toString()}px`;
-        this.#canvas.style.height = `${height.toString()}px`;
-
+        this.#canvas.style.width = `100%`;
+        this.#canvas.style.height = `100%`;
+        this.#canvas.style.display = `block`;
         this.#canvas.width = width * dpr;
         this.#canvas.height = height * dpr;
     }

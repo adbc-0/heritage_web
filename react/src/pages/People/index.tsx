@@ -5,10 +5,13 @@ import { ArrowDown01, ArrowDown10, ArrowDownAZ, ArrowDownZa } from "lucide-react
 import { isPersonInvisible, searchFamily, searchPerson } from "@/features/heritageGraph/utils";
 import { RouterPath } from "@/constants/routePaths";
 import { useHeritage } from "@/features/heritageData/heritageContext";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Table, TableBody, td, TableHead, TableHeader, tr } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 
+import styles from "./styles.module.css";
+
 import type { FullPerson, HeritageRaw } from "@/types/heritage.types.ts";
+import clsx from "clsx";
 
 type Person = FullPerson & {
     dad: string | null;
@@ -235,6 +238,7 @@ function renderSortingIcon(selectedCriterion: SortByType) {
     };
 }
 
+// ToDo: Add pagination
 export default function People() {
     const { heritage } = useHeritage();
     const navigate = useNavigate();
@@ -257,134 +261,139 @@ export default function People() {
     }
 
     return (
-        <div className="px-8 py-4 h-full">
-            <Input
-                className="max-w-sm bg-background mb-4"
-                placeholder="Wyszukaj osobę..."
-                value={filterPeopleQuery}
-                onChange={(event) => {
-                    setFilterPeopleQuery(event.target.value.toLowerCase());
-                }}
-            />
-            <div className="max-w-[calc(100vw-4rem)] rounded-md border border-border bg-background block">
-                <Table>
-                    <TableHeader>
-                        <TableRow className="border-border hover:bg-inherit">
-                            <TableHead>
-                                <button
-                                    type="button"
-                                    className="w-full flex justify-center items-center gap-1 cursor-pointer py-1 rounded-md hover:bg-muted/50"
-                                    onClick={() => {
-                                        changeSortingCriterion(SortBy.FIRST_NAME);
-                                    }}
-                                >
-                                    Imię
-                                    {renderSortingIcon(SortBy.FIRST_NAME)(sortByCriterion, sortDirection)}
-                                </button>
-                            </TableHead>
-                            <TableHead>
-                                <button
-                                    type="button"
-                                    className="w-full flex justify-center items-center gap-1 cursor-pointer py-1 rounded-md hover:bg-muted/50"
-                                    onClick={() => {
-                                        changeSortingCriterion(SortBy.NICK_NAME);
-                                    }}
-                                >
-                                    Przydomek
-                                    {renderSortingIcon(SortBy.NICK_NAME)(sortByCriterion, sortDirection)}
-                                </button>
-                            </TableHead>
-                            <TableHead>
-                                <button
-                                    type="button"
-                                    className="w-full flex justify-center items-center gap-1 cursor-pointer py-1 rounded-md hover:bg-muted/50"
-                                    onClick={() => {
-                                        changeSortingCriterion(SortBy.LAST_NAME);
-                                    }}
-                                >
-                                    Nazwisko
-                                    {renderSortingIcon(SortBy.LAST_NAME)(sortByCriterion, sortDirection)}
-                                </button>
-                            </TableHead>
-                            <TableHead>
-                                <button
-                                    type="button"
-                                    className="w-full flex justify-center items-center gap-1 cursor-pointer py-1 rounded-md hover:bg-muted/50"
-                                    onClick={() => {
-                                        changeSortingCriterion(SortBy.FATHER);
-                                    }}
-                                >
-                                    Ojciec
-                                    {renderSortingIcon(SortBy.FATHER)(sortByCriterion, sortDirection)}
-                                </button>
-                            </TableHead>
-                            <TableHead>
-                                <button
-                                    type="button"
-                                    className="w-full flex justify-center items-center gap-1 cursor-pointer py-1 rounded-md hover:bg-muted/50"
-                                    onClick={() => {
-                                        changeSortingCriterion(SortBy.MOTHER);
-                                    }}
-                                >
-                                    Matka
-                                    {renderSortingIcon(SortBy.MOTHER)(sortByCriterion, sortDirection)}
-                                </button>
-                            </TableHead>
-                            <TableHead>
-                                <button
-                                    type="button"
-                                    className="w-full flex justify-center items-center gap-1 cursor-pointer py-1 rounded-md hover:bg-muted/50"
-                                    onClick={() => {
-                                        changeSortingCriterion(SortBy.BIRTH);
-                                    }}
-                                >
-                                    Rok urodzenia
-                                    {renderSortingIcon(SortBy.BIRTH)(sortByCriterion, sortDirection)}
-                                </button>
-                            </TableHead>
-                            <TableHead>
-                                <button
-                                    type="button"
-                                    className="w-full flex justify-center items-center gap-1 cursor-pointer py-1 rounded-md hover:bg-muted/50"
-                                    onClick={() => {
-                                        changeSortingCriterion(SortBy.DEATH);
-                                    }}
-                                >
-                                    Rok śmierci
-                                    {renderSortingIcon(SortBy.DEATH)(sortByCriterion, sortDirection)}
-                                </button>
-                            </TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {people.length ? (
-                            people.map((person) => (
-                                <TableRow
-                                    className="cursor-pointer border-border"
+        <div className={styles.view}>
+            <div className={styles.input_wrapper}>
+                <div className={styles.input}>
+                    <input
+                        className={styles.search}
+                        placeholder="Wyszukaj osobę..."
+                        value={filterPeopleQuery}
+                        onChange={(event) => {
+                            setFilterPeopleQuery(event.target.value.toLowerCase());
+                        }}
+                    />
+                    <div className={styles.leading_icon}>
+                        <span className={clsx("material-symbols-outlined", styles.leading_icon_style)}>search</span>
+                    </div>
+                </div>
+            </div>
+            {people.length > 0 ? (
+                <div className={styles.table_wrapper}>
+                    <table className={styles.table}>
+                        <thead>
+                            <tr className={styles.table_row}>
+                                <th className={styles.table_head_element}>
+                                    <button
+                                        type="button"
+                                        className={styles.sortable_properties}
+                                        onClick={() => {
+                                            changeSortingCriterion(SortBy.FIRST_NAME);
+                                        }}
+                                    >
+                                        <span>Imię</span>
+                                        {renderSortingIcon(SortBy.FIRST_NAME)(sortByCriterion, sortDirection)}
+                                    </button>
+                                </th>
+                                <th className={styles.table_head_element}>
+                                    <button
+                                        type="button"
+                                        className={styles.sortable_properties}
+                                        onClick={() => {
+                                            changeSortingCriterion(SortBy.NICK_NAME);
+                                        }}
+                                    >
+                                        <span>Przydomek</span>
+                                        {renderSortingIcon(SortBy.NICK_NAME)(sortByCriterion, sortDirection)}
+                                    </button>
+                                </th>
+                                <th className={styles.table_head_element}>
+                                    <button
+                                        type="button"
+                                        className={styles.sortable_properties}
+                                        onClick={() => {
+                                            changeSortingCriterion(SortBy.LAST_NAME);
+                                        }}
+                                    >
+                                        <span>Nazwisko</span>
+                                        {renderSortingIcon(SortBy.LAST_NAME)(sortByCriterion, sortDirection)}
+                                    </button>
+                                </th>
+                                <th className={styles.table_head_element}>
+                                    <button
+                                        type="button"
+                                        className={styles.sortable_properties}
+                                        onClick={() => {
+                                            changeSortingCriterion(SortBy.FATHER);
+                                        }}
+                                    >
+                                        <span>Ojciec</span>
+                                        {renderSortingIcon(SortBy.FATHER)(sortByCriterion, sortDirection)}
+                                    </button>
+                                </th>
+                                <th className={styles.table_head_element}>
+                                    <button
+                                        type="button"
+                                        className={styles.sortable_properties}
+                                        onClick={() => {
+                                            changeSortingCriterion(SortBy.MOTHER);
+                                        }}
+                                    >
+                                        <span>Matka</span>
+                                        {renderSortingIcon(SortBy.MOTHER)(sortByCriterion, sortDirection)}
+                                    </button>
+                                </th>
+                                <th className={styles.table_head_element}>
+                                    <button
+                                        type="button"
+                                        className={styles.sortable_properties}
+                                        onClick={() => {
+                                            changeSortingCriterion(SortBy.BIRTH);
+                                        }}
+                                    >
+                                        <span>Rok urodzenia</span>
+                                        {renderSortingIcon(SortBy.BIRTH)(sortByCriterion, sortDirection)}
+                                    </button>
+                                </th>
+                                <th className={styles.table_head_element}>
+                                    <button
+                                        type="button"
+                                        className={styles.sortable_properties}
+                                        onClick={() => {
+                                            changeSortingCriterion(SortBy.DEATH);
+                                        }}
+                                    >
+                                        <span>Rok śmierci</span>
+                                        {renderSortingIcon(SortBy.DEATH)(sortByCriterion, sortDirection)}
+                                    </button>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {people.map((person) => (
+                                <tr
                                     key={person.id}
+                                    className={styles.table_row}
                                     onClick={() => {
                                         void navigate(`${RouterPath.OSOBY}/${person.id}`);
                                     }}
                                 >
-                                    <TableCell className="text-center">{person.firstName}</TableCell>
-                                    <TableCell className="text-center">{person.nickName}</TableCell>
-                                    <TableCell className="text-center">{person.lastName}</TableCell>
-                                    <TableCell className="text-center">{person.dad}</TableCell>
-                                    <TableCell className="text-center">{person.mom}</TableCell>
-                                    <TableCell className="text-center">{person.birth?.date.year}</TableCell>
-                                    <TableCell className="text-center">{person.death?.date.year}</TableCell>
-                                </TableRow>
-                            ))
-                        ) : (
-                            <TableRow className="border-border hover:bg-inherit">
-                                <TableCell colSpan={7} className="text-center">
-                                    Brak wyników.
-                                </TableCell>
-                            </TableRow>
-                        )}
-                    </TableBody>
-                </Table>
-            </div>
+                                    <td className={styles.table_element}>{person.firstName}</td>
+                                    <td className={styles.table_element}>{person.nickName}</td>
+                                    <td className={styles.table_element}>{person.lastName}</td>
+                                    <td className={styles.table_element}>{person.dad}</td>
+                                    <td className={styles.table_element}>{person.mom}</td>
+                                    <td className={styles.table_element}>{person.birth?.date.year}</td>
+                                    <td className={styles.table_element}>{person.death?.date.year}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            ) : (
+                <div>
+                    <p className={styles.empty_result}>Brak wyników</p>
+                </div>
+            )}
         </div>
     );
 }

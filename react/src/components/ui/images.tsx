@@ -1,13 +1,4 @@
-import {
-    ComponentRef,
-    createContext,
-    ReactElement,
-    TouchEvent,
-    useContext,
-    useEffect,
-    useRef,
-    useState,
-} from "react";
+import { ComponentRef, createContext, ReactElement, TouchEvent, useContext, useEffect, useRef, useState } from "react";
 import { CircleArrowLeft, CircleArrowRight, CircleX, ImageDown } from "lucide-react";
 
 import { SWIPE_THRESHOLD } from "@/constants/config";
@@ -132,9 +123,7 @@ export function ImageInspection({ allFiles }: ImageInspectionProps) {
             throw new Error("image must be inspected to find prev");
         }
 
-        const currentImageIndex = allFiles.findIndex(
-            (image) => image.filename === inspectedImage.filename,
-        );
+        const currentImageIndex = allFiles.findIndex((image) => image.filename === inspectedImage.filename);
 
         const imageIndexNotFound = currentImageIndex === -1;
         if (imageIndexNotFound) {
@@ -164,9 +153,7 @@ export function ImageInspection({ allFiles }: ImageInspectionProps) {
             throw new Error("image must be inspected to find prev");
         }
 
-        const currentImageIndex = allFiles.findIndex(
-            (image) => inspectedImage.filename === image.filename,
-        );
+        const currentImageIndex = allFiles.findIndex((image) => inspectedImage.filename === image.filename);
         const imageIndexNotFound = currentImageIndex === -1;
         if (imageIndexNotFound) {
             throw new Error("could not find image");

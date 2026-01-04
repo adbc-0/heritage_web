@@ -50,7 +50,7 @@ export default function Person() {
 
     return (
         <Tabs defaultValue="basic" className="flex flex-col h-full sm:pt-3">
-            <div className="flex overflow-x-auto sm:justify-center">
+            <di className="flex overflow-x-auto sm:justify-center">
                 <TabsList className="bg-background grow rounded-none sm:grow-0 sm:rounded-lg">
                     <TabsTrigger className="grow cursor-pointer data-[state=active]:bg-background-darker" value="basic">
                         Informacje
@@ -74,7 +74,7 @@ export default function Person() {
                         Notatki
                     </TabsTrigger>
                 </TabsList>
-            </div>
+            </di>
             <TabsContent className="m-0" value="basic">
                 <Basic />
             </TabsContent>
