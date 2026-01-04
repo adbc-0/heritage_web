@@ -49,10 +49,10 @@ Full docker cleanup
 docker system prune -a
 ```
 
-Login using github pesonal access token
+Login using github pesonal access token. Important to update when regenerating access token.
 
 ```
-echo <personal_access_token> | docker login ghcr.io -u <github-login> --password-stdin
+echo "<personal_access_token>" | docker login ghcr.io -u <github-login> --password-stdin
 ```
 
 ## Web App
