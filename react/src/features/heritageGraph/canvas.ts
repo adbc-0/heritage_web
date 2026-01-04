@@ -34,7 +34,7 @@ const TEXT_COLOR = "#000";
 /** @description extra parent line is above normal one so it's more visible */
 const EXTRA_PARENT_OFFSET = 10;
 /** @description do not render all details when zoomed out. They are not visible anyway */
-const LOD_THRESHOLD = 0.2;
+// const LOD_THRESHOLD = 0.2;
 
 interface CanvasOptions {
     startingPosition: StartingPosition;
@@ -151,21 +151,21 @@ export class Canvas {
         this.#canvasContext.translate(this.#canvasTransform.x, this.#canvasTransform.y);
         this.#canvasContext.scale(this.#canvasTransform.k, this.#canvasTransform.k);
 
-        if (this.#canvasTransform.k > LOD_THRESHOLD) {
-            for (const node of this.#graphDataset.descendants) {
-                if (node.parent && !node.parent.data.empty && !node.data.treatedAsRemarriage) {
-                    this.#drawParentToChildLine(node, node.parent);
-                }
-            }
-
-            for (const connection of this.#graphDataset.extraParents) {
-                this.#drawExtraParentToChildLine(connection.from, connection.to);
-            }
-
-            for (const connection of this.#graphDataset.remarriages) {
-                this.#drawRemarriageLine(connection.from, connection.to);
+        // if (this.#canvasTransform.k > LOD_THRESHOLD) {
+        for (const node of this.#graphDataset.descendants) {
+            if (node.parent && !node.parent.data.empty && !node.data.treatedAsRemarriage) {
+                this.#drawParentToChildLine(node, node.parent);
             }
         }
+
+        for (const connection of this.#graphDataset.extraParents) {
+            this.#drawExtraParentToChildLine(connection.from, connection.to);
+        }
+
+        for (const connection of this.#graphDataset.remarriages) {
+            this.#drawRemarriageLine(connection.from, connection.to);
+        }
+        // }
 
         for (const node of this.#graphDataset.descendants) {
             this.#drawNode(node);
@@ -243,21 +243,21 @@ export class Canvas {
                 width: personWidth,
             });
 
-            if (this.#canvasTransform.k > LOD_THRESHOLD) {
-                this.#clickableAreas.push({
-                    x: centerNode,
-                    y: node.y,
-                    width: personWidth,
-                    height: NODE_HEIGHT,
-                    personId: person.id,
-                });
+            // if (this.#canvasTransform.k > LOD_THRESHOLD) {
+            this.#clickableAreas.push({
+                x: centerNode,
+                y: node.y,
+                width: personWidth,
+                height: NODE_HEIGHT,
+                personId: person.id,
+            });
 
-                drawText(this.#canvasContext, {
-                    person,
-                    x: centerNode + personWidth / 2,
-                    y: node.y,
-                });
-            }
+            drawText(this.#canvasContext, {
+                person,
+                x: centerNode + personWidth / 2,
+                y: node.y,
+            });
+            // }
         } else if (node.data.members.length === 2) {
             const sorted = Array.from(node.data.members.values()).toSorted();
             const firstPartner = sorted[0];
@@ -278,21 +278,21 @@ export class Canvas {
                 width: secondPartnerWidth,
             });
 
-            if (this.#canvasTransform.k > LOD_THRESHOLD) {
-                this.#clickableAreas.push({
-                    x: startX,
-                    y: node.y,
-                    width: secondPartnerWidth,
-                    height: NODE_HEIGHT,
-                    personId: secondPartner.id,
-                });
+            // if (this.#canvasTransform.k > LOD_THRESHOLD) {
+            this.#clickableAreas.push({
+                x: startX,
+                y: node.y,
+                width: secondPartnerWidth,
+                height: NODE_HEIGHT,
+                personId: secondPartner.id,
+            });
 
-                drawText(this.#canvasContext, {
-                    person: secondPartner,
-                    x: startX + secondPartnerWidth / 2,
-                    y: node.y,
-                });
-            }
+            drawText(this.#canvasContext, {
+                person: secondPartner,
+                x: startX + secondPartnerWidth / 2,
+                y: node.y,
+            });
+            // }
 
             drawRectangle(this.#canvasContext, {
                 color: firstPartner.color,
@@ -301,21 +301,21 @@ export class Canvas {
                 width: firstPartnerWidth,
             });
 
-            if (this.#canvasTransform.k > LOD_THRESHOLD) {
-                this.#clickableAreas.push({
-                    x: startX + secondPartnerWidth,
-                    y: node.y,
-                    width: firstPartnerWidth,
-                    height: NODE_HEIGHT,
-                    personId: firstPartner.id,
-                });
+            // if (this.#canvasTransform.k > LOD_THRESHOLD) {
+            this.#clickableAreas.push({
+                x: startX + secondPartnerWidth,
+                y: node.y,
+                width: firstPartnerWidth,
+                height: NODE_HEIGHT,
+                personId: firstPartner.id,
+            });
 
-                drawText(this.#canvasContext, {
-                    person: firstPartner,
-                    x: startX + secondPartnerWidth + firstPartnerWidth / 2,
-                    y: node.y,
-                });
-            }
+            drawText(this.#canvasContext, {
+                person: firstPartner,
+                x: startX + secondPartnerWidth + firstPartnerWidth / 2,
+                y: node.y,
+            });
+            // }
         } else {
             throw new Error("polygamy not handled");
         }
