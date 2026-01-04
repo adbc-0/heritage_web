@@ -1,14 +1,13 @@
 import { useState } from "react";
 import { preload } from "react-dom";
+import { useLocation, useNavigate } from "react-router";
 import { clsx } from "clsx";
 
-import LOGO from "@/assets/logo.svg";
-
+import { RouterPath } from "@/constants/routePaths.ts";
 import { useGlobalSearch } from "@/features/globalSearch/globalSearch.ts";
 
+import LOGO from "@/assets/logo.svg";
 import styles from "./styles.module.css";
-import { useLocation, useNavigate } from "react-router";
-import { RouterPath } from "@/constants/routePaths.ts";
 
 export function MobileTopbar() {
     preload(LOGO, { as: "image", type: "image/svg+xml" });
@@ -115,9 +114,7 @@ export function MobileTopbar() {
                             void navigate(RouterPath.OSOBY);
                         }}
                     >
-                        <span className={clsx("material-symbols-outlined", styles.navigation_item_icon)}>
-                            table_view
-                        </span>
+                        <span className={clsx("material-symbols-outlined", styles.navigation_item_icon)}>groups</span>
                         <span className={styles.navigation_item_text}>Osoby</span>
                     </button>
                     <button

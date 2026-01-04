@@ -10,24 +10,29 @@
 }
 
 .desktop_content {
-    margin-left: 5.4rem;
+    margin-left: 6rem;
     height: 100%;
+    /*border-radius: 24px;*/
+    /*overflow: hidden;*/
 }
-
 
 .navigation_sidebar {
     display: flex;
     flex-direction: column;
+    justify-content: center;
+
     position: fixed;
     left: 0;
     top: 0;
     height: 100%;
-    width: 5.4rem;
-    background-color: inherit;
+    width: 6rem;
+    background-color: var(--md-sys-color-surface);
+
+    z-index: 9;
+    gap: 0.5rem;
 }
 
 /* --- */
-
 
 .modal {
     padding: 0;
@@ -107,7 +112,7 @@
 }
 
 .trailing_icon_style {
-    color: var(--md-sys-color-on-surface-variant)
+    color: var(--md-sys-color-on-surface-variant);
 }
 
 .leading_icon {
@@ -136,6 +141,9 @@
 
 .docked_container {
     position: absolute;
+
+    /* Add variable */
+    z-index: 10;
 
     position-anchor: --cusom-anchor;
     top: anchor(bottom);
@@ -209,11 +217,46 @@
 
 .navigation_item_icon {
     font-size: 1.5rem;
-    color: var(--md-palette-neutral-30)
+    color: var(--md-palette-neutral-30);
 }
 
 .navigation_item_text {
     display: block;
     font-size: var(--md-sys-typescale-body-medium-size);
-    color: var(--md-palette-neutral-30)
+    color: var(--md-palette-neutral-30);
+}
+
+.desktop_nav_rail_item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    color: var(--md-sys-color-on-surface-variant);
+}
+
+.link {
+    padding: 0.1rem 0;
+    text-decoration: none;
+
+    &:hover {
+        .desktop_nav_icon {
+            border-radius: 20px;
+            background-color: rgb(from var(--md-sys-color-on-secondary-container) r g b / 8%);
+        }
+    }
+}
+
+.active_link {
+    .desktop_nav_icon {
+        border-radius: 20px;
+        background-color: var(--md-sys-color-secondary-container);
+    }
+}
+
+.desktop_nav_icon {
+    display: block;
+    padding: 0.3rem 1rem;
+
+    color: var(--md-sys-color-on-surface-variant);
 }

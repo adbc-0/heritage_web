@@ -46,9 +46,7 @@ export function Clipboard({ text, className }: ClipboardProps) {
                     </TooltipTrigger>
                 </div>
                 <TooltipContent sideOffset={5}>
-                    <span className="bg-black text-white text-xs p-1.5 rounded-md">
-                        Kopiuj do schowka
-                    </span>
+                    <span className="bg-black text-white text-xs p-1.5 rounded-md">Kopiuj do schowka</span>
                 </TooltipContent>
             </Tooltip>
         </TooltipProvider>

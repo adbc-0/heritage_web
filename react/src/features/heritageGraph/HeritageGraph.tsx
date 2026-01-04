@@ -148,11 +148,7 @@ export function HeritageGraph({ rootPerson, highlightedPerson, inactiveBranches 
         };
     }, [highlightedPerson, rootPerson, heritage, inactiveBranches, navigate]);
 
-    return (
-        <div className={styles.canvas_wrapper}>
-            <canvas ref={canvasRef} />
-        </div>
-    );
+    return <canvas ref={canvasRef} className={styles.canvas} />;
 }
 
 export function ErrorFallback() {

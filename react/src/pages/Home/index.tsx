@@ -1,14 +1,16 @@
 import { useDeferredValue, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-
-import { ChevronLeft } from "lucide-react";
+import { clsx } from "clsx";
 
 import { ErrorFallback, HeritageGraph } from "@/features/heritageGraph/HeritageGraph";
 
 import { SVGSettings } from "./SVGSettings";
 
+import { useDeviceDetect } from "@/features/deviceMode/deviceModeContext";
+import { DeviceType } from "@/features/deviceMode/constants";
+import { useGlobalSearch } from "@/features/globalSearch/globalSearch";
+
 import styles from "./styles.module.css";
-import { clsx } from "clsx";
 
 // ToDo: Remove hardcoded values? Define branches roots in config?
 const defaultBranches = [
@@ -50,11 +52,16 @@ const defaultBranches = [
 ];
 
 export default function Home() {
+    const { deviceType } = useDeviceDetect();
+    const { query, searchResults, search } = useGlobalSearch();
+
+    const [searchOpen, setSearchOpen] = useState(false);
     const [branches, setBranches] = useState(defaultBranches);
     const deferredBranches = useDeferredValue(branches);
 
+    const dockedContainer = searchOpen && searchResults.length > 0;
+    const moreResultsText = searchResults.length > 5;
     const inactiveBranches = deferredBranches.filter((branch) => !branch.active).flatMap((branch) => branch.rootIndiId);
-
     const renderedBranches = deferredBranches.filter((branch) => branch.active).map((branch) => branch.name);
 
     const toggleBranch = (branchName: string) => {
@@ -73,8 +80,79 @@ export default function Home() {
 
     return (
         <>
-            <div className={styles.main}>
-                <div className={styles.tree}>
+            <div
+                className={clsx({
+                    [styles.home_desktop]: deviceType === DeviceType.DESKTOP,
+                    [styles.home]: deviceType === DeviceType.MOBILE,
+                })}
+            >
+                {deviceType === DeviceType.DESKTOP && (
+                    <div className={styles.input_wrapper}>
+                        <div className={styles.input}>
+                            <input
+                                name="global_search"
+                                className={clsx(styles.search, {
+                                    [styles.open_search]: dockedContainer,
+                                })}
+                                type="text"
+                                placeholder="Szukaj"
+                                value={query}
+                                onChange={(e) => {
+                                    search(e.target.value);
+                                }}
+                                onFocus={() => {
+                                    setSearchOpen(true);
+                                }}
+                                onBlur={() => {
+                                    setSearchOpen(false);
+                                }}
+                            />
+                            <div className={styles.leading_icon}>
+                                <span className={clsx("material-symbols-outlined", styles.leading_icon_style)}>
+                                    search
+                                </span>
+                            </div>
+                            <div className={styles.docked_container}>
+                                {dockedContainer && (
+                                    <>
+                                        <div className={styles.search_list}>
+                                            {searchResults.slice(0, 5).map((person) => (
+                                                <button
+                                                    key={person.id}
+                                                    className={clsx(styles.search_list_item, {
+                                                        [styles.has_last_list_element]: !moreResultsText,
+                                                    })}
+                                                    type="button"
+                                                >
+                                                    {person.firstName} {person.nickName} {person.lastName}
+                                                </button>
+                                            ))}
+                                        </div>
+                                        {moreResultsText && (
+                                            <>
+                                                <div className={styles.break_line} />
+                                                <button
+                                                    className={clsx(
+                                                        styles.search_list_item,
+                                                        styles.has_last_list_element,
+                                                    )}
+                                                >
+                                                    Zobacz pozostałe wyniki ({searchResults.length - 5})
+                                                </button>
+                                            </>
+                                        )}
+                                    </>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                )}
+                <div
+                    className={clsx({
+                        [styles.desktop_tree]: deviceType === DeviceType.DESKTOP,
+                        [styles.tree]: deviceType === DeviceType.MOBILE,
+                    })}
+                >
                     <div className={styles.tree_settings}>
                         <button
                             type="button"
