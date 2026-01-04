@@ -9,7 +9,8 @@
 }
 
 .input_wrapper {
-    padding: 1rem 0;
+    padding-top: 1rem;
+    /*padding: 1rem 0;*/
 }
 
 .input {
@@ -76,15 +77,44 @@
 .table_wrapper {
     overflow-x: auto;
     width: 100%;
+
+    padding: 1rem 0;
 }
 
 .table {
     width: 100%;
-    border-spacing: 0 2px;
+    border-spacing: 2px;
 }
 
 .table_row {
+    border-radius: 16px;
     background-color: var(--md-sys-color-surface-container-low);
+
+    &:first-of-type {
+        .table_head_element {
+            border-radius: 16px;
+        }
+
+        .table_element {
+            &:first-of-type {
+                border-top-left-radius: 16px;
+            }
+            &:last-of-type {
+                border-top-right-radius: 16px;
+            }
+        }
+    }
+
+    &:last-of-type {
+        .table_element {
+            &:first-of-type {
+                border-bottom-left-radius: 16px;
+            }
+            &:last-of-type {
+                border-bottom-right-radius: 16px;
+            }
+        }
+    }
 }
 
 .table_head_element {
