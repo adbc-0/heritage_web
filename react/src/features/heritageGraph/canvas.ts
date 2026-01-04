@@ -152,21 +152,24 @@ export class Canvas {
         this.#canvasContext.scale(this.#canvasTransform.k, this.#canvasTransform.k);
 
         if (this.#canvasTransform.k > LOD_THRESHOLD) {
-            this.#graphDataset.descendants.forEach((node) => {
+            for (const node of this.#graphDataset.descendants) {
                 if (node.parent && !node.parent.data.empty && !node.data.treatedAsRemarriage) {
                     this.#drawParentToChildLine(node, node.parent);
                 }
-            });
-            this.#graphDataset.extraParents.forEach((connection) => {
+            }
+
+            for (const connection of this.#graphDataset.extraParents) {
                 this.#drawExtraParentToChildLine(connection.from, connection.to);
-            });
-            this.#graphDataset.remarriages.forEach((connection) => {
+            }
+
+            for (const connection of this.#graphDataset.remarriages) {
                 this.#drawRemarriageLine(connection.from, connection.to);
-            });
+            }
         }
-        this.#graphDataset.descendants.forEach((node) => {
+
+        for (const node of this.#graphDataset.descendants) {
             this.#drawNode(node);
-        });
+        }
     }
 
     #drawExtraParentToChildLine(
