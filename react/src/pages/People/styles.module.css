@@ -143,5 +143,5 @@
 .empty_result {
     text-align: center;
     padding: 2rem 1rem;
-    font-size: var(--md-sys-typescale-title-large);
+    font-size: var(--md-sys-typescale-title-large-size);
 }
