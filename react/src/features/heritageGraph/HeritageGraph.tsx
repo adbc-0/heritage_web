@@ -155,7 +155,7 @@ export function HeritageGraph({ rootPerson, highlightedPerson, inactiveBranches 
 
 export function ErrorFallback() {
     return (
-        <div className="h-full grid content-center justify-center text-xl gap-4">
+        <div className="h-full grid content-center justify-center text-xl gap-4 px-4">
             <OctagonAlertIcon className="mx-auto" size={40} />
             <p>Nieobsłużony błąd uniemożliwił wyświetlenie drzewa</p>
         </div>

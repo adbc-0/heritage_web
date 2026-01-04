@@ -239,6 +239,7 @@ class Family {
         if (!ancestor) {
             throw new GraphError("no parent with given parent id");
         }
+
         ancestor.children.delete(removedMember);
         ancestor.members.values().forEach((parent) => parent.children.delete(removedMember));
         this.parents.delete(removedParent);
@@ -248,6 +249,26 @@ class Family {
             throw new GraphError("no family member with given person id");
         }
         member.parent = null;
+    }
+
+    removeAllParents() {
+        const ancestors = this.parents.values();
+        for (const ancestor of ancestors) {
+            for (const memberId of this.members.keys()) {
+                if (ancestor.children.keys().find((id) => id === memberId)) {
+                    ancestor.children.delete(memberId);
+                    ancestor.members.values().forEach((parent) => parent.children.delete(memberId));
+
+                    const member = this.members.get(memberId);
+                    if (!member) {
+                        throw new GraphError("no family member with given person id");
+                    }
+                    member.parent = null;
+                }
+            }
+        }
+
+        this.parents.clear();
     }
 }
 
@@ -408,8 +429,34 @@ export class Graph {
             }
             return rootFamily;
         }
-        // ToDo: Create and append new node at the top
-        throw new GraphError("multi-parent root not implemented");
+        if (root.families.size > 1) {
+            for (const family of root.families.values()) {
+                family.removeAllParents();
+            }
+
+            const fakePerson = new Person({ id: "I-fake", type: PersonType.EMPTY_NODE });
+            this.#addPerson(fakePerson);
+
+            const familyIds = Array.from(root.families.values().flatMap((family) => family.members.keys()));
+            const fakeConnection: RawConnection = {
+                id: "F-fake",
+                husb: fakePerson.id,
+                wife: null,
+                children: familyIds,
+            };
+
+            const fakeFamily = new Family(fakeConnection.id);
+            this.#addMembers(fakeFamily, fakeConnection);
+            this.#addChildren(fakeFamily, fakeConnection);
+            this.#addFamily(fakeFamily);
+
+            for (const family of root.families.values()) {
+                family.attachParentFamily(fakeFamily);
+            }
+
+            return fakeFamily;
+        }
+        throw new GraphError("unhandled root family size");
     }
 
     #setHierarchy() {
@@ -642,6 +689,7 @@ export class Graph {
         });
 
         const stratifyOperator = stratify<HeritageSVGNode>();
+        console.log("stratifyOperator", svgList);
         const treeDataset = stratifyOperator(svgList);
 
         const createTree = createTreeLayout<HeritageSVGNode>()
