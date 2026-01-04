@@ -31,9 +31,9 @@ export function Layout() {
     }
     if (deviceType === DeviceType.MOBILE) {
         return (
-            <div className={styles.main}>
+            <div className={styles.main_mobile}>
                 <MobileTopbar />
-                <main>
+                <main className={styles.mobile_content}>
                     <Outlet />
                 </main>
             </div>
