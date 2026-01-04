@@ -1,0 +1,29 @@
+.view {
+    background-color: var(--md-sys-color-surface-container-lowest);
+}
+
+.tabs_wrapper {
+    overflow-x: auto;
+}
+
+.tabs {
+    display: flex;
+    border-bottom: 1px solid var(--md-sys-color-surface-variant); /* use divider instead */
+    background-color: var(--md-sys-color-surface);
+
+    [data-state="active"] {
+        border-bottom: 2px solid var(--md-sys-color-primary);
+    }
+}
+
+.tab {
+    padding: 0;
+    flex-grow: 1;
+    background-color: inherit;
+    border: none;
+    /* prevents layout shift */
+    border-bottom: 2px solid transparent;
+    font-family: inherit;
+    height: 3rem;
+    font-size: var(--md-sys-typescale-title-small-size);
+}

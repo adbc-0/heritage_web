@@ -1,14 +1,17 @@
 import { useEffect } from "react";
 import { Params, useNavigate, useParams } from "react-router";
 
+import { isNil } from "@/lib/utils";
 import { useHeritage } from "@/features/heritageData/heritageContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 import { Basic } from "./Basic";
 import { Tree } from "./Tree";
 import { Photos } from "./Photos";
 import { Documents } from "./Documents";
 import { Notes } from "./Notes";
-import { isNil } from "@/lib/utils";
+
+import styles from "./styles.module.css";
 
 export default function Person() {
     const navigate = useNavigate();
@@ -49,47 +52,43 @@ export default function Person() {
     }
 
     return (
-        <Tabs defaultValue="basic" className="flex flex-col h-full sm:pt-3">
-            <di className="flex overflow-x-auto sm:justify-center">
-                <TabsList className="bg-background grow rounded-none sm:grow-0 sm:rounded-lg">
-                    <TabsTrigger className="grow cursor-pointer data-[state=active]:bg-background-darker" value="basic">
-                        Informacje
-                    </TabsTrigger>
-                    <TabsTrigger className="grow cursor-pointer data-[state=active]:bg-background-darker" value="tree">
-                        Drzewo
-                    </TabsTrigger>
-                    <TabsTrigger
-                        className="grow cursor-pointer data-[state=active]:bg-background-darker"
-                        value="photos"
-                    >
-                        Zdjęcia
-                    </TabsTrigger>
-                    <TabsTrigger
-                        className="grow cursor-pointer data-[state=active]:bg-background-darker"
-                        value="documents"
-                    >
-                        Dokumenty
-                    </TabsTrigger>
-                    <TabsTrigger className="grow cursor-pointer data-[state=active]:bg-background-darker" value="notes">
-                        Notatki
-                    </TabsTrigger>
-                </TabsList>
-            </di>
-            <TabsContent className="m-0" value="basic">
-                <Basic />
-            </TabsContent>
-            <TabsContent className="m-0 sm:mt-3 grow" value="tree">
-                <Tree />
-            </TabsContent>
-            <TabsContent className="m-0" value="photos">
-                <Photos />
-            </TabsContent>
-            <TabsContent className="m-0" value="documents">
-                <Documents />
-            </TabsContent>
-            <TabsContent className="m-0" value="notes">
-                <Notes />
-            </TabsContent>
-        </Tabs>
+        <div className={styles.view}>
+            <Tabs defaultValue="basic" className="flex flex-col h-full sm:pt-3">
+                <div className={styles.tabs_wrapper}>
+                    <TabsList className={styles.tabs}>
+                        <TabsTrigger className={styles.tab} value="basic">
+                            Informacje
+                        </TabsTrigger>
+                        <TabsTrigger className={styles.tab} value="tree">
+                            Drzewo
+                        </TabsTrigger>
+                        <TabsTrigger className={styles.tab} value="photos">
+                            Zdjęcia
+                        </TabsTrigger>
+                        <TabsTrigger className={styles.tab} value="documents">
+                            Dokumenty
+                        </TabsTrigger>
+                        <TabsTrigger className={styles.tab} value="notes">
+                            Notatki
+                        </TabsTrigger>
+                    </TabsList>
+                </div>
+                <TabsContent className="m-0" value="basic">
+                    <Basic />
+                </TabsContent>
+                <TabsContent className="m-0 sm:mt-3 grow" value="tree">
+                    <Tree />
+                </TabsContent>
+                <TabsContent className="m-0" value="photos">
+                    <Photos />
+                </TabsContent>
+                <TabsContent className="m-0" value="documents">
+                    <Documents />
+                </TabsContent>
+                <TabsContent className="m-0" value="notes">
+                    <Notes />
+                </TabsContent>
+            </Tabs>
+        </div>
     );
 }
