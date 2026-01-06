@@ -5,6 +5,8 @@ import { RouterPath } from "@/constants/routePaths";
 
 import type { FullPerson } from "@/types/heritage.types";
 
+import styles from "./styles.module.css";
+
 type SectionProps = {
     title: string;
     people: FullPerson[];
@@ -16,21 +18,19 @@ export function SectionWithLinks({ people, title }: SectionProps) {
     }
     return (
         <>
-            <h2 className="text-center font-semibold my-3">{title}</h2>
-            <div className="max-w-fit mx-auto">
-                <div className="mx-1 flex flex-col rounded-md">
-                    {people.map((person) => (
-                        <Link
-                            className="flex gap-2 bg-background border-t border-x last:border-b first:rounded-t-md last:rounded-b-md border-border px-5 py-2 hover:bg-background-darker"
-                            key={person.id}
-                            to={`${RouterPath.OSOBY}/${person.id}`}
-                        >
+            <h2 className={styles.title}>{title}</h2>
+            <ul className={styles.list}>
+                {people.map((person) => (
+                    <li key={person.id} className={styles.list_element}>
+                        <p className={styles.family_name}>
                             {person.firstName} {person.lastName}
+                        </p>
+                        <Link className={styles.family} key={person.id} to={`${RouterPath.OSOBY}/${person.id}`}>
                             <SquareArrowOutUpRight />
                         </Link>
-                    ))}
-                </div>
-            </div>
+                    </li>
+                ))}
+            </ul>
         </>
     );
 }
