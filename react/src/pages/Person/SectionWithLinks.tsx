@@ -1,5 +1,5 @@
+import clsx from "clsx";
 import { Link } from "react-router";
-import { SquareArrowOutUpRight } from "lucide-react";
 
 import { RouterPath } from "@/constants/routePaths";
 
@@ -16,6 +16,7 @@ export function SectionWithLinks({ people, title }: SectionProps) {
     if (people.length === 0) {
         return;
     }
+
     return (
         <>
             <h2 className={styles.title}>{title}</h2>
@@ -26,7 +27,7 @@ export function SectionWithLinks({ people, title }: SectionProps) {
                             {person.firstName} {person.lastName}
                         </p>
                         <Link className={styles.family} key={person.id} to={`${RouterPath.OSOBY}/${person.id}`}>
-                            <SquareArrowOutUpRight />
+                            <span className={clsx("material-symbols-outlined", styles.open_new_icon)}>open_in_new</span>
                         </Link>
                     </li>
                 ))}

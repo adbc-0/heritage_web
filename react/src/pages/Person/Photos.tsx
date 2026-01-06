@@ -4,7 +4,10 @@ import { Params, useParams } from "react-router";
 import { ENV } from "@/constants/env";
 import { useHeritage } from "@/features/heritageData/heritageContext";
 import { ImageInspection, Images, ImagesThumbnails, Thumbnail } from "@/components/ui/images";
+
 import type { File } from "@/pages/Person/types.ts";
+
+import styles from "./styles.module.css";
 
 type UserData = {
     files: string[];
@@ -62,7 +65,7 @@ export function Photos() {
     if (!files.length) {
         return (
             <div>
-                <h2 className="text-center font-semibold my-10">Brak zdjęć</h2>
+                <h2 className={styles.no_content}>Brak zdjęć</h2>
             </div>
         );
     }

@@ -19,7 +19,7 @@ export function SVGSettings({ branches, toggleBranch }: SVGSettingsProps) {
                 <button
                     className={clsx("material-symbols-outlined", styles.dialog_close)}
                     command="close"
-                    commandFor="graph_settings"
+                    commandfor="graph_settings"
                 >
                     close
                 </button>

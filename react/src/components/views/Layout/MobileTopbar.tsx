@@ -48,7 +48,7 @@ export function MobileTopbar() {
                             type="button"
                             className={clsx("material-symbols-outlined", styles.leading_icon_style)}
                             command="show-modal"
-                            commandFor="navigation_rail"
+                            commandfor="navigation_rail"
                         >
                             menu
                         </button>
@@ -93,7 +93,7 @@ export function MobileTopbar() {
                             [styles.active_navigation_item]: location.pathname === RouterPath.ROOT,
                         })}
                         command="close"
-                        commandFor="navigation_rail"
+                        commandfor="navigation_rail"
                         onClick={() => {
                             void navigate(RouterPath.ROOT);
                         }}
@@ -109,7 +109,7 @@ export function MobileTopbar() {
                             [styles.active_navigation_item]: location.pathname === RouterPath.OSOBY,
                         })}
                         command="close"
-                        commandFor="navigation_rail"
+                        commandfor="navigation_rail"
                         onClick={() => {
                             void navigate(RouterPath.OSOBY);
                         }}
@@ -123,7 +123,7 @@ export function MobileTopbar() {
                             [styles.active_navigation_item]: location.pathname === RouterPath.O_MNIE,
                         })}
                         command="close"
-                        commandFor="navigation_rail"
+                        commandfor="navigation_rail"
                         onClick={() => {
                             void navigate(RouterPath.O_MNIE);
                         }}
@@ -137,7 +137,7 @@ export function MobileTopbar() {
                             [styles.active_navigation_item]: location.pathname === RouterPath.RODO,
                         })}
                         command="close"
-                        commandFor="navigation_rail"
+                        commandfor="navigation_rail"
                         onClick={() => {
                             void navigate(RouterPath.RODO);
                         }}
@@ -151,7 +151,7 @@ export function MobileTopbar() {
                             [styles.active_navigation_item]: location.pathname === RouterPath.KONTAKT,
                         })}
                         command="close"
-                        commandFor="navigation_rail"
+                        commandfor="navigation_rail"
                         onClick={() => {
                             void navigate(RouterPath.KONTAKT);
                         }}
@@ -167,7 +167,7 @@ export function MobileTopbar() {
                             [styles.active_navigation_item]: location.pathname === RouterPath.WSPARCIE,
                         })}
                         command="close"
-                        commandFor="navigation_rail"
+                        commandfor="navigation_rail"
                         onClick={() => {
                             void navigate(RouterPath.WSPARCIE);
                         }}
