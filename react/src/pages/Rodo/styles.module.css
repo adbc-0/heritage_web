@@ -1,23 +1,28 @@
-.rodo {
+.page {
     background-color: var(--md-sys-color-surface-container-lowest);
     height: 100%;
-    /* ToDo: desktop vs mobile */
+    /* ToDo: desktop vs mobile, create component */
     border-radius: 24px;
+}
+
+.content_container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    padding-bottom: 1.5rem;
+
+    max-width: 60rem;
+    margin-inline: auto;
 }
 
 .title {
     font-size: var(--md-sys-typescale-headline-large-size);
 
-    padding: 1.5rem 0 1.5rem 1.5rem;
+    padding: 1.5rem 0;
 }
 
+/* ToDo: create component */
 .content {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-
-    max-width: 60rem;
 }
