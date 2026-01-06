@@ -158,7 +158,7 @@ export default function Home() {
                             type="button"
                             className={clsx("material-symbols-outlined", styles.icon_button)}
                             command="show-modal"
-                            commandFor="graph_settings"
+                            commandfor="graph_settings"
                         >
                             settings
                         </button>

@@ -3,13 +3,10 @@ import { Outlet } from "react-router";
 import { useDeviceDetect } from "@/features/deviceMode/deviceModeContext";
 import { DeviceType } from "@/features/deviceMode/constants";
 
-import { DesktopTopbar } from "./DesktopTopbar";
+import { DesktopSidebar } from "./DesktopTopbar";
 import { MobileTopbar } from "./MobileTopbar";
 
 import styles from "./styles.module.css";
-
-// Next version:
-// Remove bottom nav bar from mobile
 
 // Centering vertically elements on mobile chrome (and possibly safari) properly is not possible.
 // When entering website using url initial innerHeight is calculated with added virtual keyboard (for example 900px instead of 600px).
@@ -22,8 +19,8 @@ export function Layout() {
     if (deviceType === DeviceType.DESKTOP) {
         return (
             <div className={styles.main_desktop}>
-                <DesktopTopbar />
-                <main className={styles.desktop_content}>
+                <DesktopSidebar />
+                <main className={styles.content_desktop}>
                     <Outlet />
                 </main>
             </div>
@@ -33,7 +30,7 @@ export function Layout() {
         return (
             <div className={styles.main_mobile}>
                 <MobileTopbar />
-                <main className={styles.mobile_content}>
+                <main className={styles.content_mobile}>
                     <Outlet />
                 </main>
             </div>

@@ -2,15 +2,12 @@ import { preload } from "react-dom";
 import { NavLink } from "react-router";
 import clsx from "clsx";
 
-import LOGO from "@/assets/logo.svg";
-
 import { RouterPath } from "@/constants/routePaths";
 
+import LOGO from "@/assets/logo.svg";
 import styles from "./styles.module.css";
 
-// ToDo: Rename component from topbar to sidebar
-// ToDo: Remove footer
-export function DesktopTopbar() {
+export function DesktopSidebar() {
     preload(LOGO, { as: "image", type: "image/svg+xml" });
     return (
         <nav className={styles.navigation_sidebar}>

@@ -53,8 +53,8 @@ export default function Person() {
 
     return (
         <div className={styles.view}>
-            <Tabs defaultValue="basic" className="flex flex-col h-full sm:pt-3">
-                <div className={styles.tabs_wrapper}>
+            <Tabs defaultValue="basic" className={styles.tabs_wrapper}>
+                <div className={styles.tabs_scroller}>
                     <TabsList className={styles.tabs}>
                         <TabsTrigger className={styles.tab} value="basic">
                             Informacje
@@ -73,19 +73,19 @@ export default function Person() {
                         </TabsTrigger>
                     </TabsList>
                 </div>
-                <TabsContent className="m-0" value="basic">
+                <TabsContent value="basic">
                     <Basic />
                 </TabsContent>
-                <TabsContent className="m-0 sm:mt-3 grow" value="tree">
+                <TabsContent value="tree" className={styles.grow}>
                     <Tree />
                 </TabsContent>
-                <TabsContent className="m-0" value="photos">
+                <TabsContent value="photos">
                     <Photos />
                 </TabsContent>
-                <TabsContent className="m-0" value="documents">
+                <TabsContent value="documents">
                     <Documents />
                 </TabsContent>
-                <TabsContent className="m-0" value="notes">
+                <TabsContent value="notes">
                     <Notes />
                 </TabsContent>
             </Tabs>

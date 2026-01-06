@@ -5,6 +5,8 @@ import { ENV } from "@/constants/env";
 import { stripFileExtension } from "@/lib/utils";
 import { useHeritage } from "@/features/heritageData/heritageContext";
 
+import styles from "./styles.module.css";
+
 type UserData = {
     files: string[];
 };
@@ -46,7 +48,7 @@ export function Documents() {
     if (!filenames.length) {
         return (
             <div>
-                <h2 className="text-center font-semibold my-10">Brak dokumentów</h2>
+                <h2 className={styles.no_content}>Brak dokumentów</h2>
             </div>
         );
     }
