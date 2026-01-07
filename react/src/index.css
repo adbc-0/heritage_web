@@ -325,7 +325,6 @@
 }
 
 @layer base {
-    /* SET 100% HEIGHT FOR BASE ELEMENTS */
     html,
     body,
     #root {
