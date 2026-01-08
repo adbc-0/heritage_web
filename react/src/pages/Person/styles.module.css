@@ -1,5 +1,4 @@
 .view {
-    /* min-height fixes info page but breaks graph */
     height: 100%;
     background-color: var(--md-sys-color-surface-container-lowest);
 }

@@ -5,6 +5,8 @@ import { SWIPE_THRESHOLD } from "@/constants/config";
 import { stripFileExtension } from "@/lib/utils";
 import type { File } from "@/pages/Person/types.ts";
 
+import styles from "./styles.module.css";
+
 type ReactChildren = {
     children: ReactElement | ReactElement[];
 };
@@ -77,11 +79,7 @@ export function Images({ children }: ReactChildren) {
 }
 
 export function ImagesThumbnails({ children }: ReactChildren) {
-    return (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 auto-rows-[minmax(auto,200px)] md:auto-rows-[minmax(auto,250px)] xl:auto-rows-[minmax(auto,300px)] gap-6 m-4">
-            {children}
-        </div>
-    );
+    return <div className={styles.imagesThumbnails}>{children}</div>;
 }
 
 type ThumbnailProps = {
@@ -90,23 +88,10 @@ type ThumbnailProps = {
 export function Thumbnail({ file }: ThumbnailProps) {
     const { openInspection: openDialog } = useDialogContext();
     return (
-        <button
-            type="button"
-            className="bg-background rounded-md shadow-lg"
-            onClick={() => {
-                openDialog(file);
-            }}
-        >
-            <figure className="flex flex-col h-full cursor-pointer">
-                <img
-                    src={file.thumbnailSrc}
-                    alt={file.filename}
-                    className="rounded-t-md grow object-cover h-1"
-                    loading="lazy"
-                />
-                <figcaption className="text-center p-2 text-nowrap overflow-hidden text-ellipsis text-sm">
-                    {stripFileExtension(file.filename)}
-                </figcaption>
+        <button type="button" className={styles.thumbnailButton} onClick={() => openDialog(file)}>
+            <figure className={styles.figure}>
+                <img src={file.thumbnailSrc} alt={file.filename} className={styles.thumbImg} loading="lazy" />
+                <figcaption className={styles.figcaption}>{stripFileExtension(file.filename)}</figcaption>
             </figure>
         </button>
     );
@@ -178,10 +163,7 @@ export function ImageInspection({ allFiles }: ImageInspectionProps) {
     };
 
     return (
-        <dialog
-            ref={dialogRef}
-            className="bg-zinc-800 backdrop:bg-black backdrop:bg-opacity-55 h-full w-full rounded-lg m-auto"
-        >
+        <dialog ref={dialogRef} className={styles.dialog}>
             <Image moveToNextImage={moveToNextImage} moveToPrevImage={moveToPrevImage} />
         </dialog>
     );
@@ -252,46 +234,29 @@ function Image({ moveToNextImage, moveToPrevImage }: ImageProps) {
     }
 
     // TITLE bottom-0 VS fixed bottom-[10px]
-    // LEFT ARROW absolute left-[20px] VS fixed left-[25px
+    // LEFT ARROW absolute left-[20px] VS fixed left-[25px]
     // RIGHT ARROW absolute right-[20px] VS fixed right-[40px]
     // CLOSE top-[15px] right-[15px] VS fixed top-[25px] right-[40px]
 
     return (
         <>
-            <span className="absolute bottom-[15px] m-auto left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 p-2 rounded-md">
-                {stripFileExtension(inspectedImage.filename)}
-            </span>
-            <button
-                type="button"
-                className="cursor-pointer absolute top-[15px] right-[15px] bg-black bg-opacity-50 p-2 rounded-3xl"
-                onClick={closeInspection}
-            >
+            <span className={styles.inspectionTitle}>{stripFileExtension(inspectedImage.filename)}</span>
+            <button type="button" className={styles.closeButton} onClick={closeInspection}>
                 <CircleX />
             </button>
-            <button
-                type="button"
-                className="cursor-pointer absolute left-[20px] top-1/2 select-none bg-black bg-opacity-50 p-2 rounded-3xl"
-                onClick={moveToNextImage}
-            >
+            <button type="button" className={`${styles.arrowButton} ${styles.arrowLeft}`} onClick={moveToNextImage}>
                 <CircleArrowLeft />
             </button>
-            <button
-                type="button"
-                className="cursor-pointer absolute right-[20px] top-1/2 select-none bg-black bg-opacity-50 p-2 rounded-3xl"
-                onClick={moveToPrevImage}
-            >
+            <button type="button" className={`${styles.arrowButton} ${styles.arrowRight}`} onClick={moveToPrevImage}>
                 <CircleArrowRight />
             </button>
             <a href={inspectedImage.fullSizeSrc} download={inspectedImage.filename}>
-                <button
-                    type="button"
-                    className="cursor-pointer absolute bottom-[15px] right-[15px] bg-black bg-opacity-50 p-2 rounded-md"
-                >
+                <button type="button" className={styles.downloadButton}>
                     <ImageDown />
                 </button>
             </a>
             <img
-                className="w-full h-full object-contain"
+                className={styles.inspectedImg}
                 src={inspectedImage.fullSizeSrc}
                 alt={inspectedImage.filename}
                 onTouchStart={handleTouchStart}
