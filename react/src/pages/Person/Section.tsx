@@ -45,11 +45,21 @@ export function Section({ person }: SectionProps) {
     return (
         <>
             <h2 className={styles.title}>Podstawowe informacje</h2>
-            <div className={styles.content}>
-                <p className={styles.person_name}>{displayName(person)}</p>
-                <p className={styles.person_dates}>{displayDates(person)}</p>
-                <p>Miejsce urodzenia: {person.placeOfBirth}</p>
-                <p>Miejsce śmierci: {person.placeOfDeath}</p>
+            <div className={styles.basic_wrapper}>
+                <div className={styles.content}>
+                    <p className={styles.person_name}>{displayName(person)}</p>
+                    <p className={styles.person_dates}>{displayDates(person)}</p>
+                </div>
+                {person.placeOfBirth && (
+                    <div className={styles.content}>
+                        <li className={styles.list_element}>Miejsce urodzenia: {person.placeOfBirth}</li>
+                    </div>
+                )}
+                {person.placeOfDeath && (
+                    <div className={styles.content}>
+                        <li className={styles.list_element}>Miejsce śmierci: {person.placeOfDeath}</li>
+                    </div>
+                )}
             </div>
         </>
     );

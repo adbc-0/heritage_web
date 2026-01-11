@@ -43,10 +43,20 @@
 }
 
 .dialog {
+    background-color: var(--md-sys-color-surface);
+
+    border: none;
+    border-radius: 12px;
+
     padding: 0;
     height: 100%;
     width: 100%;
     margin: auto;
+
+    &::backdrop {
+        background-color: var(--md-sys-color-scrim);
+        backdrop-filter: blur(2px);
+    }
 }
 
 .inspectedImg {
@@ -72,64 +82,59 @@
     position: absolute;
 }
 
-/*
 .inspectionTitle {
-	position: absolute;
-	bottom: 15px;
-	left: 50%;
-	transform: translateX(-50%);
-	background: rgba(0, 0, 0, 0.5);
-	padding: 0.5rem;
-	border-radius: 0.375rem;
-	color: #fff;
-	z-index: 30;
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.5);
+    padding: 0.5rem;
+    border-radius: 0.375rem;
+    color: #fff;
+    z-index: 30;
 }
 
 .closeButton {
-	cursor: pointer;
-	position: absolute;
-	top: 15px;
-	right: 15px;
-	background: rgba(0, 0, 0, 0.5);
-	padding: 0.5rem;
-	border-radius: 9999px;
-	color: #fff;
-	z-index: 30;
-	border: none;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 0.5rem;
+    border-radius: 9999px;
+    color: #fff;
+    z-index: 30;
+    border: none;
 }
 
 .arrowButton {
-	cursor: pointer;
-	position: absolute;
-	top: 50%;
-	background: rgba(0, 0, 0, 0.5);
-	padding: 0.5rem;
-	border-radius: 9999px;
-	transform: translateY(-50%);
-	color: #fff;
-	border: none;
-	z-index: 30;
-	user-select: none;
+    position: absolute;
+    top: 50%;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 0.5rem;
+    border-radius: 9999px;
+    transform: translateY(-50%);
+    color: #fff;
+    border: none;
+    z-index: 30;
+    user-select: none;
 }
 
 .arrowLeft {
-	left: 20px;
+    left: 20px;
 }
 
 .arrowRight {
-	right: 20px;
+    right: 20px;
 }
 
 .downloadButton {
-	cursor: pointer;
-	position: absolute;
-	bottom: 15px;
-	right: 15px;
-	background: rgba(0, 0, 0, 0.5);
-	padding: 0.5rem;
-	border-radius: 0.375rem;
-	color: #fff;
-	border: none;
-	z-index: 30;
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 0.5rem;
+    border-radius: 0.375rem;
+    color: #fff;
+    border: none;
+    z-index: 30;
 }
-*/
