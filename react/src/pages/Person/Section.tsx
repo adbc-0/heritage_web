@@ -33,7 +33,8 @@ function displayDate(event?: PersonEvent) {
 }
 
 export function Section({ person }: SectionProps) {
-    const { firstName, lastName, nickName, birth, death } = person;
+    const { firstName, lastName, nickName, birth, death, placeOfBirth, placeOfDeath } = person;
+
     return (
         <>
             <h2 className="text-center font-semibold my-3">Podstawowe informacje</h2>
@@ -43,7 +44,9 @@ export function Section({ person }: SectionProps) {
                     <SectionRow k="Nazwisko" v={lastName} />
                     <SectionRow k="Przydomek/imię używane" v={nickName} />
                     <SectionRow k="Rok urodzenia" v={displayDate(birth)} />
+                    <SectionRow k="Miejsce urodzenia" v={placeOfBirth} />
                     <SectionRow k="Rok śmierci" v={displayDate(death)} />
+                    <SectionRow k="Miejsce śmierci" v={placeOfDeath} />
                 </div>
             </div>
         </>
