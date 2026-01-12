@@ -11,6 +11,7 @@ import { DeviceType } from "@/features/deviceMode/constants";
 import { useGlobalSearch } from "@/features/globalSearch/globalSearch";
 
 import styles from "./styles.module.css";
+import { MdIconButton } from "@/components/ui/MdIconButton/MdIconButton";
 
 // ToDo: Remove hardcoded values? Define branches roots in config?
 const defaultBranches = [
@@ -154,14 +155,7 @@ export default function Home() {
                     })}
                 >
                     <div className={styles.tree_settings}>
-                        <button
-                            type="button"
-                            className={clsx("material-symbols-outlined", styles.icon_button)}
-                            command="show-modal"
-                            commandfor="graph_settings"
-                        >
-                            settings
-                        </button>
+                        <MdIconButton iconName="settings" command="show-modal" commandfor="graph_settings" />
                     </div>
                     <ErrorBoundary FallbackComponent={ErrorFallback}>
                         <HeritageGraph inactiveBranches={inactiveBranches} />
