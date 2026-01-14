@@ -22,69 +22,67 @@ export function MobileTopbar() {
     const moreResultsText = searchResults.length > 5;
 
     return (
-        <>
-            <nav className={styles.top_bar}>
-                <div className={styles.input_wrapper}>
-                    <input
-                        name="global_search"
-                        className={clsx(styles.search, {
-                            [styles.open_search]: dockedContainer,
-                        })}
-                        type="text"
-                        placeholder="Szukaj"
-                        value={query}
-                        onChange={(e) => {
-                            search(e.target.value);
-                        }}
-                        onFocus={() => {
-                            setSearchOpen(true);
-                        }}
-                        onBlur={() => {
-                            setSearchOpen(false);
-                        }}
-                    />
-                    <div className={styles.leading_icon}>
-                        <button
-                            type="button"
-                            className={clsx("material-symbols-outlined", styles.leading_icon_style)}
-                            command="show-modal"
-                            commandfor="navigation_rail"
-                        >
-                            menu
-                        </button>
-                    </div>
-                    <div className={styles.trailing_icon}>
-                        <span className={clsx("material-symbols-outlined", styles.trailing_icon_style)}>search</span>
-                    </div>
-                    <div className={styles.docked_container}>
-                        {dockedContainer && (
-                            <>
-                                <div className={styles.search_list}>
-                                    {searchResults.slice(0, 5).map((person) => (
-                                        <button
-                                            key={person.id}
-                                            className={clsx(styles.search_list_item, {
-                                                [styles.has_last_list_element]: !moreResultsText,
-                                            })}
-                                            type="button"
-                                        >
-                                            {person.firstName} {person.nickName} {person.lastName}
-                                        </button>
-                                    ))}
-                                </div>
-                                {moreResultsText && (
-                                    <>
-                                        <div className={styles.break_line} />
-                                        <button className={clsx(styles.search_list_item, styles.has_last_list_element)}>
-                                            Zobacz pozostałe wyniki ({searchResults.length - 5})
-                                        </button>
-                                    </>
-                                )}
-                            </>
-                        )}
-                    </div>
+        <nav className={styles.top_bar}>
+            <div className={styles.input_wrapper}>
+                <input
+                    name="global_search"
+                    className={clsx(styles.search, {
+                        [styles.open_search]: dockedContainer,
+                    })}
+                    type="text"
+                    placeholder="Szukaj"
+                    value={query}
+                    onChange={(e) => {
+                        search(e.target.value);
+                    }}
+                    onFocus={() => {
+                        setSearchOpen(true);
+                    }}
+                    onBlur={() => {
+                        setSearchOpen(false);
+                    }}
+                />
+                <div className={styles.leading_icon}>
+                    <button
+                        type="button"
+                        className={clsx("material-symbols-outlined", styles.leading_icon_style)}
+                        command="show-modal"
+                        commandfor="navigation_rail"
+                    >
+                        menu
+                    </button>
                 </div>
-            </nav>
+                <div className={styles.trailing_icon}>
+                    <span className={clsx("material-symbols-outlined", styles.trailing_icon_style)}>search</span>
+                </div>
+                <div className={styles.docked_container}>
+                    {dockedContainer && (
+                        <>
+                            <div className={styles.search_list}>
+                                {searchResults.slice(0, 5).map((person) => (
+                                    <button
+                                        key={person.id}
+                                        className={clsx(styles.search_list_item, {
+                                            [styles.has_last_list_element]: !moreResultsText,
+                                        })}
+                                        type="button"
+                                    >
+                                        {person.firstName} {person.nickName} {person.lastName}
+                                    </button>
+                                ))}
+                            </div>
+                            {moreResultsText && (
+                                <>
+                                    <div className={styles.break_line} />
+                                    <button className={clsx(styles.search_list_item, styles.has_last_list_element)}>
+                                        Zobacz pozostałe wyniki ({searchResults.length - 5})
+                                    </button>
+                                </>
+                            )}
+                        </>
+                    )}
+                </div>
+            </div>
             <dialog id="navigation_rail" closedby="any" className={styles.modal}>
                 <ul className={styles.navigation_rail}>
                     <button
@@ -179,6 +177,6 @@ export function MobileTopbar() {
                     </button>
                 </ul>
             </dialog>
-        </>
+        </nav>
     );
 }

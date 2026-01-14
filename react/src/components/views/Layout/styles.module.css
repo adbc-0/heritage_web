@@ -1,40 +1,42 @@
-.main_mobile {
-    min-height: 100%;
+.mobile {
     display: grid;
-    grid-template-rows: min-content auto min-content;
-    grid-template-columns: 1fr;
+    grid-template-rows: min-content auto;
+
+    max-width: 100dvw;
+    min-height: 100dvh;
 }
 
-.main_desktop {
-    height: 100%;
+.desktop {
+    display: grid;
+    grid-template-columns: min-content auto;
+
+    min-height: 100dvh;
 }
 
-.content_desktop {
-    margin-left: 6rem;
-    height: 100%;
-    /*border-radius: 24px;*/
-    /*overflow: hidden;*/
-}
+.desktop_sidebar {
+    /* I case of problems use position fixed */
+    position: sticky;
+    left: 0;
+    top: 0;
 
-.content_mobile {
-    max-width: 100vw;
-}
-
-.navigation_sidebar {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
 
-    position: fixed;
-    left: 0;
-    top: 0;
-    height: 100%;
     width: 6rem;
+    max-height: 100dvh;
+
     background-color: var(--md-sys-color-surface);
 
+    /* ToDo: Variable for all z index values */
     z-index: 9;
-    gap: 0.5rem;
 }
+
+/*.content_mobile {
+    max-width: 100vw;
+}*/
 
 /* --- */
 

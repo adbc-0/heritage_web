@@ -10,7 +10,7 @@ import styles from "./styles.module.css";
 export function DesktopSidebar() {
     preload(LOGO, { as: "image", type: "image/svg+xml" });
     return (
-        <nav className={styles.navigation_sidebar}>
+        <nav className={styles.desktop_sidebar}>
             <NavLink
                 to={RouterPath.ROOT}
                 className={({ isActive }) => clsx(styles.link, { [styles.active_link]: isActive })}

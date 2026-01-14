@@ -3,10 +3,11 @@ import { Outlet } from "react-router";
 import { useDeviceDetect } from "@/features/deviceMode/deviceModeContext";
 import { DeviceType } from "@/features/deviceMode/constants";
 
-import { DesktopSidebar } from "./DesktopTopbar";
+import { DesktopSidebar } from "./DesktopSidebar";
 import { MobileTopbar } from "./MobileTopbar";
 
 import styles from "./styles.module.css";
+import { LucideBrushCleaning } from "lucide-react";
 
 // Centering vertically elements on mobile chrome (and possibly safari) properly is not possible.
 // When entering website using url initial innerHeight is calculated with added virtual keyboard (for example 900px instead of 600px).
@@ -18,9 +19,9 @@ export function Layout() {
     const { deviceType } = useDeviceDetect();
     if (deviceType === DeviceType.DESKTOP) {
         return (
-            <div className={styles.main_desktop}>
+            <div className={styles.desktop}>
                 <DesktopSidebar />
-                <main className={styles.content_desktop}>
+                <main>
                     <Outlet />
                 </main>
             </div>
@@ -28,9 +29,9 @@ export function Layout() {
     }
     if (deviceType === DeviceType.MOBILE) {
         return (
-            <div className={styles.main_mobile}>
+            <div className={styles.mobile}>
                 <MobileTopbar />
-                <main className={styles.content_mobile}>
+                <main>
                     <Outlet />
                 </main>
             </div>
