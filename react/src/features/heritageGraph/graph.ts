@@ -155,6 +155,21 @@ class Person {
         this.parent.children.delete(this.id);
         this.parent = null;
     }
+
+    // ToDo: remove also children for remarriages?
+    removeRemarriagesExcept(unremovableFamily: string) {
+        const remarriagesForRemoval = this.families.values().filter((family) => family.id !== unremovableFamily);
+        if (!remarriagesForRemoval) {
+            throw new Error("cannot find family to remove");
+        }
+
+        for (const remarriageForRemoval of remarriagesForRemoval) {
+            const members = remarriageForRemoval.members.values();
+            for (const member of members) {
+                member.families.delete(remarriageForRemoval.id);
+            }
+        }
+    }
 }
 
 class Family {
@@ -469,7 +484,7 @@ export class Graph {
         }
     }
 
-    #removeLinkToNonDescendants() {
+    #removeUnrelatedNodes(rootPersonId: string) {
         // remove parent connection from new root
         if (this.#root instanceof Person) {
             const rootPerson = this.#root;
@@ -502,6 +517,14 @@ export class Graph {
                         }
                     }
                 }
+            }
+        }
+
+        // remove remarriages from spouses
+        const spouse = rootFamily.members.values().find((member) => member.id !== rootPersonId);
+        if (spouse) {
+            if (spouse.families.size > 1) {
+                spouse.removeRemarriagesExcept(rootFamily.id);
             }
         }
     }
@@ -634,7 +657,7 @@ export class Graph {
 
         this.#root = this.#getRootNode(options.rootPerson);
         if (options.rootPerson) {
-            this.#removeLinkToNonDescendants();
+            this.#removeUnrelatedNodes(options.rootPerson);
         }
 
         if (options.excludedPeople) {
