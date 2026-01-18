@@ -689,7 +689,6 @@ export class Graph {
         });
 
         const stratifyOperator = stratify<HeritageSVGNode>();
-        console.log("stratifyOperator", svgList);
         const treeDataset = stratifyOperator(svgList);
 
         const createTree = createTreeLayout<HeritageSVGNode>()
