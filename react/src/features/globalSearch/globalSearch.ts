@@ -36,10 +36,13 @@ export function useGlobalSearch() {
             .map((person) => ({ ...person, fullName: composeFullName(person) }))
             .filter((person) => person.fullName.includes(newQuery.toLowerCase()));
 
-        console.log(queriedPeople, newQuery.toLowerCase());
-
         setSearchResults(queriedPeople);
     };
 
-    return { searchResults, query, search };
+    const clear = () => {
+        setQuery("");
+        setSearchResults([]);
+    };
+
+    return { searchResults, query, search, clear };
 }

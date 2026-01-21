@@ -7,7 +7,6 @@ import { DesktopSidebar } from "./DesktopSidebar";
 import { MobileTopbar } from "./MobileTopbar";
 
 import styles from "./styles.module.css";
-import { LucideBrushCleaning } from "lucide-react";
 
 // Centering vertically elements on mobile chrome (and possibly safari) properly is not possible.
 // When entering website using url initial innerHeight is calculated with added virtual keyboard (for example 900px instead of 600px).

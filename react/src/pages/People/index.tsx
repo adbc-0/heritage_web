@@ -1,12 +1,10 @@
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import { ArrowDown01, ArrowDown10, ArrowDownAZ, ArrowDownZa } from "lucide-react";
 
 import { isPersonInvisible, searchFamily, searchPerson } from "@/features/heritageGraph/utils";
 import { RouterPath } from "@/constants/routePaths";
 import { useHeritage } from "@/features/heritageData/heritageContext";
-import { Table, TableBody, td, TableHead, TableHeader, tr } from "@/components/ui/table";
-import { Input } from "@/components/ui/input";
 
 import styles from "./styles.module.css";
 
@@ -240,10 +238,11 @@ function renderSortingIcon(selectedCriterion: SortByType) {
 
 // ToDo: Add pagination
 export default function People() {
-    const { heritage } = useHeritage();
     const navigate = useNavigate();
+    const { heritage } = useHeritage();
+    const [searchParams] = useSearchParams();
 
-    const [filterPeopleQuery, setFilterPeopleQuery] = useState("");
+    const [filterPeopleQuery, setFilterPeopleQuery] = useState(searchParams.get("search") ?? "");
     const [sortByCriterion, setSortByCriterion] = useState<SortByType>(SortBy.FIRST_NAME);
     const [sortDirection, setSortDirection] = useState<DirectionType>(Direction.ASC);
 
