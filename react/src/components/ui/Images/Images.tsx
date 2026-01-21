@@ -1,5 +1,4 @@
 import { ComponentRef, createContext, ReactElement, TouchEvent, useContext, useEffect, useRef, useState } from "react";
-import { CircleArrowLeft, CircleArrowRight, CircleX, ImageDown } from "lucide-react";
 
 import { SWIPE_THRESHOLD } from "@/constants/config";
 import { stripFileExtension } from "@/lib/utils";
@@ -242,17 +241,17 @@ function Image({ moveToNextImage, moveToPrevImage }: ImageProps) {
         <>
             <span className={styles.inspectionTitle}>{stripFileExtension(inspectedImage.filename)}</span>
             <button type="button" className={styles.closeButton} onClick={closeInspection}>
-                <CircleX />
+                <span className="material-symbols-outlined">close</span>
             </button>
             <button type="button" className={`${styles.arrowButton} ${styles.arrowLeft}`} onClick={moveToNextImage}>
-                <CircleArrowLeft />
+                <span className="material-symbols-outlined">chevron_left</span>
             </button>
             <button type="button" className={`${styles.arrowButton} ${styles.arrowRight}`} onClick={moveToPrevImage}>
-                <CircleArrowRight />
+                <span className="material-symbols-outlined">chevron_right</span>
             </button>
             <a href={inspectedImage.fullSizeSrc} download={inspectedImage.filename}>
                 <button type="button" className={styles.downloadButton}>
-                    <ImageDown />
+                    <span className="material-symbols-outlined">file_download</span>
                 </button>
             </a>
             <img

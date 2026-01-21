@@ -1,5 +1,4 @@
 import { type ComponentRef, useEffect, useRef } from "react";
-import { OctagonAlertIcon } from "lucide-react";
 import { useNavigate } from "react-router";
 import { type HierarchyPointNode } from "d3-hierarchy";
 
@@ -154,7 +153,9 @@ export function HeritageGraph({ rootPerson, highlightedPerson, inactiveBranches 
 export function ErrorFallback() {
     return (
         <div className="h-full grid content-center justify-center text-xl gap-4 px-4">
-            <OctagonAlertIcon className="mx-auto" size={40} />
+            <span className="material-symbols-outlined mx-auto" style={{ fontSize: 40 }}>
+                warning_amber
+            </span>
             <p>Nieobsłużony błąd uniemożliwił wyświetlenie drzewa</p>
         </div>
     );

@@ -1,5 +1,4 @@
-import { Loader } from "lucide-react";
-
+import clsx from "clsx";
 import styles from "./styles.module.css";
 
 export function LoadingPage() {
@@ -7,7 +6,9 @@ export function LoadingPage() {
         <div className={styles.wrapper}>
             <div className={styles.overlay}>
                 <div className={styles.center}>
-                    <Loader size={40} className={styles.spinner} />
+                    <span className={clsx("material-symbols-outlined", styles.spinner)} style={{ fontSize: 40 }}>
+                        autorenew
+                    </span>
                 </div>
             </div>
         </div>

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
-import { ArrowDown01, ArrowDown10, ArrowDownAZ, ArrowDownZa } from "lucide-react";
 
 import { isPersonInvisible, searchFamily, searchPerson } from "@/features/heritageGraph/utils";
 import { RouterPath } from "@/constants/routePaths";
@@ -198,32 +197,32 @@ function sortBy(strategy: SortByType, direction: DirectionType) {
 
 const sortingIconByTypeMap = {
     [SortBy.FIRST_NAME]: {
-        ASC: <ArrowDownAZ />,
-        DESC: <ArrowDownZa />,
+        ASC: <span className="material-symbols-outlined">sort_by_alpha</span>,
+        DESC: <span className="material-symbols-outlined">sort_by_alpha</span>,
     },
     [SortBy.NICK_NAME]: {
-        ASC: <ArrowDownAZ />,
-        DESC: <ArrowDownZa />,
+        ASC: <span className="material-symbols-outlined">sort_by_alpha</span>,
+        DESC: <span className="material-symbols-outlined">sort_by_alpha</span>,
     },
     [SortBy.LAST_NAME]: {
-        ASC: <ArrowDownAZ />,
-        DESC: <ArrowDownZa />,
+        ASC: <span className="material-symbols-outlined">sort_by_alpha</span>,
+        DESC: <span className="material-symbols-outlined">sort_by_alpha</span>,
     },
     [SortBy.MOTHER]: {
-        ASC: <ArrowDownAZ />,
-        DESC: <ArrowDownZa />,
+        ASC: <span className="material-symbols-outlined">sort_by_alpha</span>,
+        DESC: <span className="material-symbols-outlined">sort_by_alpha</span>,
     },
     [SortBy.FATHER]: {
-        ASC: <ArrowDownAZ />,
-        DESC: <ArrowDownZa />,
+        ASC: <span className="material-symbols-outlined">sort_by_alpha</span>,
+        DESC: <span className="material-symbols-outlined">sort_by_alpha</span>,
     },
     [SortBy.BIRTH]: {
-        ASC: <ArrowDown01 />,
-        DESC: <ArrowDown10 />,
+        ASC: <span className="material-symbols-outlined">arrow_upward</span>,
+        DESC: <span className="material-symbols-outlined">arrow_downward</span>,
     },
     [SortBy.DEATH]: {
-        ASC: <ArrowDown01 />,
-        DESC: <ArrowDown10 />,
+        ASC: <span className="material-symbols-outlined">arrow_upward</span>,
+        DESC: <span className="material-symbols-outlined">arrow_downward</span>,
     },
 } as const;
 
