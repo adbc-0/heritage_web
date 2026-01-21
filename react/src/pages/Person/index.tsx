@@ -3,7 +3,7 @@ import { Params, useNavigate, useParams } from "react-router";
 
 import { isNil } from "@/lib/utils";
 import { useHeritage } from "@/features/heritageData/heritageContext";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/MdTabs";
 
 import { Basic } from "./Basic";
 import { Tree } from "./Tree";
