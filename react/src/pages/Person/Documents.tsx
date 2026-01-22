@@ -54,7 +54,7 @@ export function Documents() {
     }
     return (
         <div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 ld:grid-cols-5 gap-3 mx-4 mb-4">
+            <div>
                 {filenames.map((filename) => (
                     <a
                         key={filename}
@@ -62,15 +62,9 @@ export function Documents() {
                         rel="noreferrer"
                         href={`${ENV.API_URL}/public/${personId}/documents/${filename}`}
                     >
-                        <figure className="bg-background rounded-md shadow-md">
-                            <img
-                                src={`${ENV.API_URL}/public/${personId}/documents/${filename}`}
-                                alt={filename}
-                                className="rounded-t-md"
-                            />
-                            <figcaption className="text-center p-1 text-nowrap overflow-hidden text-ellipsis text-sm">
-                                {stripFileExtension(filename)}
-                            </figcaption>
+                        <figure className="bg-background">
+                            <img src={`${ENV.API_URL}/public/${personId}/documents/${filename}`} alt={filename} />
+                            <figcaption>{stripFileExtension(filename)}</figcaption>
                         </figure>
                     </a>
                 ))}

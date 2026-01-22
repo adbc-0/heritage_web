@@ -152,8 +152,8 @@ export function HeritageGraph({ rootPerson, highlightedPerson, inactiveBranches 
 
 export function ErrorFallback() {
     return (
-        <div className="h-full grid content-center justify-center text-xl gap-4 px-4">
-            <span className="material-symbols-outlined mx-auto" style={{ fontSize: 40 }}>
+        <div>
+            <span className="material-symbols-outlined" style={{ fontSize: 40 }}>
                 warning_amber
             </span>
             <p>Nieobsłużony błąd uniemożliwił wyświetlenie drzewa</p>

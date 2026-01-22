@@ -9,7 +9,7 @@ const navlinkStyle = ({ isActive }: NavLinkRenderProps) =>
 
 export function DesktopFooter() {
     return (
-        <div className="bg-background border-t border-border flex justify-center gap-3 py-2 text-sm">
+        <div className="bg-background border-border">
             <NavLink to={RouterPath.KONTAKT} className={navlinkStyle}>
                 Kontakt
             </NavLink>

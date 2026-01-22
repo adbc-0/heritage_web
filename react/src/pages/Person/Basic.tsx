@@ -121,7 +121,7 @@ export function Basic() {
     const { children, parents, partners, siblings } = collectPersonDetails(heritage, person);
 
     return (
-        <section className="py-3">
+        <section>
             <Section person={person} />
             <SectionWithLinks title="Rodzice" people={parents} />
             <SectionWithLinks title="Rodzeństwo" people={siblings} />
