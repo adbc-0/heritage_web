@@ -12,6 +12,15 @@ import { Documents } from "./Documents";
 import { Notes } from "./Notes";
 
 import styles from "./styles.module.css";
+import { RouterPath } from "@/constants/routePaths";
+
+const PersonTabs = {
+    BASIC: "BASIC",
+    TREE: "TREE",
+    PHOTOS: "PHOTOS",
+    DOCUMENTS: "DOCUMENTS",
+    NOTES: "NOTES",
+};
 
 export default function Person() {
     const navigate = useNavigate();
@@ -29,11 +38,11 @@ export default function Person() {
 
         const person = heritage.people.find((person) => person.id === id);
         if (!person) {
-            void navigate("/404", { replace: true });
+            void navigate(RouterPath.NOT_FOUND, { replace: true });
             return;
         }
         if (person.type === "EMPTY_NODE") {
-            void navigate("/404", { replace: true });
+            void navigate(RouterPath.NOT_FOUND, { replace: true });
             return;
         }
     }, [heritage, id, navigate]);
@@ -53,39 +62,39 @@ export default function Person() {
 
     return (
         <div className={styles.view}>
-            <Tabs defaultValue="basic" className={styles.tabs_wrapper}>
+            <Tabs defaultValue={PersonTabs.BASIC} className={styles.tabs_wrapper}>
                 <div className={styles.tabs_scroller}>
                     <TabsList className={styles.tabs}>
-                        <TabsTrigger className={styles.tab} value="basic">
+                        <TabsTrigger className={styles.tab} value={PersonTabs.BASIC}>
                             Informacje
                         </TabsTrigger>
-                        <TabsTrigger className={styles.tab} value="tree">
+                        <TabsTrigger className={styles.tab} value={PersonTabs.TREE}>
                             Drzewo
                         </TabsTrigger>
-                        <TabsTrigger className={styles.tab} value="photos">
+                        <TabsTrigger className={styles.tab} value={PersonTabs.PHOTOS}>
                             Zdjęcia
                         </TabsTrigger>
-                        <TabsTrigger className={styles.tab} value="documents">
+                        <TabsTrigger className={styles.tab} value={PersonTabs.DOCUMENTS}>
                             Dokumenty
                         </TabsTrigger>
-                        <TabsTrigger className={styles.tab} value="notes">
+                        <TabsTrigger className={styles.tab} value={PersonTabs.NOTES}>
                             Notatki
                         </TabsTrigger>
                     </TabsList>
                 </div>
-                <TabsContent value="basic">
+                <TabsContent value={PersonTabs.BASIC}>
                     <Basic />
                 </TabsContent>
-                <TabsContent value="tree" className={styles.grow}>
+                <TabsContent value={PersonTabs.TREE} className={styles.grow}>
                     <Tree />
                 </TabsContent>
-                <TabsContent value="photos">
+                <TabsContent value={PersonTabs.PHOTOS}>
                     <Photos />
                 </TabsContent>
-                <TabsContent value="documents">
+                <TabsContent value={PersonTabs.DOCUMENTS}>
                     <Documents />
                 </TabsContent>
-                <TabsContent value="notes">
+                <TabsContent value={PersonTabs.NOTES}>
                     <Notes />
                 </TabsContent>
             </Tabs>
