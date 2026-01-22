@@ -31,7 +31,7 @@
     background-color: var(--md-sys-color-surface);
 
     /* ToDo: Variable for all z index values */
-    z-index: 9;
+    z-index: var(--md-sys-elevation-index1);
 }
 
 /*.content_mobile {
@@ -62,6 +62,8 @@
     background-color: var(--md-sys-color-surface);
     top: 0;
     padding: 1rem;
+    /* Ensure dropdowns inside the top bar are painted above transformed elements (canvas) */
+    z-index: var(--md-sys-elevation-index1);
 }
 
 .input_wrapper {
@@ -152,7 +154,7 @@
     position: absolute;
 
     /* Add variable */
-    z-index: 10;
+    z-index: var(--md-sys-elevation-index1);
 
     position-anchor: --cusom-anchor;
     top: anchor(bottom);

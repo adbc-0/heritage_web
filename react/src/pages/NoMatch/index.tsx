@@ -1,15 +1,10 @@
-import { Link } from "react-router";
-
-import { RouterPath } from "@/constants/routePaths";
+import styles from "./styles.module.css";
 
 export function NoMatch() {
     return (
-        <div>
-            <h1>404</h1>
-            <h1>Page not found</h1>
-            <Link to={RouterPath.ROOT}>
-                <button type="button">Go back home</button>
-            </Link>
+        <div className={styles.page}>
+            <h1 className={styles.error_code}>404</h1>
+            <h1 className={styles.description}>Strona nie istnieje</h1>
         </div>
     );
 }

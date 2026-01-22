@@ -1,0 +1,11 @@
+.page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    padding: 1rem;
+
+    font-size: var(--md-sys-typescale-title-large-size);
+
+    min-height: 100dvh;
+}

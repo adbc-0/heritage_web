@@ -91,7 +91,7 @@
     padding: 0.5rem;
     border-radius: 0.375rem;
     color: #fff;
-    z-index: 30;
+    z-index: var(--md-sys-elevation-index1);
 }
 
 .closeButton {
@@ -102,7 +102,7 @@
     padding: 0.5rem;
     border-radius: 9999px;
     color: #fff;
-    z-index: 30;
+    z-index: var(--md-sys-elevation-index1);
     border: none;
 }
 
@@ -115,7 +115,7 @@
     transform: translateY(-50%);
     color: #fff;
     border: none;
-    z-index: 30;
+    z-index: var(--md-sys-elevation-index1);
     user-select: none;
 }
 
@@ -136,5 +136,5 @@
     border-radius: 0.375rem;
     color: #fff;
     border: none;
-    z-index: 30;
+    z-index: var(--md-sys-elevation-index1);
 }

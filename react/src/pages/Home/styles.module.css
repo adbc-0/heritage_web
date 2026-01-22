@@ -176,7 +176,7 @@
     position: absolute;
 
     /* Add variable */
-    z-index: 10;
+    z-index: var(--md-sys-elevation-index1);
 
     position-anchor: --cusom-anchor;
     top: anchor(bottom);
