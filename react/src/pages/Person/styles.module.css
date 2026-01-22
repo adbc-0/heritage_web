@@ -30,7 +30,7 @@
     border-bottom: 1px solid var(--md-sys-color-surface-variant); /* use divider instead */
     background-color: var(--md-sys-color-surface);
 
-    [data-state="active"] {
+    [aria-selected="true"] {
         border-bottom: 2px solid var(--md-sys-color-primary);
     }
 }

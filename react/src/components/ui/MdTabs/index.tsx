@@ -1,5 +1,9 @@
-import { createContext, ReactNode, useContext, useState } from "react";
+import { createContext, ReactElement, useContext, useState } from "react";
 import clsx from "clsx";
+
+interface ReactChildren {
+    children: ReactElement | ReactElement[];
+}
 
 type TabsContextType = {
     value: string;
@@ -9,14 +13,21 @@ type TabsContextType = {
 
 const TabsContext = createContext<TabsContextType | null>(null);
 
-type TabsProps = {
-    children: ReactNode;
-    defaultValue?: string;
-    className?: string;
-};
+function useTabs() {
+    const context = useContext(TabsContext);
+    if (!context) {
+        throw new Error("useTabs must be used within Tabs");
+    }
+    return context;
+}
 
-export function Tabs({ children, defaultValue = "", className }: TabsProps) {
-    const [value, setValue] = useState<string>(defaultValue);
+interface TabsProps extends ReactChildren {
+    defaultValue: string;
+    className?: string;
+}
+
+export function Tabs({ children, defaultValue, className }: TabsProps) {
+    const [value, setValue] = useState(defaultValue);
     return (
         <TabsContext.Provider value={{ value, setValue, defaultValue }}>
             <div className={className}>{children}</div>
@@ -24,10 +35,9 @@ export function Tabs({ children, defaultValue = "", className }: TabsProps) {
     );
 }
 
-type TabsListProps = {
-    children: ReactNode;
+interface TabsListProps extends ReactChildren {
     className?: string;
-};
+}
 export function TabsList({ children, className }: TabsListProps) {
     return (
         <div role="tablist" className={className}>
@@ -36,49 +46,40 @@ export function TabsList({ children, className }: TabsListProps) {
     );
 }
 
-type TabsTriggerProps = {
+interface TabsTriggerProps {
+    children: string;
     value: string;
-    children: ReactNode;
     className?: string;
-};
+}
 export function TabsTrigger({ value, children, className }: TabsTriggerProps) {
-    const ctx = useContext(TabsContext);
-    if (!ctx) {
-        throw new Error("TabsTrigger must be used within Tabs");
-    }
-    const { setValue, value: current, defaultValue: ctxDefault } = ctx;
-    const isActive = current === value || (current === "" && value === ctxDefault);
+    const { setValue, value: current } = useTabs();
+    const isActive = current === value;
     return (
         <button
+            type="button"
             role="tab"
             aria-selected={isActive}
-            className={clsx(className, { ["active"]: isActive })}
+            className={clsx(className)}
             onClick={() => {
                 setValue(value);
             }}
-            type="button"
         >
             {children}
         </button>
     );
 }
 
-type TabsContentProps = {
+interface TabsContentProps extends ReactChildren {
     value: string;
-    children: ReactNode;
     className?: string;
-};
+}
 export function TabsContent({ value, children, className }: TabsContentProps) {
-    const ctx = useContext(TabsContext);
-    if (!ctx) {
-        throw new Error("TabsContent must be used within Tabs");
+    const { value: current } = useTabs();
+    const renderContent = current === value;
+    if (!renderContent) {
+        return;
     }
-    const { value: current } = ctx;
-    return (
-        <div className={className} hidden={current !== value}>
-            {children}
-        </div>
-    );
+    return <div className={className}>{children}</div>;
 }
 
 export default Tabs;
