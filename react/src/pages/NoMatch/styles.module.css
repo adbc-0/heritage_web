@@ -1,0 +1,19 @@
+.page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    flex-direction: column;
+
+    padding: 1rem;
+
+    min-height: 100dvh;
+}
+
+.error_code {
+    font-size: 4rem;
+}
+
+.description {
+    font-size: var(--md-sys-typescale-headline-small-size);
+}

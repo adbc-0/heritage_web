@@ -1,14 +1,26 @@
 import { useEffect } from "react";
 import { Params, useNavigate, useParams } from "react-router";
 
+import { isNil } from "@/lib/utils";
 import { useHeritage } from "@/features/heritageData/heritageContext";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/MdTabs";
+
 import { Basic } from "./Basic";
 import { Tree } from "./Tree";
 import { Photos } from "./Photos";
 import { Documents } from "./Documents";
 import { Notes } from "./Notes";
-import { isNil } from "@/lib/utils";
+
+import styles from "./styles.module.css";
+import { RouterPath } from "@/constants/routePaths";
+
+const PersonTabs = {
+    BASIC: "BASIC",
+    TREE: "TREE",
+    PHOTOS: "PHOTOS",
+    DOCUMENTS: "DOCUMENTS",
+    NOTES: "NOTES",
+};
 
 export default function Person() {
     const navigate = useNavigate();
@@ -26,11 +38,11 @@ export default function Person() {
 
         const person = heritage.people.find((person) => person.id === id);
         if (!person) {
-            void navigate("/404", { replace: true });
+            void navigate(RouterPath.NOT_FOUND, { replace: true });
             return;
         }
         if (person.type === "EMPTY_NODE") {
-            void navigate("/404", { replace: true });
+            void navigate(RouterPath.NOT_FOUND, { replace: true });
             return;
         }
     }, [heritage, id, navigate]);
@@ -49,47 +61,43 @@ export default function Person() {
     }
 
     return (
-        <Tabs defaultValue="basic" className="flex flex-col h-full sm:pt-3">
-            <div className="flex overflow-x-auto sm:justify-center">
-                <TabsList className="bg-background grow rounded-none sm:grow-0 sm:rounded-lg">
-                    <TabsTrigger className="grow cursor-pointer data-[state=active]:bg-background-darker" value="basic">
-                        Informacje
-                    </TabsTrigger>
-                    <TabsTrigger className="grow cursor-pointer data-[state=active]:bg-background-darker" value="tree">
-                        Drzewo
-                    </TabsTrigger>
-                    <TabsTrigger
-                        className="grow cursor-pointer data-[state=active]:bg-background-darker"
-                        value="photos"
-                    >
-                        Zdjęcia
-                    </TabsTrigger>
-                    <TabsTrigger
-                        className="grow cursor-pointer data-[state=active]:bg-background-darker"
-                        value="documents"
-                    >
-                        Dokumenty
-                    </TabsTrigger>
-                    <TabsTrigger className="grow cursor-pointer data-[state=active]:bg-background-darker" value="notes">
-                        Notatki
-                    </TabsTrigger>
-                </TabsList>
-            </div>
-            <TabsContent className="m-0" value="basic">
-                <Basic />
-            </TabsContent>
-            <TabsContent className="m-0 sm:mt-3 grow" value="tree">
-                <Tree />
-            </TabsContent>
-            <TabsContent className="m-0" value="photos">
-                <Photos />
-            </TabsContent>
-            <TabsContent className="m-0" value="documents">
-                <Documents />
-            </TabsContent>
-            <TabsContent className="m-0" value="notes">
-                <Notes />
-            </TabsContent>
-        </Tabs>
+        <div className={styles.view}>
+            <Tabs defaultValue={PersonTabs.BASIC} className={styles.tabs_wrapper}>
+                <div className={styles.tabs_scroller}>
+                    <TabsList className={styles.tabs}>
+                        <TabsTrigger className={styles.tab} value={PersonTabs.BASIC}>
+                            Informacje
+                        </TabsTrigger>
+                        <TabsTrigger className={styles.tab} value={PersonTabs.TREE}>
+                            Drzewo
+                        </TabsTrigger>
+                        <TabsTrigger className={styles.tab} value={PersonTabs.PHOTOS}>
+                            Zdjęcia
+                        </TabsTrigger>
+                        <TabsTrigger className={styles.tab} value={PersonTabs.DOCUMENTS}>
+                            Dokumenty
+                        </TabsTrigger>
+                        <TabsTrigger className={styles.tab} value={PersonTabs.NOTES}>
+                            Notatki
+                        </TabsTrigger>
+                    </TabsList>
+                </div>
+                <TabsContent value={PersonTabs.BASIC}>
+                    <Basic />
+                </TabsContent>
+                <TabsContent value={PersonTabs.TREE} className={styles.grow}>
+                    <Tree />
+                </TabsContent>
+                <TabsContent value={PersonTabs.PHOTOS}>
+                    <Photos />
+                </TabsContent>
+                <TabsContent value={PersonTabs.DOCUMENTS}>
+                    <Documents />
+                </TabsContent>
+                <TabsContent value={PersonTabs.NOTES}>
+                    <Notes />
+                </TabsContent>
+            </Tabs>
+        </div>
     );
 }

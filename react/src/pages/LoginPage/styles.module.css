@@ -1,0 +1,77 @@
+.login_page_wrapper {
+    background-color: var(--md-sys-color-surface-container-lowest);
+
+    height: 100dvh;
+
+    display: flex;
+    justify-content: center;
+}
+
+.login_form_wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+
+    padding: 2rem;
+}
+
+.no_access_wrapper {
+    display: flex;
+    flex-direction: column;
+
+    gap: 0.5rem;
+}
+
+.lock {
+    display: inline;
+
+    font-size: 100px;
+    font-weight: 300;
+
+    text-align: center;
+}
+
+.no_access_main_text {
+    font-size: var(--text-lg);
+}
+
+.login_actions {
+    display: flex;
+    flex-direction: column;
+
+    gap: 1.5rem;
+}
+
+.password_input {
+    background-color: var(--md-sys-color-surface-container-lowest);
+
+    width: 100%;
+}
+
+.login_button {
+    align-self: end;
+}
+
+.logo {
+    margin: 2rem auto;
+}
+
+/*https://m3.material.io/foundations/layout/applying-layout/window-size-classes*/
+@media (width >= 40rem /* 600px */) {
+    .login_page_wrapper {
+        background-color: var(--md-sys-color-surface);
+        align-items: center;
+    }
+
+    .login_form_wrapper {
+        background-color: var(--md-sys-color-surface-container-lowest);
+
+        padding: 2rem 3rem;
+
+        border-radius: var(--border-radius);
+    }
+
+    .logo {
+        margin: 0 0 1rem 0;
+    }
+}

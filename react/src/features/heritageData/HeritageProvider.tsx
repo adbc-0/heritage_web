@@ -22,6 +22,7 @@ export function HeritageProvider({ children }: ReactChildren) {
     const [heritageError, setHeritageError] = useState(false);
     const [heritageStatus, setHeritageStatus] = useState<LoadingStateValues>(LoadingState.IDLE);
 
+    // react compiler make sure reference is stable
     const fetchHeritage = async () => {
         setHeritageStatus(LoadingState.LOADING);
         const networkResponse = await fetch(API_HERITAGE, {

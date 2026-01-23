@@ -8,8 +8,8 @@ import { AuthProvider } from "./features/auth/AuthProvider";
 import { Layout } from "./components/views/Layout";
 import { RouterPath } from "./constants/routePaths";
 import { NoMatch } from "./pages/NoMatch";
-import { LoadingPage } from "./pages/LoadingPage";
 import { GlobalError } from "./pages/GlobalError/GlobalError";
+import { Loader } from "./components/ui/Loader/Loader";
 import { LoginPage } from "./pages/LoginPage";
 import { ProtectedRoute } from "./features/auth/ProtectedRoute";
 
@@ -31,7 +31,7 @@ const router = createBrowserRouter([
             {
                 index: true,
                 element: (
-                    <Suspense fallback={<LoadingPage />}>
+                    <Suspense fallback={<Loader />}>
                         <ProtectedRoute>
                             <LazyHome />
                         </ProtectedRoute>
@@ -41,7 +41,7 @@ const router = createBrowserRouter([
             {
                 path: RouterPath.OSOBY,
                 element: (
-                    <Suspense fallback={<LoadingPage />}>
+                    <Suspense fallback={<Loader />}>
                         <ProtectedRoute>
                             <LazyPeople />
                         </ProtectedRoute>
@@ -51,7 +51,7 @@ const router = createBrowserRouter([
             {
                 path: `${RouterPath.OSOBY}/:id`,
                 element: (
-                    <Suspense fallback={<LoadingPage />}>
+                    <Suspense fallback={<Loader />}>
                         <ProtectedRoute>
                             <LazyPerson />
                         </ProtectedRoute>
@@ -61,7 +61,7 @@ const router = createBrowserRouter([
             {
                 path: RouterPath.KONTAKT,
                 element: (
-                    <Suspense fallback={<LoadingPage />}>
+                    <Suspense fallback={<Loader />}>
                         <ProtectedRoute>
                             <LazyContact />
                         </ProtectedRoute>
@@ -71,7 +71,7 @@ const router = createBrowserRouter([
             {
                 path: RouterPath.RODO,
                 element: (
-                    <Suspense fallback={<LoadingPage />}>
+                    <Suspense fallback={<Loader />}>
                         <ProtectedRoute>
                             <LazyRodo />
                         </ProtectedRoute>
@@ -81,7 +81,7 @@ const router = createBrowserRouter([
             {
                 path: RouterPath.WSPARCIE,
                 element: (
-                    <Suspense fallback={<LoadingPage />}>
+                    <Suspense fallback={<Loader />}>
                         <ProtectedRoute>
                             <LazySupport />
                         </ProtectedRoute>
@@ -91,7 +91,7 @@ const router = createBrowserRouter([
             {
                 path: RouterPath.O_MNIE,
                 element: (
-                    <Suspense fallback={<LoadingPage />}>
+                    <Suspense fallback={<Loader />}>
                         <ProtectedRoute>
                             <LazyAboutMe />
                         </ProtectedRoute>

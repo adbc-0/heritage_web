@@ -1,27 +1,39 @@
-import { LockKeyhole } from "lucide-react";
-import { FormEvent, useEffect, useId } from "react";
+import { FormEvent, useEffect } from "react";
 import { useNavigate } from "react-router";
 
 import { http } from "@/constants/httpStatusCodes";
 import { RouterPath } from "@/constants/routePaths";
 import { useHeritage } from "@/features/heritageData/heritageContext";
 import { useAuth } from "@/features/auth/authContext";
-import { AuthErrorType, AuthStatus } from "@/features/auth/constants";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { AuthErrorType, AuthErrorTypeValues, AuthStatus } from "@/features/auth/constants";
+import { OutlineTextField } from "@/components/ui/OutlineTextField/OutlineTextField.tsx";
+import { MdButton } from "@/components/ui/MdButton/MdButton.tsx";
+
 import { GlobalError } from "../GlobalError/GlobalError";
+
+import styles from "./styles.module.css";
 
 type LoginFormInputs = {
     password: string;
 };
 
+function getLoginError(authError: AuthErrorTypeValues | null) {
+    if (!authError) {
+        return { ok: true, text: null };
+    }
+    if (authError === AuthErrorType.WRONG_PASSWORD) {
+        return { ok: false, text: "Niepoprawne hasło" };
+    }
+    throw new Error("all error values must be handled");
+}
+
 export function LoginPage() {
     const navigate = useNavigate();
-    const passwordId = useId();
 
     const { fetchHeritage, heritageError } = useHeritage();
     const { authError, authInProgress, authStatus, setAuthCookieAndAuthorize } = useAuth();
+
+    const loginNetworkError = getLoginError(authError);
 
     useEffect(() => {
         if (authStatus !== AuthStatus.AUTHORIZED) {
@@ -61,40 +73,31 @@ export function LoginPage() {
     }
 
     return (
-        <div className="flex items-center justify-center pt-12 sm:pt-0 sm:h-full sm:bg-background-darker sm:border sm:border-border">
+        <div className={styles.login_page_wrapper}>
             <form onSubmit={(e) => void login(e)}>
-                <div className="flex flex-col gap-5 items-center px-6 py-8 bg-background rounded-3xl">
-                    <LockKeyhole size={60} />
-                    <div className="text-center">
-                        <h1 className="text-xl font-bold tracking-tight">Wymagane hasło</h1>
-                        <p className="text-sm text-muted-foreground">Dostęp do zawartości jest chroniony hasłem</p>
+                <div className={styles.login_form_wrapper}>
+                    <div className={styles.no_access_wrapper}>
+                        <img src="/icon.svg" width={50} alt="logo" className={styles.logo} />
+                        <h1 className={styles.no_access_main_text}>Brak dostępu</h1>
+                        <p>Dostęp do zawartości jest chroniony hasłem</p>
                     </div>
-                    {authError === AuthErrorType.WRONG_PASSWORD && (
-                        <div className="w-full bg-red-50 py-2 px-4 rounded-md">
-                            <p className="text-red-800 text-center">Niepoprawne hasło</p>
-                        </div>
-                    )}
-                    <div>
-                        <Label className="text-sm" htmlFor={passwordId}>
-                            Hasło
-                        </Label>
-                        <Input
-                            id={passwordId}
-                            className="bg-white"
+                    <div className={styles.login_actions}>
+                        <OutlineTextField
+                            label="Hasło"
+                            className={styles.password_input}
                             type="password"
                             name="password"
                             autoComplete="current-password"
+                            error={loginNetworkError.text}
                         />
-                        <Button
-                            className="cursor-pointer w-full mt-3 active:scale-95 transition-transform"
-                            type="submit"
-                            disabled={authInProgress}
-                        >
+                        <MdButton type="submit" disabled={authInProgress} className={styles.login_button}>
                             Wyślij
-                        </Button>
+                        </MdButton>
                     </div>
                 </div>
             </form>
         </div>
     );
 }
+
+// ToDo: check out https://naszrod.pl/osoby/I87

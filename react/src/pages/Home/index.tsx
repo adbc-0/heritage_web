@@ -1,11 +1,17 @@
-import { useState } from "react";
+import { useDeferredValue, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-
-import { ChevronLeft, Settings } from "lucide-react";
+import { clsx } from "clsx";
 
 import { ErrorFallback, HeritageGraph } from "@/features/heritageGraph/HeritageGraph";
 
 import { SVGSettings } from "./SVGSettings";
+
+import { useDeviceDetect } from "@/features/deviceMode/deviceModeContext";
+import { DeviceType } from "@/features/deviceMode/constants";
+import { useGlobalSearch } from "@/features/globalSearch/globalSearch";
+
+import styles from "./styles.module.css";
+import { MdIconButton } from "@/components/ui/MdIconButton/MdIconButton";
 
 // ToDo: Remove hardcoded values? Define branches roots in config?
 const defaultBranches = [
@@ -46,29 +52,18 @@ const defaultBranches = [
     },
 ];
 
-// ToDo: play with memoization
 export default function Home() {
-    // const location = useLocation();
-    // console.log(location);
+    const { deviceType } = useDeviceDetect();
+    const { query, searchResults, search } = useGlobalSearch();
 
+    const [searchOpen, setSearchOpen] = useState(false);
     const [branches, setBranches] = useState(defaultBranches);
-    const [settingsAreOpen, setSettingsAreOpen] = useState(false);
+    const deferredBranches = useDeferredValue(branches);
 
-    const inactiveBranches = branches
-        .filter((branch) => !branch.active)
-        .flatMap((branch) => branch.rootIndiId);
-
-    const renderedBranches = branches
-        .filter((branch) => branch.active)
-        .map((branch) => branch.name);
-
-    function openSVGSettingsView() {
-        setSettingsAreOpen(true);
-    }
-
-    function closeSVGSettingsView() {
-        setSettingsAreOpen(false);
-    }
+    const dockedContainer = searchOpen && searchResults.length > 0;
+    const moreResultsText = searchResults.length > 5;
+    const inactiveBranches = deferredBranches.filter((branch) => !branch.active).flatMap((branch) => branch.rootIndiId);
+    const renderedBranches = deferredBranches.filter((branch) => branch.active).map((branch) => branch.name);
 
     const toggleBranch = (branchName: string) => {
         const copy = structuredClone(branches);
@@ -76,8 +71,7 @@ export default function Home() {
         if (!branch) {
             throw new Error("Branch was not found");
         }
-        const userIsAttemptingToRemoveLastActiveBranch =
-            branch.active && renderedBranches.length === 1;
+        const userIsAttemptingToRemoveLastActiveBranch = branch.active && renderedBranches.length === 1;
         if (userIsAttemptingToRemoveLastActiveBranch) {
             return;
         }
@@ -86,36 +80,92 @@ export default function Home() {
     };
 
     return (
-        <div className="h-full">
-            <div className="bg-background h-full flex flex-col">
-                {/* ToDo: Make ToolBar Component */}
-                {settingsAreOpen && (
-                    <div className="flex border-b border-border p-2 justify-end">
-                        <button
-                            type="button"
-                            className="cursor-pointer p-1 rounded-md"
-                            onClick={closeSVGSettingsView}
-                        >
-                            <ChevronLeft size={22} />
-                        </button>
+        <>
+            <div
+                className={clsx({
+                    [styles.home_desktop as unknown as string]: deviceType === DeviceType.DESKTOP,
+                    [styles.home as unknown as string]: deviceType === DeviceType.MOBILE,
+                })}
+            >
+                {deviceType === DeviceType.DESKTOP && (
+                    <div className={styles.input_wrapper}>
+                        <div className={styles.input}>
+                            <input
+                                name="global_search"
+                                className={clsx(styles.search, {
+                                    [styles.open_search as unknown as string]: dockedContainer,
+                                })}
+                                type="text"
+                                placeholder="Szukaj"
+                                value={query}
+                                onChange={(e) => {
+                                    search(e.target.value);
+                                }}
+                                onFocus={() => {
+                                    setSearchOpen(true);
+                                }}
+                                onBlur={() => {
+                                    setSearchOpen(false);
+                                }}
+                            />
+                            <div className={styles.leading_icon}>
+                                <span className={clsx("material-symbols-outlined", styles.leading_icon_style)}>
+                                    search
+                                </span>
+                            </div>
+                            <div className={styles.docked_container}>
+                                {dockedContainer && (
+                                    <>
+                                        <div className={styles.search_list}>
+                                            {searchResults.slice(0, 5).map((person) => (
+                                                <button
+                                                    key={person.id}
+                                                    className={clsx(styles.search_list_item, {
+                                                        [styles.has_last_list_element as unknown as string]:
+                                                            !moreResultsText,
+                                                    })}
+                                                    type="button"
+                                                >
+                                                    {person.firstName} {person.nickName} {person.lastName}
+                                                </button>
+                                            ))}
+                                        </div>
+                                        {moreResultsText && (
+                                            <>
+                                                <div className={styles.break_line} />
+                                                <button
+                                                    className={clsx(
+                                                        styles.search_list_item,
+                                                        styles.has_last_list_element,
+                                                    )}
+                                                >
+                                                    Zobacz pozostałe wyniki ({searchResults.length - 5})
+                                                </button>
+                                            </>
+                                        )}
+                                    </>
+                                )}
+                            </div>
+                        </div>
                     </div>
                 )}
-                {!settingsAreOpen && (
-                    <div className="flex border-b border-border p-2 justify-end">
-                        <button
-                            type="button"
-                            className="cursor-pointer p-1 rounded-md"
-                            onClick={openSVGSettingsView}
-                        >
-                            <Settings size={22} />
-                        </button>
+                <div
+                    className={clsx({
+                        [styles.desktop_tree as unknown as string]: deviceType === DeviceType.DESKTOP,
+                        [styles.tree as unknown as string]: deviceType === DeviceType.MOBILE,
+                    })}
+                >
+                    <div className={styles.tree_settings}>
+                        <MdIconButton iconName="settings" command="show-modal" commandfor="graph_settings" />
                     </div>
-                )}
-                {settingsAreOpen && <SVGSettings branches={branches} toggleBranch={toggleBranch} />}
-                <ErrorBoundary FallbackComponent={ErrorFallback}>
-                    <HeritageGraph inactiveBranches={inactiveBranches} />
-                </ErrorBoundary>
+                    <ErrorBoundary FallbackComponent={ErrorFallback}>
+                        <HeritageGraph inactiveBranches={inactiveBranches} />
+                    </ErrorBoundary>
+                </div>
             </div>
-        </div>
+            <dialog id="graph_settings" className={styles.dialog}>
+                <SVGSettings branches={branches} toggleBranch={toggleBranch} />
+            </dialog>
+        </>
     );
 }

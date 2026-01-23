@@ -1,110 +1,210 @@
 import { useState } from "react";
 import { preload } from "react-dom";
-import { NavLink, NavLinkRenderProps } from "react-router";
-import { BookHeart, HandCoins, House, Mail, Menu, ScrollText, User } from "lucide-react";
+import { useLocation, useNavigate } from "react-router";
+import { clsx } from "clsx";
 
-import { RouterPath } from "@/constants/routePaths";
-import {
-    Sheet,
-    SheetContent,
-    SheetDescription,
-    SheetHeader,
-    SheetTitle,
-    SheetTrigger,
-} from "@/components/ui/sheet";
+import { RouterPath } from "@/constants/routePaths.ts";
+import { useGlobalSearch } from "@/features/globalSearch/globalSearch.ts";
 
 import LOGO from "@/assets/logo.svg";
-
-const sidebarNavlinkStyle = ({ isActive }: NavLinkRenderProps) =>
-    isActive
-        ? "flex gap-2 p-2 bg-highlight-background text-highlight rounded-md"
-        : "flex gap-2 p-2 bg-background text-foreground rounded-md";
+import styles from "./styles.module.css";
 
 export function MobileTopbar() {
     preload(LOGO, { as: "image", type: "image/svg+xml" });
 
-    const [sidebarOpen, setSidebarOpen] = useState(false);
+    const location = useLocation();
+    const navigate = useNavigate();
+    const { query, searchResults, search, clear } = useGlobalSearch();
+
+    const [searchOpen, setSearchOpen] = useState(false);
+
+    const dockedContainer = searchOpen && searchResults.length > 0;
+    const moreResultsText = searchResults.length > 5;
 
     return (
-        <nav className="flex items-center justify-between bg-background px-8 py-3 border-b border-border ">
-            <NavLink to={RouterPath.ROOT}>
-                <img src={LOGO} width={170} height={32} alt="logo" />
-            </NavLink>
-            <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
-                <SheetTrigger>
-                    <Menu size={26} className="m-auto" />
-                </SheetTrigger>
-                <SheetContent className="flex flex-col justify-center">
-                    <SheetHeader>
-                        <SheetTitle>Nasz Ród</SheetTitle>
-                        <SheetDescription />
-                    </SheetHeader>
-                    <NavLink
-                        to={RouterPath.ROOT}
-                        className={sidebarNavlinkStyle}
+        <nav className={styles.top_bar}>
+            {location.pathname !== RouterPath.OSOBY ? (
+                <div className={styles.input_wrapper}>
+                    <input
+                        autoComplete="off"
+                        name="global_search"
+                        className={clsx(styles.search, {
+                            [styles.open_search as unknown as string]: dockedContainer,
+                        })}
+                        type="text"
+                        placeholder="Szukaj"
+                        value={query}
+                        onChange={(e) => {
+                            search(e.target.value);
+                        }}
+                        onFocus={() => {
+                            setSearchOpen(true);
+                        }}
+                        onBlur={() => {
+                            setSearchOpen(false);
+                        }}
+                    />
+                    <div className={styles.leading_icon}>
+                        <button
+                            type="button"
+                            className={clsx("material-symbols-outlined", styles.leading_icon_style)}
+                            command="show-modal"
+                            commandfor="navigation_rail"
+                        >
+                            menu
+                        </button>
+                    </div>
+                    <div className={styles.trailing_icon}>
+                        <span className={clsx("material-symbols-outlined", styles.trailing_icon_style)}>search</span>
+                    </div>
+                    <div className={styles.docked_container}>
+                        {dockedContainer && (
+                            <>
+                                <div className={styles.search_list}>
+                                    {searchResults.slice(0, 5).map((person) => (
+                                        <button
+                                            key={person.id}
+                                            type="button"
+                                            className={clsx(styles.search_list_item, {
+                                                [styles.has_last_list_element as unknown as string]: !moreResultsText,
+                                            })}
+                                            onMouseDown={() => {
+                                                void navigate(`/osoby/${person.id}`);
+                                                clear();
+                                            }}
+                                        >
+                                            {person.firstName} {person.nickName} {person.lastName}
+                                        </button>
+                                    ))}
+                                </div>
+                                {moreResultsText && (
+                                    <>
+                                        <div className={styles.break_line} />
+                                        <button
+                                            className={clsx(styles.search_list_item, styles.has_last_list_element)}
+                                            onMouseDown={() => {
+                                                void navigate(`${RouterPath.OSOBY}?search=${query}`);
+                                                clear();
+                                            }}
+                                        >
+                                            Zobacz pozostałe wyniki ({searchResults.length - 5})
+                                        </button>
+                                    </>
+                                )}
+                            </>
+                        )}
+                    </div>
+                </div>
+            ) : (
+                <div>
+                    <button
+                        type="button"
+                        className={clsx("material-symbols-outlined", styles.leading_icon_style)}
+                        command="show-modal"
+                        commandfor="navigation_rail"
+                    >
+                        menu
+                    </button>
+                </div>
+            )}
+            <dialog id="navigation_rail" closedby="any" className={styles.modal}>
+                <ul className={styles.navigation_rail}>
+                    <button
+                        type="button"
+                        className={clsx(styles.navigation_item, {
+                            [styles.active_navigation_item as unknown as string]: location.pathname === RouterPath.ROOT,
+                        })}
+                        command="close"
+                        commandfor="navigation_rail"
                         onClick={() => {
-                            setSidebarOpen(false);
+                            void navigate(RouterPath.ROOT);
                         }}
                     >
-                        <House />
-                        <span>Drzewo</span>
-                    </NavLink>
-                    <NavLink
-                        to={RouterPath.OSOBY}
-                        className={sidebarNavlinkStyle}
+                        <span className={clsx("material-symbols-outlined", styles.navigation_item_icon)}>
+                            family_history
+                        </span>
+                        <span className={styles.navigation_item_text}>Drzewo</span>
+                    </button>
+                    <button
+                        type="button"
+                        className={clsx(styles.navigation_item, {
+                            [styles.active_navigation_item as unknown as string]:
+                                location.pathname === RouterPath.OSOBY,
+                        })}
+                        command="close"
+                        commandfor="navigation_rail"
                         onClick={() => {
-                            setSidebarOpen(false);
+                            void navigate(RouterPath.OSOBY);
                         }}
                     >
-                        <User />
-                        <span>Osoby</span>
-                    </NavLink>
-                    <SheetHeader>
-                        <SheetTitle>O stronie</SheetTitle>
-                        <SheetDescription />
-                    </SheetHeader>
-                    <NavLink
-                        to={RouterPath.O_MNIE}
-                        className={sidebarNavlinkStyle}
+                        <span className={clsx("material-symbols-outlined", styles.navigation_item_icon)}>groups</span>
+                        <span className={styles.navigation_item_text}>Osoby</span>
+                    </button>
+                    <button
+                        type="button"
+                        className={clsx(styles.navigation_item, {
+                            [styles.active_navigation_item as unknown as string]:
+                                location.pathname === RouterPath.O_MNIE,
+                        })}
+                        command="close"
+                        commandfor="navigation_rail"
                         onClick={() => {
-                            setSidebarOpen(false);
+                            void navigate(RouterPath.O_MNIE);
                         }}
                     >
-                        <BookHeart />
-                        <span>O mnie</span>
-                    </NavLink>
-                    <NavLink
-                        to={RouterPath.RODO}
-                        className={sidebarNavlinkStyle}
+                        <span className={clsx("material-symbols-outlined", styles.navigation_item_icon)}>info</span>
+                        <span className={styles.navigation_item_text}>O nas</span>
+                    </button>
+                    <button
+                        type="button"
+                        className={clsx(styles.navigation_item, {
+                            [styles.active_navigation_item as unknown as string]: location.pathname === RouterPath.RODO,
+                        })}
+                        command="close"
+                        commandfor="navigation_rail"
                         onClick={() => {
-                            setSidebarOpen(false);
+                            void navigate(RouterPath.RODO);
                         }}
                     >
-                        <ScrollText />
-                        <span>Rodo</span>
-                    </NavLink>
-                    <NavLink
-                        to={RouterPath.KONTAKT}
-                        className={sidebarNavlinkStyle}
+                        <span className={clsx("material-symbols-outlined", styles.navigation_item_icon)}>policy</span>
+                        <span className={styles.navigation_item_text}>RODO</span>
+                    </button>
+                    <button
+                        type="button"
+                        className={clsx(styles.navigation_item, {
+                            [styles.active_navigation_item as unknown as string]:
+                                location.pathname === RouterPath.KONTAKT,
+                        })}
+                        command="close"
+                        commandfor="navigation_rail"
                         onClick={() => {
-                            setSidebarOpen(false);
+                            void navigate(RouterPath.KONTAKT);
                         }}
                     >
-                        <Mail />
-                        <span>Kontakt</span>
-                    </NavLink>
-                    <NavLink
-                        to={RouterPath.WSPARCIE}
-                        className={sidebarNavlinkStyle}
+                        <span className={clsx("material-symbols-outlined", styles.navigation_item_icon)}>
+                            contact_page
+                        </span>
+                        <span className={styles.navigation_item_text}>Kontakt</span>
+                    </button>
+                    <button
+                        type="button"
+                        className={clsx(styles.navigation_item, {
+                            [styles.active_navigation_item as unknown as string]:
+                                location.pathname === RouterPath.WSPARCIE,
+                        })}
+                        command="close"
+                        commandfor="navigation_rail"
                         onClick={() => {
-                            setSidebarOpen(false);
+                            void navigate(RouterPath.WSPARCIE);
                         }}
                     >
-                        <HandCoins />
-                        <span>Wsparcie</span>
-                    </NavLink>
-                </SheetContent>
-            </Sheet>
+                        <span className={clsx("material-symbols-outlined", styles.navigation_item_icon)}>
+                            crowdsource
+                        </span>
+                        <span className={styles.navigation_item_text}>Wsparcie</span>
+                    </button>
+                </ul>
+            </dialog>
         </nav>
     );
 }

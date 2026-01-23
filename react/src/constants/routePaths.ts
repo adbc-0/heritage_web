@@ -7,4 +7,5 @@ export const RouterPath = {
     O_MNIE: "/o-mnie",
     LOGOWANIE: "/logowanie",
     MATCH_ALL: "*",
+    NOT_FOUND: "/404",
 } as const;

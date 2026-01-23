@@ -1,22 +1,10 @@
-import { Fragment } from "react/jsx-runtime";
-
 import type { FullPerson, PersonEvent } from "@/types/heritage.types";
+
+import styles from "./styles.module.css";
 
 type SectionProps = {
     person: FullPerson;
 };
-
-function SectionRow({ k, v }: { k: string; v?: string | null }) {
-    if (v == null || v === "") {
-        return null;
-    }
-    return (
-        <Fragment key={v}>
-            <p>{k}</p>
-            <p>{v}</p>
-        </Fragment>
-    );
-}
 
 function displayDate(event?: PersonEvent) {
     if (!event) {
@@ -32,22 +20,46 @@ function displayDate(event?: PersonEvent) {
     return null;
 }
 
-export function Section({ person }: SectionProps) {
-    const { firstName, lastName, nickName, birth, death, placeOfBirth, placeOfDeath } = person;
+function displayName(person: FullPerson) {
+    let name = person.firstName;
+    if (person.nickName) {
+        name += ` "${person.nickName}"`;
+    }
+    name += ` ${person.lastName}`;
 
+    return name;
+}
+
+function displayDates(person: FullPerson) {
+    const birthDate = displayDate(person.birth);
+    const deathDate = displayDate(person.death);
+
+    if (!birthDate && !deathDate) {
+        return null;
+    }
+
+    return `${birthDate ?? "?"} - ${deathDate ?? "?"}`;
+}
+
+export function Section({ person }: SectionProps) {
     return (
         <>
-            <h2 className="text-center font-semibold my-3">Podstawowe informacje</h2>
-            <div className="max-w-fit mx-auto">
-                <div className="grid grid-cols-[1fr_1fr] max-w-fit mx-1 bg-border gap-px border border-border rounded-md *:bg-background *:px-5 *:py-2 [&>*:nth-child(even)]:text-end [&>*:nth-child(1)]:rounded-tl-md [&>*:nth-child(2)]:rounded-tr-md [&>*:nth-last-child(1)]:rounded-br-md [&>*:nth-last-child(2)]:rounded-bl-md">
-                    <SectionRow k="Imię" v={firstName} />
-                    <SectionRow k="Nazwisko" v={lastName} />
-                    <SectionRow k="Przydomek/imię używane" v={nickName} />
-                    <SectionRow k="Rok urodzenia" v={displayDate(birth)} />
-                    <SectionRow k="Miejsce urodzenia" v={placeOfBirth} />
-                    <SectionRow k="Rok śmierci" v={displayDate(death)} />
-                    <SectionRow k="Miejsce śmierci" v={placeOfDeath} />
+            <h2 className={styles.title}>Podstawowe informacje</h2>
+            <div className={styles.basic_wrapper}>
+                <div className={styles.content}>
+                    <p className={styles.person_name}>{displayName(person)}</p>
+                    <p className={styles.person_dates}>{displayDates(person)}</p>
                 </div>
+                {person.placeOfBirth && (
+                    <div className={styles.content}>
+                        <li className={styles.list_element}>Miejsce urodzenia: {person.placeOfBirth}</li>
+                    </div>
+                )}
+                {person.placeOfDeath && (
+                    <div className={styles.content}>
+                        <li className={styles.list_element}>Miejsce śmierci: {person.placeOfDeath}</li>
+                    </div>
+                )}
             </div>
         </>
     );

@@ -1,5 +1,4 @@
 import { type ComponentRef, useEffect, useRef } from "react";
-import { OctagonAlertIcon } from "lucide-react";
 import { useNavigate } from "react-router";
 import { type HierarchyPointNode } from "d3-hierarchy";
 
@@ -10,6 +9,8 @@ import { NODE_HEIGHT } from "./constants";
 import { getCanvasSizeFromParent } from "./utils";
 import { Canvas } from "./canvas";
 import { Graph, type HeritageSVGNode, type SVGPersonDetails } from "./graph";
+
+import styles from "./styles.module.css";
 
 import type { CanvasGraphDataset, StartingPosition } from "./graph.types";
 
@@ -146,17 +147,15 @@ export function HeritageGraph({ rootPerson, highlightedPerson, inactiveBranches 
         };
     }, [highlightedPerson, rootPerson, heritage, inactiveBranches, navigate]);
 
-    return (
-        <div className="h-full w-full">
-            <canvas ref={canvasRef} />
-        </div>
-    );
+    return <canvas ref={canvasRef} className={styles.canvas} />;
 }
 
 export function ErrorFallback() {
     return (
-        <div className="h-full grid content-center justify-center text-xl gap-4 px-4">
-            <OctagonAlertIcon className="mx-auto" size={40} />
+        <div>
+            <span className="material-symbols-outlined" style={{ fontSize: 40 }}>
+                warning_amber
+            </span>
             <p>Nieobsłużony błąd uniemożliwił wyświetlenie drzewa</p>
         </div>
     );
