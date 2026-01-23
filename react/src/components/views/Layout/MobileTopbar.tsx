@@ -29,7 +29,7 @@ export function MobileTopbar() {
                         autoComplete="off"
                         name="global_search"
                         className={clsx(styles.search, {
-                            [styles.open_search]: dockedContainer,
+                            [styles.open_search as unknown as string]: dockedContainer,
                         })}
                         type="text"
                         placeholder="Szukaj"
@@ -66,7 +66,7 @@ export function MobileTopbar() {
                                             key={person.id}
                                             type="button"
                                             className={clsx(styles.search_list_item, {
-                                                [styles.has_last_list_element]: !moreResultsText,
+                                                [styles.has_last_list_element as unknown as string]: !moreResultsText,
                                             })}
                                             onMouseDown={() => {
                                                 void navigate(`/osoby/${person.id}`);
@@ -112,7 +112,7 @@ export function MobileTopbar() {
                     <button
                         type="button"
                         className={clsx(styles.navigation_item, {
-                            [styles.active_navigation_item]: location.pathname === RouterPath.ROOT,
+                            [styles.active_navigation_item as unknown as string]: location.pathname === RouterPath.ROOT,
                         })}
                         command="close"
                         commandfor="navigation_rail"
@@ -128,7 +128,8 @@ export function MobileTopbar() {
                     <button
                         type="button"
                         className={clsx(styles.navigation_item, {
-                            [styles.active_navigation_item]: location.pathname === RouterPath.OSOBY,
+                            [styles.active_navigation_item as unknown as string]:
+                                location.pathname === RouterPath.OSOBY,
                         })}
                         command="close"
                         commandfor="navigation_rail"
@@ -142,7 +143,8 @@ export function MobileTopbar() {
                     <button
                         type="button"
                         className={clsx(styles.navigation_item, {
-                            [styles.active_navigation_item]: location.pathname === RouterPath.O_MNIE,
+                            [styles.active_navigation_item as unknown as string]:
+                                location.pathname === RouterPath.O_MNIE,
                         })}
                         command="close"
                         commandfor="navigation_rail"
@@ -156,7 +158,7 @@ export function MobileTopbar() {
                     <button
                         type="button"
                         className={clsx(styles.navigation_item, {
-                            [styles.active_navigation_item]: location.pathname === RouterPath.RODO,
+                            [styles.active_navigation_item as unknown as string]: location.pathname === RouterPath.RODO,
                         })}
                         command="close"
                         commandfor="navigation_rail"
@@ -170,7 +172,8 @@ export function MobileTopbar() {
                     <button
                         type="button"
                         className={clsx(styles.navigation_item, {
-                            [styles.active_navigation_item]: location.pathname === RouterPath.KONTAKT,
+                            [styles.active_navigation_item as unknown as string]:
+                                location.pathname === RouterPath.KONTAKT,
                         })}
                         command="close"
                         commandfor="navigation_rail"
@@ -186,7 +189,8 @@ export function MobileTopbar() {
                     <button
                         type="button"
                         className={clsx(styles.navigation_item, {
-                            [styles.active_navigation_item]: location.pathname === RouterPath.WSPARCIE,
+                            [styles.active_navigation_item as unknown as string]:
+                                location.pathname === RouterPath.WSPARCIE,
                         })}
                         command="close"
                         commandfor="navigation_rail"

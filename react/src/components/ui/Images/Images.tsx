@@ -1,4 +1,5 @@
 import { ComponentRef, createContext, ReactElement, TouchEvent, useContext, useEffect, useRef, useState } from "react";
+import clsx from "clsx";
 
 import { SWIPE_THRESHOLD } from "@/constants/config";
 import { stripFileExtension } from "@/lib/utils";
@@ -87,7 +88,13 @@ type ThumbnailProps = {
 export function Thumbnail({ file }: ThumbnailProps) {
     const { openInspection: openDialog } = useDialogContext();
     return (
-        <button type="button" className={styles.thumbnailButton} onClick={() => openDialog(file)}>
+        <button
+            type="button"
+            className={styles.thumbnailButton}
+            onClick={() => {
+                openDialog(file);
+            }}
+        >
             <figure className={styles.figure}>
                 <img src={file.thumbnailSrc} alt={file.filename} className={styles.thumbImg} loading="lazy" />
                 <figcaption className={styles.figcaption}>{stripFileExtension(file.filename)}</figcaption>
@@ -243,10 +250,10 @@ function Image({ moveToNextImage, moveToPrevImage }: ImageProps) {
             <button type="button" className={styles.closeButton} onClick={closeInspection}>
                 <span className="material-symbols-outlined">close</span>
             </button>
-            <button type="button" className={`${styles.arrowButton} ${styles.arrowLeft}`} onClick={moveToNextImage}>
+            <button type="button" className={clsx(styles.arrowButton, styles.arrowLeft)} onClick={moveToNextImage}>
                 <span className="material-symbols-outlined">chevron_left</span>
             </button>
-            <button type="button" className={`${styles.arrowButton} ${styles.arrowRight}`} onClick={moveToPrevImage}>
+            <button type="button" className={clsx(styles.arrowButton, styles.arrowRight)} onClick={moveToPrevImage}>
                 <span className="material-symbols-outlined">chevron_right</span>
             </button>
             <a href={inspectedImage.fullSizeSrc} download={inspectedImage.filename}>

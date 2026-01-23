@@ -13,7 +13,7 @@ export function DesktopSidebar() {
         <nav className={styles.desktop_sidebar}>
             <NavLink
                 to={RouterPath.ROOT}
-                className={({ isActive }) => clsx(styles.link, { [styles.active_link]: isActive })}
+                className={({ isActive }) => clsx(styles.link, { [styles.active_link as unknown as string]: isActive })}
             >
                 <div className={styles.desktop_nav_rail_item}>
                     <span className={clsx("material-symbols-outlined", styles.desktop_nav_icon)}>family_history</span>
@@ -22,7 +22,7 @@ export function DesktopSidebar() {
             </NavLink>
             <NavLink
                 to={RouterPath.OSOBY}
-                className={({ isActive }) => clsx(styles.link, { [styles.active_link]: isActive })}
+                className={({ isActive }) => clsx(styles.link, { [styles.active_link as unknown as string]: isActive })}
             >
                 <div className={styles.desktop_nav_rail_item}>
                     <span className={clsx("material-symbols-outlined", styles.desktop_nav_icon)}>groups</span>
@@ -31,7 +31,7 @@ export function DesktopSidebar() {
             </NavLink>
             <NavLink
                 to={RouterPath.O_MNIE}
-                className={({ isActive }) => clsx(styles.link, { [styles.active_link]: isActive })}
+                className={({ isActive }) => clsx(styles.link, { [styles.active_link as unknown as string]: isActive })}
             >
                 <div className={styles.desktop_nav_rail_item}>
                     <span className={clsx("material-symbols-outlined", styles.desktop_nav_icon)}>info</span>
@@ -40,7 +40,7 @@ export function DesktopSidebar() {
             </NavLink>
             <NavLink
                 to={RouterPath.RODO}
-                className={({ isActive }) => clsx(styles.link, { [styles.active_link]: isActive })}
+                className={({ isActive }) => clsx(styles.link, { [styles.active_link as unknown as string]: isActive })}
             >
                 <div className={styles.desktop_nav_rail_item}>
                     <span className={clsx("material-symbols-outlined", styles.desktop_nav_icon)}>policy</span>
@@ -49,7 +49,7 @@ export function DesktopSidebar() {
             </NavLink>
             <NavLink
                 to={RouterPath.KONTAKT}
-                className={({ isActive }) => clsx(styles.link, { [styles.active_link]: isActive })}
+                className={({ isActive }) => clsx(styles.link, { [styles.active_link as unknown as string]: isActive })}
             >
                 <div className={styles.desktop_nav_rail_item}>
                     <span className={clsx("material-symbols-outlined", styles.desktop_nav_icon)}>contact_page</span>
@@ -58,7 +58,7 @@ export function DesktopSidebar() {
             </NavLink>
             <NavLink
                 to={RouterPath.WSPARCIE}
-                className={({ isActive }) => clsx(styles.link, { [styles.active_link]: isActive })}
+                className={({ isActive }) => clsx(styles.link, { [styles.active_link as unknown as string]: isActive })}
             >
                 <div className={styles.desktop_nav_rail_item}>
                     <span className={clsx("material-symbols-outlined", styles.desktop_nav_icon)}>crowdsource</span>

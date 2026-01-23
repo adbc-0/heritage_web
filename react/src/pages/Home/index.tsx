@@ -83,8 +83,8 @@ export default function Home() {
         <>
             <div
                 className={clsx({
-                    [styles.home_desktop]: deviceType === DeviceType.DESKTOP,
-                    [styles.home]: deviceType === DeviceType.MOBILE,
+                    [styles.home_desktop as unknown as string]: deviceType === DeviceType.DESKTOP,
+                    [styles.home as unknown as string]: deviceType === DeviceType.MOBILE,
                 })}
             >
                 {deviceType === DeviceType.DESKTOP && (
@@ -93,7 +93,7 @@ export default function Home() {
                             <input
                                 name="global_search"
                                 className={clsx(styles.search, {
-                                    [styles.open_search]: dockedContainer,
+                                    [styles.open_search as unknown as string]: dockedContainer,
                                 })}
                                 type="text"
                                 placeholder="Szukaj"
@@ -121,7 +121,8 @@ export default function Home() {
                                                 <button
                                                     key={person.id}
                                                     className={clsx(styles.search_list_item, {
-                                                        [styles.has_last_list_element]: !moreResultsText,
+                                                        [styles.has_last_list_element as unknown as string]:
+                                                            !moreResultsText,
                                                     })}
                                                     type="button"
                                                 >
@@ -150,8 +151,8 @@ export default function Home() {
                 )}
                 <div
                     className={clsx({
-                        [styles.desktop_tree]: deviceType === DeviceType.DESKTOP,
-                        [styles.tree]: deviceType === DeviceType.MOBILE,
+                        [styles.desktop_tree as unknown as string]: deviceType === DeviceType.DESKTOP,
+                        [styles.tree as unknown as string]: deviceType === DeviceType.MOBILE,
                     })}
                 >
                     <div className={styles.tree_settings}>
