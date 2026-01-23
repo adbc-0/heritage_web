@@ -43,6 +43,7 @@ export default defineConfig([
             ...react.configs["jsx-runtime"].rules,
             ...reactHooks.configs.recommended.rules,
             ...jsxA11y.configs.recommended.rules,
+            "react/no-unknown-property": ["error", { ignore: ["command", "commandfor", "closedby"] }],
             "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
             "react-hooks/todo": "error",
             "@typescript-eslint/no-unsafe-declaration-merging": "error",
