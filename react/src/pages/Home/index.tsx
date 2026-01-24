@@ -1,4 +1,5 @@
 import { useDeferredValue, useState } from "react";
+import { useNavigate } from "react-router";
 import { ErrorBoundary } from "react-error-boundary";
 import { clsx } from "clsx";
 
@@ -12,6 +13,7 @@ import { useGlobalSearch } from "@/features/globalSearch/globalSearch";
 
 import styles from "./styles.module.css";
 import { MdIconButton } from "@/components/ui/MdIconButton/MdIconButton";
+import { RouterPath } from "@/constants/routePaths";
 
 // ToDo: Remove hardcoded values? Define branches roots in config?
 const defaultBranches = [
@@ -54,7 +56,8 @@ const defaultBranches = [
 
 export default function Home() {
     const { deviceType } = useDeviceDetect();
-    const { query, searchResults, search } = useGlobalSearch();
+    const { query, searchResults, search, clear } = useGlobalSearch();
+    const navigate = useNavigate();
 
     const [searchOpen, setSearchOpen] = useState(false);
     const [branches, setBranches] = useState(defaultBranches);
@@ -91,6 +94,7 @@ export default function Home() {
                     <div className={styles.input_wrapper}>
                         <div className={styles.input}>
                             <input
+                                autoComplete="off"
                                 name="global_search"
                                 className={clsx(styles.search, {
                                     [styles.open_search as unknown as string]: dockedContainer,
@@ -120,11 +124,15 @@ export default function Home() {
                                             {searchResults.slice(0, 5).map((person) => (
                                                 <button
                                                     key={person.id}
+                                                    type="button"
                                                     className={clsx(styles.search_list_item, {
                                                         [styles.has_last_list_element as unknown as string]:
                                                             !moreResultsText,
                                                     })}
-                                                    type="button"
+                                                    onMouseDown={() => {
+                                                        void navigate(`/osoby/${person.id}`);
+                                                        clear();
+                                                    }}
                                                 >
                                                     {person.firstName} {person.nickName} {person.lastName}
                                                 </button>
@@ -138,6 +146,10 @@ export default function Home() {
                                                         styles.search_list_item,
                                                         styles.has_last_list_element,
                                                     )}
+                                                    onMouseDown={() => {
+                                                        void navigate(`${RouterPath.OSOBY}?search=${query}`);
+                                                        clear();
+                                                    }}
                                                 >
                                                     Zobacz pozostałe wyniki ({searchResults.length - 5})
                                                 </button>
