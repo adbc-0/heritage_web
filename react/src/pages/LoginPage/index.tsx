@@ -78,7 +78,6 @@ export function LoginPage() {
                 <div className={styles.login_form_wrapper}>
                     <div className={styles.no_access_wrapper}>
                         <img src="/icon.svg" width={50} alt="logo" className={styles.logo} />
-                        <h1 className={styles.no_access_main_text}>Brak dostępu</h1>
                         <p>Dostęp do zawartości jest chroniony hasłem</p>
                     </div>
                     <div className={styles.login_actions}>

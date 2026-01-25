@@ -31,10 +31,6 @@
     text-align: center;
 }
 
-.no_access_main_text {
-    font-size: var(--text-lg);
-}
-
 .login_actions {
     display: flex;
     flex-direction: column;
