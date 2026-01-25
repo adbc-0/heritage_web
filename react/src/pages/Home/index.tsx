@@ -3,17 +3,16 @@ import { useNavigate } from "react-router";
 import { ErrorBoundary } from "react-error-boundary";
 import { clsx } from "clsx";
 
-import { ErrorFallback, HeritageGraph } from "@/features/heritageGraph/HeritageGraph";
-
 import { SVGSettings } from "./SVGSettings";
 
+import { RouterPath } from "@/constants/routePaths";
+import { ErrorFallback, HeritageGraph } from "@/features/heritageGraph/HeritageGraph";
 import { useDeviceDetect } from "@/features/deviceMode/deviceModeContext";
 import { DeviceType } from "@/features/deviceMode/constants";
 import { useGlobalSearch } from "@/features/globalSearch/globalSearch";
+import { MdIconButton } from "@/components/ui/MdIconButton/MdIconButton";
 
 import styles from "./styles.module.css";
-import { MdIconButton } from "@/components/ui/MdIconButton/MdIconButton";
-import { RouterPath } from "@/constants/routePaths";
 
 // ToDo: Remove hardcoded values? Define branches roots in config?
 const defaultBranches = [

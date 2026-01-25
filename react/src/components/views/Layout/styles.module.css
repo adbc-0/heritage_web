@@ -45,7 +45,7 @@
     margin: 0;
     max-height: 100vh;
     height: 100%;
-    /*width: 85%;*/
+    width: 60%;
     border: none;
     border-top-right-radius: 15px;
     border-bottom-right-radius: 15px;
@@ -53,6 +53,7 @@
 }
 
 .modal::backdrop {
+    pointer-events: none;
     background-color: var(--md-palette-neutral-20);
     opacity: 0.4;
 }
@@ -202,12 +203,14 @@
 }
 
 .navigation_rail {
-    padding: 0 4rem 0 1.25rem;
+    padding: 0 1.25rem;
 }
 
 .navigation_item {
     display: flex;
     height: 3.5rem;
+    
+    width: 100%;
 
     background-color: inherit;
     border: none;

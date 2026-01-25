@@ -1,0 +1,9 @@
+.full_size_dialog {
+    height: 100%;
+    width: 100%;
+    max-height: none;
+    max-width: none;
+    margin: 0;
+    border: none;
+    padding: 0;
+}

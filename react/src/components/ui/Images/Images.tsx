@@ -6,6 +6,7 @@ import { stripFileExtension } from "@/lib/utils";
 import type { File } from "@/pages/Person/types.ts";
 
 import styles from "./styles.module.css";
+import { MdIconButton } from "../MdIconButton/MdIconButton";
 
 type ReactChildren = {
     children: ReactElement | ReactElement[];
@@ -247,19 +248,19 @@ function Image({ moveToNextImage, moveToPrevImage }: ImageProps) {
     return (
         <>
             <span className={styles.inspectionTitle}>{stripFileExtension(inspectedImage.filename)}</span>
-            <button type="button" className={styles.closeButton} onClick={closeInspection}>
-                <span className="material-symbols-outlined">close</span>
-            </button>
-            <button type="button" className={clsx(styles.arrowButton, styles.arrowLeft)} onClick={moveToNextImage}>
-                <span className="material-symbols-outlined">chevron_left</span>
-            </button>
-            <button type="button" className={clsx(styles.arrowButton, styles.arrowRight)} onClick={moveToPrevImage}>
-                <span className="material-symbols-outlined">chevron_right</span>
-            </button>
+            <MdIconButton className={styles.closeButton} onClick={closeInspection} iconName="close" />
+            <MdIconButton
+                className={clsx(styles.arrowButton, styles.arrowLeft)}
+                onClick={moveToPrevImage}
+                iconName="chevron_left"
+            />
+            <MdIconButton
+                className={clsx(styles.arrowButton, styles.arrowRight)}
+                onClick={moveToNextImage}
+                iconName="chevron_right"
+            />
             <a href={inspectedImage.fullSizeSrc} download={inspectedImage.filename}>
-                <button type="button" className={styles.downloadButton}>
-                    <span className="material-symbols-outlined">file_download</span>
-                </button>
+                <MdIconButton className={styles.downloadButton} iconName="file_download" />
             </a>
             <img
                 className={styles.inspectedImg}

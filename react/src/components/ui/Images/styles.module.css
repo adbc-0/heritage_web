@@ -68,54 +68,24 @@
 
 .inspectionTitle {
     position: absolute;
-}
-
-.closeButton {
-    position: absolute;
-}
-
-.downloadButton {
-    position: absolute;
-}
-
-.arrowButton {
-    position: absolute;
-}
-
-.inspectionTitle {
-    position: absolute;
     bottom: 15px;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(0, 0, 0, 0.5);
     padding: 0.5rem;
-    border-radius: 0.375rem;
-    color: #fff;
-    z-index: var(--md-sys-elevation-index1);
+    border-radius: 16px;
+    background-color: var(--md-sys-color-secondary-container);
 }
 
 .closeButton {
     position: absolute;
     top: 15px;
     right: 15px;
-    background: rgba(0, 0, 0, 0.5);
-    padding: 0.5rem;
-    border-radius: 9999px;
-    color: #fff;
-    z-index: var(--md-sys-elevation-index1);
-    border: none;
 }
 
 .arrowButton {
     position: absolute;
     top: 50%;
-    background: rgba(0, 0, 0, 0.5);
-    padding: 0.5rem;
-    border-radius: 9999px;
     transform: translateY(-50%);
-    color: #fff;
-    border: none;
-    z-index: var(--md-sys-elevation-index1);
     user-select: none;
 }
 
@@ -131,10 +101,4 @@
     position: absolute;
     bottom: 15px;
     right: 15px;
-    background: rgba(0, 0, 0, 0.5);
-    padding: 0.5rem;
-    border-radius: 0.375rem;
-    color: #fff;
-    border: none;
-    z-index: var(--md-sys-elevation-index1);
 }

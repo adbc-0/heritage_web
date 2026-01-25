@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { preload } from "react-dom";
 import { useLocation, useNavigate } from "react-router";
 import { clsx } from "clsx";
@@ -11,6 +11,12 @@ import styles from "./styles.module.css";
 
 export function MobileTopbar() {
     preload(LOGO, { as: "image", type: "image/svg+xml" });
+
+    const dialogRef = useRef<HTMLDialogElement>(null);
+
+    useEffect(() => {
+        // dialogRef.current?.addEventListener(() => )
+    }, []);
 
     const location = useLocation();
     const navigate = useNavigate();
@@ -107,7 +113,7 @@ export function MobileTopbar() {
                     </button>
                 </div>
             )}
-            <dialog id="navigation_rail" closedby="any" className={styles.modal}>
+            <dialog ref={dialogRef} id="navigation_rail" closedby="any" className={styles.modal}>
                 <ul className={styles.navigation_rail}>
                     <button
                         type="button"

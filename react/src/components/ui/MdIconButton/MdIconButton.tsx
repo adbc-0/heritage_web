@@ -6,9 +6,9 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     iconName: string;
 }
 
-export function MdIconButton({ iconName, ...buttonProps }: ButtonProps) {
+export function MdIconButton({ iconName, className, ...buttonProps }: ButtonProps) {
     return (
-        <button className={styles.button} {...buttonProps} type="button">
+        <button type="button" className={clsx(styles.button, className)} {...buttonProps}>
             <span className={clsx("material-symbols-outlined", styles.icon)}>{iconName}</span>
         </button>
     );
