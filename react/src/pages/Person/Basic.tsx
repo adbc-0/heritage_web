@@ -3,6 +3,7 @@ import { useParams } from "react-router";
 import { isNil } from "@/lib/utils";
 import { useHeritage } from "@/features/heritageData/heritageContext";
 import { searchFamily, searchPerson } from "@/features/heritageGraph/utils";
+
 import { Section } from "./Section";
 import { SectionWithLinks } from "./SectionWithLinks";
 
@@ -121,12 +122,12 @@ export function Basic() {
     const { children, parents, partners, siblings } = collectPersonDetails(heritage, person);
 
     return (
-        <section>
+        <div>
             <Section person={person} />
             <SectionWithLinks title="Rodzice" people={parents} />
             <SectionWithLinks title="Rodzeństwo" people={siblings} />
             <SectionWithLinks title="Małżeństwo/Partnerstwo" people={partners} />
             <SectionWithLinks title="Dzieci" people={children} />
-        </section>
+        </div>
     );
 }

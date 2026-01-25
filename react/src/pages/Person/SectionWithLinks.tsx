@@ -18,9 +18,9 @@ export function SectionWithLinks({ people, title }: SectionProps) {
     }
 
     return (
-        <>
+        <section className={styles.section}>
             <h2 className={styles.title}>{title}</h2>
-            <ul className={styles.list}>
+            <div className={styles.list}>
                 {people.map((person) => (
                     <li key={person.id} className={styles.list_element}>
                         <p className={styles.family_name}>
@@ -31,7 +31,7 @@ export function SectionWithLinks({ people, title }: SectionProps) {
                         </Link>
                     </li>
                 ))}
-            </ul>
-        </>
+            </div>
+        </section>
     );
 }

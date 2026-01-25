@@ -43,7 +43,7 @@ function displayDates(person: FullPerson) {
 
 export function Section({ person }: SectionProps) {
     return (
-        <>
+        <section>
             <h2 className={styles.title}>Podstawowe informacje</h2>
             <div className={styles.basic_wrapper}>
                 <div className={styles.content}>
@@ -61,6 +61,6 @@ export function Section({ person }: SectionProps) {
                     </div>
                 )}
             </div>
-        </>
+        </section>
     );
 }
