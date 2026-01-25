@@ -53,7 +53,6 @@
 }
 
 .modal::backdrop {
-    pointer-events: none;
     background-color: var(--md-palette-neutral-20);
     opacity: 0.4;
 }

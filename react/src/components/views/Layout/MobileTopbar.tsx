@@ -14,8 +14,26 @@ export function MobileTopbar() {
 
     const dialogRef = useRef<HTMLDialogElement>(null);
 
+    // close dialog on clicking backdrop
+    // maybe in the future closedby="any" won't be leaking events through backdrop
     useEffect(() => {
-        // dialogRef.current?.addEventListener(() => )
+        const dialog = dialogRef.current;
+
+        if (!dialog) {
+            throw new Error("missing dialog element reference");
+        }
+
+        const onDialogClick = (event: MouseEvent) => {
+            if (event.target === dialog) {
+                dialog.close();
+            }
+        };
+
+        dialog.addEventListener("click", onDialogClick);
+
+        return () => {
+            dialog.removeEventListener("click", onDialogClick);
+        };
     }, []);
 
     const location = useLocation();
@@ -113,7 +131,7 @@ export function MobileTopbar() {
                     </button>
                 </div>
             )}
-            <dialog ref={dialogRef} id="navigation_rail" closedby="any" className={styles.modal}>
+            <dialog ref={dialogRef} id="navigation_rail" closedby="closerequest" className={styles.modal}>
                 <ul className={styles.navigation_rail}>
                     <button
                         type="button"
