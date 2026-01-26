@@ -195,6 +195,7 @@
     /*padding: 0.25rem 0;*/
 }
 
+/* ToDo: This style is duplicated. Create separate component */
 .break_line {
     border-bottom: 1px solid var(--md-sys-color-secondary);
 }

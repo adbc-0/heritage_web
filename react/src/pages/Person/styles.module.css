@@ -23,6 +23,7 @@
     max-width: 40rem;
 }
 
+/* ToDo: Add position sticky? But first create global variables for search? */
 .tabs_scroller {
     overflow-x: auto;
 }
