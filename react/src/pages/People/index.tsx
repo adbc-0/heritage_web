@@ -66,7 +66,7 @@ function filterOutPeople(people: Person[], searchQuery: string): Person[] {
     if (!searchQuery) {
         return people;
     }
-    const queryRegex = new RegExp(searchQuery);
+    const queryRegex = new RegExp(searchQuery.toLowerCase());
     return people.filter((person) => {
         const fullName = [person.firstName, person.nickName, person.lastName].filter(Boolean).join(" ").toLowerCase();
         const searchResult = fullName.match(queryRegex);
@@ -239,7 +239,7 @@ function renderSortingIcon(selectedCriterion: SortByType) {
 export default function People() {
     const navigate = useNavigate();
     const { heritage } = useHeritage();
-    const [searchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
 
     const [filterPeopleQuery, setFilterPeopleQuery] = useState(searchParams.get("search") ?? "");
     const [sortByCriterion, setSortByCriterion] = useState<SortByType>(SortBy.FIRST_NAME);
@@ -267,7 +267,8 @@ export default function People() {
                         placeholder="Wyszukaj osobę..."
                         value={filterPeopleQuery}
                         onChange={(event) => {
-                            setFilterPeopleQuery(event.target.value.toLowerCase());
+                            setFilterPeopleQuery(event.target.value);
+                            setSearchParams({ search: event.target.value });
                         }}
                     />
                     <div className={styles.leading_icon}>
