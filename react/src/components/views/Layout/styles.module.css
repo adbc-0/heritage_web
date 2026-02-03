@@ -204,6 +204,8 @@
 
     text-align: start;
 
+    font-family: inherit;
+
     &:hover {
         background-color: var(--md-sys-color-surface-container-low);
     }
