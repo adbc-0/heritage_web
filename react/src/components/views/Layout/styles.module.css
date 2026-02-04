@@ -94,7 +94,7 @@
     padding: 0;
 
     &[open] {
-        animation: expand-rect 0.2s ease forwards;
+        animation: expand-rect 0.35s ease forwards;
     }
 }
 
