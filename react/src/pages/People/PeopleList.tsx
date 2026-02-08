@@ -1,16 +1,17 @@
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router";
+import clsx from "clsx";
 
-import styles from "./styles.module.css";
 import { useDeviceDetect } from "@/features/deviceMode/deviceModeContext";
 import { DeviceType } from "@/features/deviceMode/constants";
 import { RouterPath } from "@/constants/routePaths";
 import { MdIconButton } from "@/components/ui/MdIconButton/MdIconButton";
-import { useRef, useState } from "react";
 import { isPersonInvisible, searchFamily, searchPerson } from "@/features/heritageGraph/utils";
 import { useHeritage } from "@/features/heritageData/heritageContext";
 
 import type { FullPerson, HeritageRaw } from "@/types/heritage.types.ts";
-import clsx from "clsx";
+
+import styles from "./styles.module.css";
 
 type Person = FullPerson & {
     dad: string | null;
@@ -107,13 +108,10 @@ function filterOutPeople(people: Person[], searchQuery: string): Person[] {
     });
 }
 
-// ToDo: Remove sorting by parents
 const SortBy = {
     FIRST_NAME: "FIRST_NAME",
     NICK_NAME: "NICK_NAME",
     LAST_NAME: "LAST_NAME",
-    FATHER: "FATHER",
-    MOTHER: "MOTHER",
     BIRTH: "BIRTH",
     DEATH: "DEATH",
 } as const;
@@ -121,8 +119,6 @@ const SortByNameLabel = {
     FIRST_NAME: "imieniu",
     NICK_NAME: "przezwisku",
     LAST_NAME: "nazwisku",
-    FATHER: "ojcu",
-    MOTHER: "matce",
     BIRTH: "roku urodzenia",
     DEATH: "roku śmierci",
 } as const;
@@ -216,14 +212,6 @@ const sortingAlgorithmByType = {
         ASC: sortByTextAsc("lastName"),
         DESC: sortByTextDesc("lastName"),
     },
-    [SortBy.MOTHER]: {
-        ASC: sortByTextAsc("mom"),
-        DESC: sortByTextDesc("mom"),
-    },
-    [SortBy.FATHER]: {
-        ASC: sortByTextAsc("dad"),
-        DESC: sortByTextDesc("dad"),
-    },
     [SortBy.BIRTH]: {
         ASC: sortByNumberAsc("birth"),
         DESC: sortByNumberDesc("birth"),
@@ -240,32 +228,24 @@ function sortBy(strategy: SortByType, direction: DirectionType) {
 
 const sortingIconByTypeMap = {
     [SortBy.FIRST_NAME]: {
-        ASC: <span className="material-symbols-outlined">sort_by_alpha</span>,
-        DESC: <span className="material-symbols-outlined">sort_by_alpha</span>,
+        ASC: <span className={clsx("material-symbols-outlined", styles.sorting_icon)}>arrow_upward</span>,
+        DESC: <span className={clsx("material-symbols-outlined", styles.sorting_icon)}>arrow_downward</span>,
     },
     [SortBy.NICK_NAME]: {
-        ASC: <span className="material-symbols-outlined">sort_by_alpha</span>,
-        DESC: <span className="material-symbols-outlined">sort_by_alpha</span>,
+        ASC: <span className={clsx("material-symbols-outlined", styles.sorting_icon)}>arrow_upward</span>,
+        DESC: <span className={clsx("material-symbols-outlined", styles.sorting_icon)}>arrow_downward</span>,
     },
     [SortBy.LAST_NAME]: {
-        ASC: <span className="material-symbols-outlined">sort_by_alpha</span>,
-        DESC: <span className="material-symbols-outlined">sort_by_alpha</span>,
-    },
-    [SortBy.MOTHER]: {
-        ASC: <span className="material-symbols-outlined">sort_by_alpha</span>,
-        DESC: <span className="material-symbols-outlined">sort_by_alpha</span>,
-    },
-    [SortBy.FATHER]: {
-        ASC: <span className="material-symbols-outlined">sort_by_alpha</span>,
-        DESC: <span className="material-symbols-outlined">sort_by_alpha</span>,
+        ASC: <span className={clsx("material-symbols-outlined", styles.sorting_icon)}>arrow_upward</span>,
+        DESC: <span className={clsx("material-symbols-outlined", styles.sorting_icon)}>arrow_downward</span>,
     },
     [SortBy.BIRTH]: {
-        ASC: <span className="material-symbols-outlined">arrow_upward</span>,
-        DESC: <span className="material-symbols-outlined">arrow_downward</span>,
+        ASC: <span className={clsx("material-symbols-outlined", styles.sorting_icon)}>arrow_upward</span>,
+        DESC: <span className={clsx("material-symbols-outlined", styles.sorting_icon)}>arrow_downward</span>,
     },
     [SortBy.DEATH]: {
-        ASC: <span className="material-symbols-outlined">arrow_upward</span>,
-        DESC: <span className="material-symbols-outlined">arrow_downward</span>,
+        ASC: <span className={clsx("material-symbols-outlined", styles.sorting_icon)}>arrow_upward</span>,
+        DESC: <span className={clsx("material-symbols-outlined", styles.sorting_icon)}>arrow_downward</span>,
     },
 } as const;
 
@@ -520,29 +500,19 @@ function DesktopPeopleList({ searchQuery }: PersonListProps) {
                                 }}
                             >
                                 <span>Imię oraz nazwisko</span>
+                                {renderSortingIcon(SortBy.FIRST_NAME)(sortByCriterion, sortDirection)}
+                                {renderSortingIcon(SortBy.LAST_NAME)(sortByCriterion, sortDirection)}
                             </button>
                         </th>
                         <th className={styles.table_head_element}>
-                            <button
-                                type="button"
-                                className={styles.sortable_properties}
-                                onClick={() => {
-                                    changeSortingCriterion(SortBy.FATHER);
-                                }}
-                            >
+                            <div className={styles.sortable_properties}>
                                 <span>Ojciec</span>
-                            </button>
+                            </div>
                         </th>
                         <th className={styles.table_head_element}>
-                            <button
-                                type="button"
-                                className={styles.sortable_properties}
-                                onClick={() => {
-                                    changeSortingCriterion(SortBy.MOTHER);
-                                }}
-                            >
+                            <div className={styles.sortable_properties}>
                                 <span>Matka</span>
-                            </button>
+                            </div>
                         </th>
                         <th className={styles.table_head_element}>
                             <button
@@ -553,6 +523,7 @@ function DesktopPeopleList({ searchQuery }: PersonListProps) {
                                 }}
                             >
                                 <span>Rok urodzenia</span>
+                                {renderSortingIcon(SortBy.BIRTH)(sortByCriterion, sortDirection)}
                             </button>
                         </th>
                         <th className={styles.table_head_element}>
@@ -564,6 +535,7 @@ function DesktopPeopleList({ searchQuery }: PersonListProps) {
                                 }}
                             >
                                 <span>Rok śmierci</span>
+                                {renderSortingIcon(SortBy.DEATH)(sortByCriterion, sortDirection)}
                             </button>
                         </th>
                     </tr>

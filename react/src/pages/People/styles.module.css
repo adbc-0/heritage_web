@@ -205,6 +205,13 @@
 
     &:first-of-type {
         .table_head_element {
+            &:hover {
+                border-top-right-radius: 16px;
+                border-top-left-radius: 16px;
+
+                background-color: var(--md-sys-color-surface-container);
+            }
+
             &:first-of-type {
                 border-top-left-radius: 16px;
             }
@@ -237,6 +244,8 @@
 .table_head_element {
     text-align: center;
     padding: 0.5rem;
+    font-weight: normal;
+    font-size: 0.85rem;
 }
 
 .table_element {
@@ -256,6 +265,16 @@
     background-color: inherit;
     border: none;
     font-family: inherit;
+
+    gap: 0.25rem;
+
+    .sorting_icon {
+        background-color: var(--md-sys-color-secondary-container);
+        color: var(--md-sys-color-on-secondary-container);
+        border-radius: 50%;
+        padding: 0.15rem;
+        font-size: 1.2rem;
+    }
 }
 
 .empty_result {
