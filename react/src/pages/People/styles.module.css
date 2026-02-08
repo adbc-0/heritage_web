@@ -205,7 +205,7 @@
 
     &:first-of-type {
         .table_head_element {
-            &:hover {
+            &:has(button):hover {
                 border-top-right-radius: 16px;
                 border-top-left-radius: 16px;
 
